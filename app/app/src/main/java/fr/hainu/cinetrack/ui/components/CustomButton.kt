@@ -16,17 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.hainu.cinetrack.ui.theme.Gray800
 import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.theme.Pink600
 import fr.hainu.cinetrack.ui.theme.Purple600
 
 enum class ButtonVariant {
     PRIMARY,
-    SECONDARY,
-    OUTLINE
+    SECONDARY
 }
 
 @Composable
@@ -35,28 +33,20 @@ fun CustomButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     variant: ButtonVariant = ButtonVariant.PRIMARY,
-    backgroundColor: Color = Purple600,
-    textColor: Color = Color.White,
-    height: Dp = 56.dp,
-    cornerRadius: Dp = 12.dp,
     enabled: Boolean = true
 ) {
     val colors = when (variant) {
         ButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = textColor,
-            disabledContainerColor = backgroundColor.copy(alpha = 0.5f),
-            disabledContentColor = textColor.copy(alpha = 0.5f)
+            containerColor = Purple600,
+            contentColor = Color.White,
+            disabledContainerColor = Purple600.copy(alpha = 0.5f),
+            disabledContentColor = Color.White.copy(alpha = 0.5f)
         )
         ButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
-            containerColor = backgroundColor.copy(alpha = 0.2f),
-            contentColor = backgroundColor,
-            disabledContainerColor = backgroundColor.copy(alpha = 0.1f),
-            disabledContentColor = backgroundColor.copy(alpha = 0.3f)
-        )
-        ButtonVariant.OUTLINE -> ButtonDefaults.outlinedButtonColors(
-            contentColor = backgroundColor,
-            disabledContentColor = backgroundColor.copy(alpha = 0.3f)
+            containerColor = Gray800,
+            contentColor = Color.White,
+            disabledContainerColor = Gray800.copy(alpha = 0.5f),
+            disabledContentColor = Color.White.copy(alpha = 0.5f)
         )
     }
 
@@ -64,9 +54,9 @@ fun CustomButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(height),
+            .height(56.dp),
         colors = colors,
-        shape = RoundedCornerShape(cornerRadius),
+        shape = RoundedCornerShape(12.dp),
         enabled = enabled
     ) {
         Text(
@@ -87,35 +77,30 @@ private fun CustomButtonPreview() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         CustomButton(
-            text = "Primary Button",
+            text = "Se connecter",
             onClick = {},
             variant = ButtonVariant.PRIMARY
         )
 
         CustomButton(
-            text = "Secondary Button",
+            text = "Créer un compte",
             onClick = {},
             variant = ButtonVariant.SECONDARY
         )
 
         CustomButton(
-            text = "Outline Button",
+            text = "Créer un compte",
             onClick = {},
-            variant = ButtonVariant.OUTLINE
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CustomButton(
-            text = "Custom Color",
-            onClick = {},
-            backgroundColor = Pink600
-        )
-
-        CustomButton(
-            text = "Disabled Button",
-            onClick = {},
+            variant = ButtonVariant.PRIMARY,
             enabled = false
         )
+
+        CustomButton(
+            text = "Créer un compte",
+            onClick = {},
+            variant = ButtonVariant.SECONDARY,
+            enabled = false
+        )
+
     }
 }
