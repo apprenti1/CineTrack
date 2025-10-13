@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.R
+import fr.hainu.cinetrack.ui.components.CustomButton
 import fr.hainu.cinetrack.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -125,7 +126,8 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp, vertical = 32.dp)
             ) {
-                Button(
+                CustomButton(
+                    text = if (pagerState.currentPage < pages.size - 1) "Suivant" else "Commencer",
                     onClick = {
                         if (pagerState.currentPage < pages.size - 1) {
                             scope.launch {
@@ -134,21 +136,8 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                         } else {
                             onFinish()
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Purple600
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = if (pagerState.currentPage < pages.size - 1) "Suivant" else "Commencer",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                    }
+                )
             }
         }
     }
