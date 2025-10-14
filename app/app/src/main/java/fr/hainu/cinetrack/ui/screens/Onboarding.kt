@@ -1,6 +1,7 @@
 package fr.hainu.cinetrack.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -65,10 +66,12 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxSize()
             .background(Gray900)
-    ) {
+    )
+    {
         Column(
             modifier = Modifier.fillMaxSize()
-        ) {
+        )
+        {
             // Skip button
             if (pagerState.currentPage < pages.size - 1) {
                 Box(
@@ -110,6 +113,11 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                     Box(
                         modifier = Modifier
                             .padding(horizontal = 4.dp)
+                            .clickable {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                             .height(8.dp)
                             .width(if (isActive) 32.dp else 8.dp)
                             .clip(CircleShape)

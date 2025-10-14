@@ -8,6 +8,7 @@ import androidx.compose.animation.*
 import androidx.compose.runtime.*
 import fr.hainu.cinetrack.ui.screens.AuthChoiceScreen
 import fr.hainu.cinetrack.ui.screens.OnboardingScreen
+import fr.hainu.cinetrack.ui.screens.RegisterScreen
 import fr.hainu.cinetrack.ui.screens.SplashScreen
 import fr.hainu.cinetrack.ui.theme.CineTrackTheme
 import kotlinx.coroutines.delay
@@ -46,9 +47,14 @@ fun AppNavigation() {
                 onFinish = { currentScreen = "auth" }
             )
             "auth" -> AuthChoiceScreen(
-                onLoginClick = { /* TODO */ },
-                onRegisterClick = { /* TODO */ },
-                onContinueWithoutAccount = { /* TODO */ }
+                onLoginClick = { currentScreen = "login" },
+                onRegisterClick = { currentScreen = "register" },
+                onContinueWithoutAccount = { currentScreen = "" }
+            )
+            "register" -> RegisterScreen(
+                onBackClick = { currentScreen = "auth" },
+                onLoginClick = { currentScreen = "login" },
+                onRegister = { currentScreen = "" }
             )
         }
     }
