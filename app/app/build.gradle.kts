@@ -16,6 +16,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Charger les variables depuis local.properties
+        val properties = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir, providers)
+
+        buildConfigField("String", "TMDB_API_KEY", "\"${properties.getProperty("tmdb.api.key", "")}\"")
+        buildConfigField("String", "TMDB_BASE_URL", "\"${properties.getProperty("tmdb.base.url", "https://api.themoviedb.org/3/")}\"")
+        buildConfigField("String", "CINETRACK_API_URL", "\"${properties.getProperty("cinetrack.api.url", "http://10.0.2.2:3000")}\"")
     }
 
     buildTypes {
@@ -36,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
