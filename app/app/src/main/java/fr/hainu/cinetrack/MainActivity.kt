@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.animation.*
+import androidx.compose.runtime.*
+import fr.hainu.cinetrack.ui.screens.AuthChoiceScreen
+import fr.hainu.cinetrack.ui.screens.OnboardingScreen
+import fr.hainu.cinetrack.ui.screens.SplashScreen
 import fr.hainu.cinetrack.ui.theme.CineTrackTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +18,38 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CineTrackTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun AppNavigation() {
+    var currentScreen by remember { mutableStateOf("splash") }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CineTrackTheme {
-        Greeting("Android")
+    LaunchedEffect(Unit) {
+        delay(2500)
+        currentScreen = "onboarding"
+    }
+
+    AnimatedContent(
+        targetState = currentScreen,
+        transitionSpec = {
+            slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
+        },
+        label = "screen_transition"
+    ) { screen ->
+        when (screen) {
+            "splash" -> SplashScreen()
+            "onboarding" -> OnboardingScreen(
+                onFinish = { currentScreen = "auth" }
+            )
+            "auth" -> AuthChoiceScreen(
+                onLoginClick = { /* TODO */ },
+                onRegisterClick = { /* TODO */ },
+                onContinueWithoutAccount = { /* TODO */ }
+            )
+        }
     }
 }
