@@ -49,7 +49,7 @@ fun SplashScreen() {
         ) {
             // Icône de film avec animation rebond
             Icon(
-                painter = painterResource(id = R.drawable.ic_film),
+                painter = painterResource(id = R.drawable.film),
                 contentDescription = null,
                 modifier = Modifier
                     .size(96.dp)

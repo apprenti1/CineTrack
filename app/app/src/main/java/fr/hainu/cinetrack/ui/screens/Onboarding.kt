@@ -7,8 +7,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -41,19 +39,19 @@ data class OnboardingPage(
 fun OnboardingScreen(onFinish: () -> Unit = {}) {
     val pages = listOf(
         OnboardingPage(
-            icon = R.drawable.ic_film,
+            icon = R.drawable.film,
             gradient = listOf(Purple600, Pink600),
             title = "Découvrez des milliers de films",
             description = "Explorez une vaste collection de films et séries. Trouvez votre prochain coup de cœur."
         ),
         OnboardingPage(
-            icon = R.drawable.ic_bookmark,
+            icon = R.drawable.bookmark,
             gradient = listOf(Blue600, Cyan600),
             title = "Créez votre watchlist",
             description = "Sauvegardez les films que vous souhaitez voir et ne perdez jamais une trace."
         ),
         OnboardingPage(
-            icon = R.drawable.ic_stats,
+            icon = R.drawable.stats,
             gradient = listOf(Pink600, Rose500),
             title = "Suivez vos statistiques",
             description = "Analysez vos habitudes de visionnage et découvrez vos genres favoris."
