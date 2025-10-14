@@ -1,0 +1,23 @@
+# API
+api/dist/
+api/node_modules/
+api/.env
+
+# Android
+app/local.properties
+app/.gradle/
+app/build/
+app/app/build/
+*.apk
+*.aab
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
