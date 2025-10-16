@@ -1,9 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Activation de la validation globale
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    transform: true,
+  }));
 
   // Configuration du préfixe global /api pour toutes les routes sauf /doc et /health
   app.setGlobalPrefix('api', {
@@ -15,7 +22,12 @@ async function bootstrap() {
     .setTitle('CineTrack API')
     .setDescription('API de gestion de films et séries')
     .setVersion('1.0')
-    .addTag('cinetrack')
+    .addTag('auth')
+    .addTag('users')
+    .addTag('reviews')
+    .addTag('lists')
+    .addTag('health')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
