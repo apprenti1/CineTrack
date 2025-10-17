@@ -1,5 +1,21 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { ListsService } from './lists.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
@@ -18,7 +34,7 @@ export class ListsController {
   @ApiResponse({ status: 201, description: 'Liste créée avec succès' })
   @ApiResponse({ status: 401, description: 'Non autorisé' })
   async create(@Request() req, @Body() createListDto: CreateListDto) {
-    return this.listsService.create(req.user.id, createListDto);
+    return this.listsService.create(req.user.id as string, createListDto);
   }
 
   @Get('my-lists')
@@ -27,7 +43,7 @@ export class ListsController {
   @ApiOperation({ summary: 'Obtenir toutes mes listes' })
   @ApiResponse({ status: 200, description: 'Listes récupérées avec succès' })
   async findMyLists(@Request() req) {
-    return this.listsService.findByUser(req.user.id);
+    return this.listsService.findByUser(req.user.id as string);
   }
 
   @Get(':id')
@@ -43,10 +59,17 @@ export class ListsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Modifier une liste' })
   @ApiResponse({ status: 200, description: 'Liste modifiée avec succès' })
-  @ApiResponse({ status: 403, description: 'Vous ne pouvez modifier que vos propres listes' })
+  @ApiResponse({
+    status: 403,
+    description: 'Vous ne pouvez modifier que vos propres listes',
+  })
   @ApiResponse({ status: 404, description: 'Liste non trouvée' })
-  async update(@Param('id') id: string, @Request() req, @Body() updateListDto: UpdateListDto) {
-    return this.listsService.update(id, req.user.id, updateListDto);
+  async update(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() updateListDto: UpdateListDto,
+  ) {
+    return this.listsService.update(id, req.user.id as string, updateListDto);
   }
 
   @Delete(':id')
@@ -54,10 +77,13 @@ export class ListsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Supprimer une liste' })
   @ApiResponse({ status: 200, description: 'Liste supprimée avec succès' })
-  @ApiResponse({ status: 403, description: 'Vous ne pouvez supprimer que vos propres listes' })
+  @ApiResponse({
+    status: 403,
+    description: 'Vous ne pouvez supprimer que vos propres listes',
+  })
   @ApiResponse({ status: 404, description: 'Liste non trouvée' })
   async remove(@Param('id') id: string, @Request() req) {
-    return this.listsService.remove(id, req.user.id);
+    return this.listsService.remove(id, req.user.id as string);
   }
 
   @Post(':id/films')
@@ -65,20 +91,38 @@ export class ListsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Ajouter un film à une liste' })
   @ApiResponse({ status: 200, description: 'Film ajouté à la liste' })
-  @ApiResponse({ status: 403, description: 'Vous ne pouvez modifier que vos propres listes' })
+  @ApiResponse({
+    status: 403,
+    description: 'Vous ne pouvez modifier que vos propres listes',
+  })
   @ApiResponse({ status: 404, description: 'Liste non trouvée' })
-  async addFilm(@Param('id') id: string, @Request() req, @Body() dto: ManageFilmsDto) {
-    return this.listsService.addFilm(id, req.user.id, dto.filmId);
+  async addFilm(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() dto: ManageFilmsDto,
+  ) {
+    return this.listsService.addFilm(id, req.user.id as string, dto.filmId);
   }
 
   @Delete(':id/films/:filmId')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Retirer un film d\'une liste' })
+  @ApiOperation({ summary: "Retirer un film d'une liste" })
   @ApiResponse({ status: 200, description: 'Film retiré de la liste' })
-  @ApiResponse({ status: 403, description: 'Vous ne pouvez modifier que vos propres listes' })
+  @ApiResponse({
+    status: 403,
+    description: 'Vous ne pouvez modifier que vos propres listes',
+  })
   @ApiResponse({ status: 404, description: 'Liste non trouvée' })
-  async removeFilm(@Param('id') id: string, @Request() req, @Param('filmId') filmId: string) {
-    return this.listsService.removeFilm(id, req.user.id, parseInt(filmId));
+  async removeFilm(
+    @Param('id') id: string,
+    @Request() req,
+    @Param('filmId') filmId: string,
+  ) {
+    return this.listsService.removeFilm(
+      id,
+      req.user.id as string,
+      parseInt(filmId),
+    );
   }
 }

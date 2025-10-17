@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
@@ -25,7 +29,7 @@ export class ListsService {
     });
   }
 
-  async findOne(listId: string, userId?: string) {
+  async findOne(listId: string) {
     const list = await this.prisma.list.findUnique({
       where: { id: listId },
       include: {
@@ -55,7 +59,9 @@ export class ListsService {
     }
 
     if (list.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez modifier que vos propres listes');
+      throw new ForbiddenException(
+        'Vous ne pouvez modifier que vos propres listes',
+      );
     }
 
     return this.prisma.list.update({
@@ -74,7 +80,9 @@ export class ListsService {
     }
 
     if (list.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez supprimer que vos propres listes');
+      throw new ForbiddenException(
+        'Vous ne pouvez supprimer que vos propres listes',
+      );
     }
 
     await this.prisma.list.delete({
@@ -94,7 +102,9 @@ export class ListsService {
     }
 
     if (list.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez modifier que vos propres listes');
+      throw new ForbiddenException(
+        'Vous ne pouvez modifier que vos propres listes',
+      );
     }
 
     if (list.filmIds.includes(filmId)) {
@@ -123,7 +133,9 @@ export class ListsService {
     }
 
     if (list.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez modifier que vos propres listes');
+      throw new ForbiddenException(
+        'Vous ne pouvez modifier que vos propres listes',
+      );
     }
 
     const updatedFilmIds = list.filmIds.filter((id) => id !== filmId);

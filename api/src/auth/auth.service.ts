@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
@@ -16,10 +20,7 @@ export class AuthService {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.prisma.user.findFirst({
       where: {
-        OR: [
-          { email: registerDto.email },
-          { pseudo: registerDto.pseudo },
-        ],
+        OR: [{ email: registerDto.email }, { pseudo: registerDto.pseudo }],
       },
     });
 
@@ -71,7 +72,10 @@ export class AuthService {
     }
 
     // Vérifier le mot de passe
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Identifiants incorrects');
