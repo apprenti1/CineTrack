@@ -29,6 +29,8 @@
 
 ```bash
 $ npm install
+docker compose up -d
+npm run init-db
 ```
 
 ## Compile and run the project
