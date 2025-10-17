@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
@@ -66,7 +71,11 @@ export class ReviewsService {
     });
   }
 
-  async update(reviewId: string, userId: string, updateReviewDto: UpdateReviewDto) {
+  async update(
+    reviewId: string,
+    userId: string,
+    updateReviewDto: UpdateReviewDto,
+  ) {
     const review = await this.prisma.review.findUnique({
       where: { id: reviewId },
     });
@@ -76,7 +85,9 @@ export class ReviewsService {
     }
 
     if (review.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez modifier que vos propres avis');
+      throw new ForbiddenException(
+        'Vous ne pouvez modifier que vos propres avis',
+      );
     }
 
     return this.prisma.review.update({
@@ -103,7 +114,9 @@ export class ReviewsService {
     }
 
     if (review.userId !== userId) {
-      throw new ForbiddenException('Vous ne pouvez supprimer que vos propres avis');
+      throw new ForbiddenException(
+        'Vous ne pouvez supprimer que vos propres avis',
+      );
     }
 
     await this.prisma.review.delete({
