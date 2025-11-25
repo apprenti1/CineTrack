@@ -19,7 +19,14 @@ import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(
+    onNavigateToOnboarding: () -> Unit = {}
+) {
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(2500)
+        onNavigateToOnboarding()
+    }
+
     val infiniteTransition = rememberInfiniteTransition(label = "splash_animation")
 
     // Animation rebond pour l'icône
