@@ -89,7 +89,7 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                     }
                 }
             } else {
-                Spacer(modifier = Modifier.height(72.dp))
+                Spacer(modifier = Modifier.height(95.dp))
             }
 
             // Content
