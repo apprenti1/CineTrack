@@ -102,6 +102,7 @@ fun TrendingSectionWithPager() {
 @Composable
 fun HomeScreen() {
     val activeNav = remember { mutableStateOf(NavItem.HOME) }
+    val searchText = remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -113,30 +114,38 @@ fun HomeScreen() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            HomeHeader()
+            HomeHeader(searchText)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-            ) {
-                TrendingSectionWithPager()
+            if (searchText.value.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
+                ) {
+                    TrendingSectionWithPager()
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                PopularMoviesSection(
-                    onMovieClick = { /* Navigate to movie details */ }
-                )
+                    PopularMoviesSection(
+                        onMovieClick = { /* Navigate to movie details */ }
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                NewReleasesSection(
-                    onMovieClick = { /* Navigate to movie details */ }
-                )
+                    NewReleasesSection(
+                        onMovieClick = { /* Navigate to movie details */ }
+                    )
 
-                Spacer(modifier = Modifier.height(120.dp))
+                    Spacer(modifier = Modifier.height(120.dp))
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp)
+                ) {}
             }
         }
 
