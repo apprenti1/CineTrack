@@ -1,7 +1,7 @@
 package fr.hainu.cinetrack.data.mapper
 
 import fr.hainu.cinetrack.data.remote.models.UserDto
-import fr.hainu.cinetrack.ui.models.UserModel
+import fr.hainu.cinetrack.domain.models.UserModel
 
 fun mapUserDtoToUserModel(dto: UserDto): UserModel {
     return UserModel(
