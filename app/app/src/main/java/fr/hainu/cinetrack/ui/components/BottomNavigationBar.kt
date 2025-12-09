@@ -41,7 +41,7 @@ fun BottomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(Gray800)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -69,7 +69,7 @@ private fun NavigationButton(
         Icon(
             painter = painterResource(id = item.icon),
             contentDescription = item.title,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(30.dp),
             tint = if (isActive) Purple600 else Gray400
         )
 

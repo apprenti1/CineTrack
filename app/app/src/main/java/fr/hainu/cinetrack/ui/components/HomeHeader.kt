@@ -58,27 +58,6 @@ fun HomeHeader(
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.notifications),
-                    contentDescription = "Notifications",
-                    modifier = Modifier
-                        .size(24.dp),
-                    tint = Gray400
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.person),
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(24.dp),
-                    tint = Gray400
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))

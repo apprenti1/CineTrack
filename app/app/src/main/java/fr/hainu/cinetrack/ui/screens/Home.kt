@@ -153,7 +153,8 @@ fun HomeScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(androidx.compose.ui.Alignment.BottomCenter)
-        ) {
+        )
+        {
             BottomNavigationBar(
                 activeItem = activeNav.value,
                 onItemClick = { activeNav.value = it }

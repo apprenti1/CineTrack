@@ -29,7 +29,6 @@ fun SplashScreen(
 
     val infiniteTransition = rememberInfiniteTransition(label = "splash_animation")
 
-    // Animation rebond pour l'icône
     val iconOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = -20f,
@@ -54,7 +53,6 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Icône de film avec animation rebond
             Icon(
                 painter = painterResource(id = R.drawable.film),
                 contentDescription = null,
@@ -66,7 +64,6 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Titre
             Text(
                 text = "CineTrack",
                 fontSize = 48.sp,
@@ -76,7 +73,6 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Sous-titre
             Text(
                 text = "Your Movie Companion",
                 fontSize = 18.sp,
@@ -85,7 +81,6 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Points animés
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
