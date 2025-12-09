@@ -64,7 +64,7 @@ fun BigMovieCard(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (posterUrl != null) {
+            if (posterUrl != null && posterUrl != "") {
                 AsyncImage(
                     model = posterUrl,
                     contentDescription = title,
@@ -161,7 +161,7 @@ fun MovieCard(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (posterUrl != null) {
+            if (posterUrl != null && posterUrl != "") {
                 AsyncImage(
                     model = posterUrl,
                     contentDescription = title,
@@ -245,7 +245,7 @@ fun MovieCardHorizontal(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (posterUrl != null) {
+            if (posterUrl != null && posterUrl != "") {
                 AsyncImage(
                     model = posterUrl,
                     contentDescription = title,

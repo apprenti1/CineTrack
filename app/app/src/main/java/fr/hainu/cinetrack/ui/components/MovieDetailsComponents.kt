@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
+import fr.hainu.cinetrack.ui.getMockMovies
+import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.*
 
 
@@ -385,7 +387,7 @@ fun SynopsisSection(
 
 @Composable
 fun CastSection(
-    cast: List<CastMember>,
+    cast: List<CastMemberModel>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -417,7 +419,7 @@ fun CastSection(
 
 @Composable
 private fun CastMemberItem(
-    member: CastMember,
+    member: CastMemberModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -435,9 +437,9 @@ private fun CastMemberItem(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (member.photoUrl != null) {
+            if (member.profilePictureUrl != null) {
                 AsyncImage(
-                    model = member.photoUrl,
+                    model = member.profilePictureUrl,
                     contentDescription = member.name,
                     modifier = Modifier.size(80.dp),
                     contentScale = ContentScale.Crop
@@ -467,7 +469,7 @@ private fun CastMemberItem(
 
 @Composable
 fun SimilarMoviesSection(
-    movies: List<MovieData>,
+    movies: List<MovieModel>,
     onMovieClick: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -565,12 +567,7 @@ fun MovieDetailsComponentsPreview() {
         Spacer(modifier = Modifier.height(24.dp))
 
         CastSection(
-            cast = listOf(
-                CastMember("Timothée Chalamet", gradientStart = Blue600, gradientEnd = Purple600),
-                CastMember("Zendaya", gradientStart = Pink500, gradientEnd = Rose600),
-                CastMember("Rebecca Ferguson", gradientStart = Green600, gradientEnd = Emerald600),
-                CastMember("Javier Bardem", gradientStart = Amber600, gradientEnd = Orange600)
-            )
+            cast = getMockMovies()[0].cast
         )
     }
 }
