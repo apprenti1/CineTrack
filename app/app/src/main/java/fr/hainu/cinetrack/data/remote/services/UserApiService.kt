@@ -1,4 +1,4 @@
 package fr.hainu.cinetrack.data.remote.services
 
-class MovieRemoteDataSource {
+class UserApiService {
 }
