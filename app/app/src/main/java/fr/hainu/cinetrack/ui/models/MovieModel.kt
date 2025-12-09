@@ -1,11 +1,10 @@
 package fr.hainu.cinetrack.ui.models
 
 import androidx.compose.ui.graphics.Color
+import fr.hainu.cinetrack.ui.getRandomColor
 import kotlin.random.Random
 
-private fun getRandomColor(): Color {
-    return Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
-}
+
 
 /**
  * Modèle pour un film
@@ -21,6 +20,7 @@ private fun getRandomColor(): Color {
  * @param duration: La durée du film
  * @param synopsis: Le résumé du film
  * @param trailerUrl: L'URL de la bande-annonce du film
+ * @param cast: La liste des membres du cast du film
  * @param internalCommentsAndRatings: La liste des commentaires et notes internes pour le film
  **/
 data class MovieModel(
@@ -36,5 +36,6 @@ data class MovieModel(
     val duration: String = "",
     val synopsis: String = "",
     val trailerUrl: String = "",
+    val cast: List<CastMemberModel> = emptyList(),
     val internalCommentsAndRatings: List<ReviewModel> = emptyList()
 )
