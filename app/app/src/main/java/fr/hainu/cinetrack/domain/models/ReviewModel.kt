@@ -1,5 +1,6 @@
 package fr.hainu.cinetrack.domain.models
 
+<<<<<<< HEAD
 /**
  * Modèle pour un commentaire et une note interne
  * @param id: L'ID du commentaire
@@ -24,4 +25,7 @@ data class ReviewModel(
     val movieModel: MovieModel? = null,
     val createdAt: String,
     val updatedAt: String
+=======
+data class ReviewModel(
+>>>>>>> Vold
 )

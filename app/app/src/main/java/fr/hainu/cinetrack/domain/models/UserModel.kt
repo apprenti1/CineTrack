@@ -1,5 +1,6 @@
 package fr.hainu.cinetrack.domain.models
 
+<<<<<<< HEAD
 /**
  * Modèle pour un utilisateur
  * @param id: L'ID unique de l'utilisateur
@@ -24,4 +25,7 @@ data class UserModel(
     val updatedAt: String,
     val reviews: List<ReviewModel> = emptyList(),
     val lists: List<ListModel> = emptyList()
+=======
+data class UserModel(
+>>>>>>> Vold
 )
