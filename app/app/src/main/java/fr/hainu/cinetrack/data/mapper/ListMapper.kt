@@ -1,7 +1,7 @@
 package fr.hainu.cinetrack.data.mapper
 
 import fr.hainu.cinetrack.data.remote.models.ListDto
-import fr.hainu.cinetrack.ui.models.ListModel
+import fr.hainu.cinetrack.domain.models.ListModel
 
 fun mapListDtoToListModel(dto: ListDto): ListModel {
     return ListModel(

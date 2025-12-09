@@ -1,4 +1,4 @@
-package fr.hainu.cinetrack.ui.models
+package fr.hainu.cinetrack.domain.models
 
 import androidx.compose.ui.graphics.Color
 import fr.hainu.cinetrack.ui.getRandomColor
