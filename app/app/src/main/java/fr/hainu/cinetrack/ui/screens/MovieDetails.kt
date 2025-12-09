@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -17,42 +16,33 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.hainu.cinetrack.ui.components.*
+import fr.hainu.cinetrack.ui.getMockMovies
+import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.*
 
 @Composable
 fun MovieDetailsScreen(
-    movieId: String? = null,
+    movie: MovieModel,
     onBackClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val movieTitle = "Dune: Part Two"
-    val movieYear = "2024"
-    val cast = listOf(
-        CastMember("Timothée Chalamet", gradientStart = Blue600, gradientEnd = Purple600),
-        CastMember("Zendaya", gradientStart = Pink500, gradientEnd = Rose600),
-        CastMember("Rebecca Ferguson", gradientStart = Green600, gradientEnd = Emerald600),
-        CastMember("Javier Bardem", gradientStart = Amber600, gradientEnd = Orange600)
-    )
+    val movieTitle = movie.title
+    val movieYear = movie.year
+
+    val cast = movie.cast
+
 
     val similarMovies = listOf(
-        MovieData(
-            "Blade Runner 2049",
-            8.0,
-            gradientStart = Blue600,
-            gradientEnd = Cyan600
+        MovieModel(
+            0,
+            "Avatar: The Way of Water",
+            7.8,
+            "https://fr.web.img2.acsta.net/c_310_420/pictures/22/12/14/10/06/4868282.jpg",
+            "2022",
+            "Science-fiction"
         ),
-        MovieData(
-            "Arrival",
-            7.9,
-            gradientStart = Red600,
-            gradientEnd = Orange600
-        ),
-        MovieData(
-            "Interstellar",
-            8.6,
-            gradientStart = Indigo600,
-            gradientEnd = Purple600
-        )
+        MovieModel(0, "Black Panther: Wakanda Forever", 7.3, "https://fr.web.img6.acsta.net/c_310_420/pictures/22/11/03/10/06/2758283.jpg", "2022", "Action, Aventure"),
+        MovieModel(0, "Top Gun: Maverick", 8.4, "https://fr.web.img5.acsta.net/c_310_420/pictures/22/05/16/10/06/2753601.jpg", "2022", "Action, Drame"),
     )
 
     val reviews = listOf(
@@ -158,5 +148,5 @@ fun MovieDetailsScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovieDetailsScreenPreview() {
-    MovieDetailsScreen()
+    MovieDetailsScreen(getMockMovies()[1])
 }

@@ -1,12 +1,18 @@
 package fr.hainu.cinetrack.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.google.gson.Gson
+import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.screens.AuthChoiceScreen
 import fr.hainu.cinetrack.ui.screens.HomeScreen
 import fr.hainu.cinetrack.ui.screens.LoginScreen
+import fr.hainu.cinetrack.ui.screens.MovieDetailsScreen
 import fr.hainu.cinetrack.ui.screens.OnboardingScreen
 import fr.hainu.cinetrack.ui.screens.RegisterScreen
 import fr.hainu.cinetrack.ui.screens.SplashScreen
@@ -18,6 +24,12 @@ object Destinations {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val HOME = "home"
+    const val MOVIE_DETAILS = "movie_details/{movieJson}"
+
+    fun movieDetails(movie: MovieModel): String {
+        val json = Gson().toJson(movie)
+        return "movie_details/${Uri.encode(json)}"
+    }
 }
 
 
@@ -105,7 +117,28 @@ fun NavGraph() {
         }
 
         composable(route = Destinations.HOME) {
-            HomeScreen()
+            HomeScreen(
+                onMovieClick = { movie ->
+                    navController.navigate(Destinations.movieDetails(movie))
+                }
+            )
+        }
+
+        composable(
+            route = Destinations.MOVIE_DETAILS,
+            arguments = listOf(navArgument("movieJson") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val movieJson = backStackEntry.arguments?.getString("movieJson")
+            val movie = movieJson?.let { Gson().fromJson(Uri.decode(it), MovieModel::class.java) }
+
+            movie?.let {
+                MovieDetailsScreen(
+                    movie = it,
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
     }
 }
