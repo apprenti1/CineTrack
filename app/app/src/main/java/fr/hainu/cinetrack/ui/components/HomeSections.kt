@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.hainu.cinetrack.ui.getMockMovies
+import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.Amber600
 import fr.hainu.cinetrack.ui.theme.Blue600
 import fr.hainu.cinetrack.ui.theme.Cyan600
@@ -33,26 +35,13 @@ import fr.hainu.cinetrack.ui.theme.Purple600
 import fr.hainu.cinetrack.ui.theme.Red600
 import fr.hainu.cinetrack.ui.theme.Rose600
 
-data class MovieData(
-    val title: String,
-    val rating: Double,
-    val posterUrl: String? = null,
-    val year: String = "",
-    val genres: String = "",
-    val gradientStart: Color = Purple600,
-    val gradientEnd: Color = Pink600
-)
+
 
 @Composable
 fun TrendingSection(
-    onMovieClick: (String) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val trendingMovies = listOf(
-        MovieData("Dune: Part Two", 8.5, "https://fr.web.img2.acsta.net/c_310_420/pictures/24/01/26/10/18/5392835.jpg", gradientStart = Green600, gradientEnd = Emerald600),
-        MovieData("Inception",  8.5, gradientStart = Purple600, gradientEnd = Pink600),
-        MovieData("Oppenheimer", 7.9, gradientStart = Blue600, gradientEnd = Cyan600),
-        MovieData("Barbie", 8.2, gradientStart = Red600, gradientEnd = Orange600)
-    )
+    val trendingMovies = getMockMovies()
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -82,7 +71,7 @@ fun TrendingSection(
                     gradientStart = movie.gradientStart,
                     gradientEnd = movie.gradientEnd,
                     modifier = Modifier.width(160.dp),
-                    onClick = { onMovieClick(movie.title) }
+                    onClick = { onMovieClick(movie) }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
             }
@@ -92,16 +81,10 @@ fun TrendingSection(
 
 @Composable
 fun PopularMoviesSection(
-    onMovieClick: (String) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val popularMovies = listOf(
-        MovieData("The Matrix", 8.0, gradientStart = Green600, gradientEnd = Emerald600),
-        MovieData("Inception", 8.1, gradientStart = Amber600, gradientEnd = Orange600),
-        MovieData("Interstellar", 8.7, gradientStart = Indigo600, gradientEnd = Purple600),
-        MovieData("Avatar", 7.9, gradientStart = Blue600, gradientEnd = Cyan600),
-        MovieData("Blade Runner 2049", 8.0, gradientStart = Red600, gradientEnd = Orange600),
-        MovieData("Tenet", 7.4, gradientStart = Blue600, gradientEnd = Cyan600)
-    )
+    val popularMovies = getMockMovies()
+
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -165,27 +148,9 @@ fun PopularMoviesSection(
 
 @Composable
 fun NewReleasesSection(
-    onMovieClick: (String) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val newReleases = listOf(
-        MovieData(
-            "Poor Things",
-            8.0,
-            "2024",
-            "2024",
-            genres = "Comédie, Drame",
-            gradientStart = Pink600,
-            gradientEnd = Rose600
-        ),
-        MovieData(
-            "The Zone of Interest",
-            7.6,
-            "2024",
-            "Drame, Guerre",
-            gradientStart = Blue600,
-            gradientEnd = Cyan600
-        )
-    )
+    val newReleases = getMockMovies().take(3)
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -214,7 +179,7 @@ fun NewReleasesSection(
                     posterUrl = movie.posterUrl,
                     gradientStart = movie.gradientStart,
                     gradientEnd = movie.gradientEnd,
-                    onClick = { onMovieClick(movie.title) }
+                    onClick = { onMovieClick(movie) }
                 )
                 if (index < newReleases.size - 1) {
                     Spacer(modifier = Modifier.height(12.dp))
