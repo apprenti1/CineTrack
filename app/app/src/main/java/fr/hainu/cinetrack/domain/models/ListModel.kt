@@ -1,6 +1,5 @@
 package fr.hainu.cinetrack.domain.models
 
-<<<<<<< HEAD
 /**
  * Modèle pour une liste de films personnalisée
  * @param id: L'ID unique de la liste
@@ -17,7 +16,4 @@ data class ListModel(
     val filmIds: List<Int> = emptyList(),
     val createdAt: String,
     val updatedAt: String
-=======
-data class ListModel(
->>>>>>> Vold
 )
