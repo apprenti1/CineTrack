@@ -1,4 +1,4 @@
-package fr.hainu.cinetrack.ui.models
+package fr.hainu.cinetrack.domain.models
 
 /**
  * Modèle pour une liste de films personnalisée
