@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Mes Favoris",
+    "filmIds": [101, 102, 103]
+  },
+  {
+    "name": "À voir plus tard",
+    "filmIds": [201, 202]
+  }
+]

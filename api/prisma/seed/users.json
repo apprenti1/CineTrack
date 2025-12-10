@@ -1,0 +1,16 @@
+[
+  {
+    "pseudo": "john_doe",
+    "email": "john@example.com",
+    "password": "hashed_password_123",
+    "watchlist": [101, 102],
+    "likes": [201, 202]
+  },
+  {
+    "pseudo": "jane_smith",
+    "email": "jane@example.com",
+    "password": "hashed_password_456",
+    "watchlist": [103],
+    "likes": [201]
+  }
+]
