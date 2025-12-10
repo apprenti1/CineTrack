@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
+import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.getMockMovies
 import fr.hainu.cinetrack.ui.models.CastMemberModel
-import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.*
 
 
@@ -47,8 +47,6 @@ fun MovieDetailsHeader(
     backdropUrl: String? = null,
     onBackClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
-    gradientStart: Color = Purple600,
-    gradientEnd: Color = Pink600
 ) {
     Box(
         modifier = Modifier
@@ -61,7 +59,7 @@ fun MovieDetailsHeader(
                 .height(256.dp)
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 )
         ) {
@@ -148,8 +146,6 @@ fun MoviePosterInfo(
     duration: String,
     rating: Double,
     posterUrl: String? = null,
-    gradientStart: Color = Purple700,
-    gradientEnd: Color = Pink600,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -165,7 +161,7 @@ fun MoviePosterInfo(
                 .clip(RoundedCornerShape(8.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -286,7 +282,10 @@ fun ActionButtons(
     onWatchlistClick: () -> Unit = {},
     onWatchedClick: () -> Unit = {},
     onRateClick: () -> Unit = {},
-    isFavorite: Boolean = false,
+    isOnFavorite: Boolean = false,
+    isOnWatchlist: Boolean = false,
+    isOnWatched: Boolean = false,
+    isRated: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -299,28 +298,28 @@ fun ActionButtons(
             icon = R.drawable.heart,
             label = "Favoris",
             onClick = onFavoriteClick,
-            backgroundColor = if (isFavorite) Purple600 else Gray800,
+            backgroundColor = if (isOnFavorite) Purple600 else Gray800,
             modifier = Modifier.weight(1f)
         )
         ActionButton(
             icon = R.drawable.bookmark,
             label = "Watchlist",
             onClick = onWatchlistClick,
-            backgroundColor = Gray800,
+            backgroundColor = if (isOnWatchlist) Purple600 else Gray800,
             modifier = Modifier.weight(1f)
         )
         ActionButton(
             icon = R.drawable.check_circle,
             label = "Vu",
             onClick = onWatchedClick,
-            backgroundColor = Gray800,
+            backgroundColor = if (isOnWatched) Purple600 else Gray800,
             modifier = Modifier.weight(1f)
         )
         ActionButton(
             icon = R.drawable.star,
             label = "Noter",
             onClick = onRateClick,
-            backgroundColor = Gray800,
+            backgroundColor = if (isRated) Purple600 else Gray800,
             modifier = Modifier.weight(1f)
         )
     }
@@ -432,7 +431,7 @@ private fun CastMemberItem(
                 .clip(CircleShape)
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(member.gradientStart, member.gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -504,8 +503,6 @@ fun SimilarMoviesSection(
                                 title = movie.title,
                                 rating = movie.rating,
                                 posterUrl = movie.posterUrl,
-                                gradientStart = movie.gradientStart,
-                                gradientEnd = movie.gradientEnd,
                                 modifier = Modifier.weight(1f),
                                 onClick = { onMovieClick(movie.title) }
                             )
@@ -522,8 +519,6 @@ fun SimilarMoviesSection(
 data class CastMember(
     val name: String,
     val photoUrl: String? = null,
-    val gradientStart: Color = Blue600,
-    val gradientEnd: Color = Purple600
 )
 
 @Preview(showBackground = true, backgroundColor = 0xFF111827)
@@ -556,7 +551,7 @@ fun MovieDetailsComponentsPreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ActionButtons(isFavorite = true)
+        ActionButtons(isOnFavorite = true)
 
         Spacer(modifier = Modifier.height(24.dp))
 
