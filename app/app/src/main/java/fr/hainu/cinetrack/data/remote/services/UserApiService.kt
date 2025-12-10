@@ -1,4 +1,63 @@
 package fr.hainu.cinetrack.data.remote.services
 
-class UserApiService {
+import fr.hainu.cinetrack.data.remote.models.MovieDto
+import fr.hainu.cinetrack.data.remote.models.UserDto
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+
+interface UserApiService {
+    // https://my-json-server.typicode.com/RamzyK//demo/notes
+
+    //GET REQUEST
+    @GET("api/users")
+    suspend fun getAllUser(): List<UserDto>
+
+    @GET("api/users/{id}")
+    suspend fun getUserUser(
+        @Path("id") id: Int
+    ): UserDto
+
+    @GET("api/users/watchlist")
+    suspend fun getUserMovies(
+        @Path("movieId") id: Int
+    ): List<MovieDto>
+
+    @GET("api/users/watchlist/{movieId}")
+    suspend fun getUserMovie(
+        @Path("movieId") id: Int
+    ): MovieDto
+
+    //POST REQUEST
+
+    @POST("api/users/movie/{movieId}")
+    suspend fun createMovieUser(
+        @Path("movieId") id: Int,
+        @Body list: UserDto
+    ): UserDto
+
+    @POST("api/users/watchlist/{movieId}")
+    suspend fun addWatchListMovies(
+        @Path("movieId") id: Int
+    ): List<MovieDto>
+
+    //PUT REQUEST
+
+    @PUT("api/users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Int,
+        @Body note: UserDto
+    ):UserDto
+
+    //DELETE REQUEST
+
+    @DELETE("api/users/{id}")
+    suspend fun deleteUser(
+        @Path("id") id: Int
+    ): Response<Unit>
+
 }
