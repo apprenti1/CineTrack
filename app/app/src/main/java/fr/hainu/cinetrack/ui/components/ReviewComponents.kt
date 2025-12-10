@@ -39,8 +39,6 @@ data class Review(
     val comment: String,
     val timeAgo: String,
     val likes: Int = 0,
-    val gradientStart: Color = Blue600,
-    val gradientEnd: Color = Purple600
 )
 
 @Composable
@@ -67,7 +65,7 @@ fun ReviewItem(
                         .clip(CircleShape)
                         .background(
                             brush = Brush.linearGradient(
-                                colors = listOf(review.gradientStart, review.gradientEnd)
+                                colors = listOf(Indigo600, Purple700)
                             )
                         ),
                     contentAlignment = Alignment.Center
@@ -288,8 +286,6 @@ fun ReviewItemPreview() {
                 comment = "Un chef-d'œuvre absolu ! Denis Villeneuve a réussi à surpasser le premier opus. Les visuels sont à couper le souffle et la bande-son de Hans Zimmer est magistrale.",
                 timeAgo = "Il y a 2 jours",
                 likes = 24,
-                gradientStart = Blue600,
-                gradientEnd = Purple600
             )
         )
 
@@ -300,8 +296,6 @@ fun ReviewItemPreview() {
                 comment = "Excellent film, même si j'ai trouvé le rythme un peu lent par moments. Les performances des acteurs sont remarquables.",
                 timeAgo = "Il y a 5 jours",
                 likes = 12,
-                gradientStart = Pink500,
-                gradientEnd = Rose600
             )
         )
     }
@@ -318,8 +312,6 @@ fun ReviewsSectionPreview() {
                 comment = "Un chef-d'œuvre absolu ! Denis Villeneuve a réussi à surpasser le premier opus.",
                 timeAgo = "Il y a 2 jours",
                 likes = 24,
-                gradientStart = Blue600,
-                gradientEnd = Purple600
             ),
             Review(
                 userName = "Thomas Laurent",
@@ -327,8 +319,6 @@ fun ReviewsSectionPreview() {
                 comment = "Excellent film, même si j'ai trouvé le rythme un peu lent par moments.",
                 timeAgo = "Il y a 5 jours",
                 likes = 12,
-                gradientStart = Pink500,
-                gradientEnd = Rose600
             )
         ),
         modifier = Modifier

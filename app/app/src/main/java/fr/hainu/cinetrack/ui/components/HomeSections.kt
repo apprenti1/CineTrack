@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.getMockMovies
-import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.Amber600
 import fr.hainu.cinetrack.ui.theme.Blue600
 import fr.hainu.cinetrack.ui.theme.Cyan600
@@ -68,8 +68,6 @@ fun TrendingSection(
                     title = movie.title,
                     rating = movie.rating,
                     posterUrl = movie.posterUrl,
-                    gradientStart = movie.gradientStart,
-                    gradientEnd = movie.gradientEnd,
                     modifier = Modifier.width(160.dp),
                     onClick = { onMovieClick(movie) }
                 )
@@ -130,8 +128,6 @@ fun PopularMoviesSection(
                                 title = movie.title,
                                 rating = movie.rating,
                                 posterUrl = movie.posterUrl,
-                                gradientStart = movie.gradientStart,
-                                gradientEnd = movie.gradientEnd,
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(4.dp)
@@ -177,8 +173,6 @@ fun NewReleasesSection(
                     genres = movie.genres,
                     rating = movie.rating,
                     posterUrl = movie.posterUrl,
-                    gradientStart = movie.gradientStart,
-                    gradientEnd = movie.gradientEnd,
                     onClick = { onMovieClick(movie) }
                 )
                 if (index < newReleases.size - 1) {

@@ -32,8 +32,10 @@ import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray800
+import fr.hainu.cinetrack.ui.theme.Indigo600
 import fr.hainu.cinetrack.ui.theme.Pink600
 import fr.hainu.cinetrack.ui.theme.Purple600
+import fr.hainu.cinetrack.ui.theme.Purple700
 import fr.hainu.cinetrack.ui.theme.Yellow400
 
 @Composable
@@ -42,8 +44,6 @@ fun BigMovieCard(
     rating: Double,
     posterUrl: String? = null,
     modifier: Modifier = Modifier,
-    gradientStart: Color = Purple600,
-    gradientEnd: Color = Pink600,
     onClick: () -> Unit = {}
 ) {
     Box(
@@ -59,7 +59,7 @@ fun BigMovieCard(
                 .fillMaxHeight()
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -142,8 +142,6 @@ fun MovieCard(
     withRating: Boolean = false,
     posterUrl: String? = null,
     modifier: Modifier = Modifier,
-    gradientStart: Color = Purple600,
-    gradientEnd: Color = Pink600,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -156,7 +154,7 @@ fun MovieCard(
                 .clip(RoundedCornerShape(8.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -221,8 +219,6 @@ fun MovieCardHorizontal(
     rating: Double,
     posterUrl: String? = null,
     modifier: Modifier = Modifier,
-    gradientStart: Color = Purple600,
-    gradientEnd: Color = Pink600,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -240,7 +236,7 @@ fun MovieCardHorizontal(
                 .clip(RoundedCornerShape(6.dp))
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(gradientStart, gradientEnd)
+                        colors = listOf(Indigo600, Purple700)
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -316,8 +312,6 @@ fun MovieCardPreview() {
         BigMovieCard(
             title = "Sans URL",
             rating = 7.8,
-            gradientStart = Purple600,
-            gradientEnd = Pink600,
             modifier = Modifier
                 .padding(8.dp)
         )

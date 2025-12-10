@@ -16,13 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.BottomNavigationBar
 import fr.hainu.cinetrack.ui.components.HomeHeader
 import fr.hainu.cinetrack.ui.components.NavItem
 import fr.hainu.cinetrack.ui.components.NewReleasesSection
 import fr.hainu.cinetrack.ui.components.PopularMoviesSection
 import fr.hainu.cinetrack.ui.components.TrendingSection
-import fr.hainu.cinetrack.ui.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.Gray900
 
 @Composable
