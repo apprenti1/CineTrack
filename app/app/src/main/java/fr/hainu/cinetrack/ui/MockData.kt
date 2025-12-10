@@ -1,10 +1,10 @@
 package fr.hainu.cinetrack.ui
 
 import androidx.compose.ui.graphics.Color
+import fr.hainu.cinetrack.domain.models.MovieModel
+import fr.hainu.cinetrack.domain.models.ReviewModel
+import fr.hainu.cinetrack.domain.models.UserModel
 import fr.hainu.cinetrack.ui.models.CastMemberModel
-import fr.hainu.cinetrack.ui.models.MovieModel
-import fr.hainu.cinetrack.ui.models.ReviewModel
-import fr.hainu.cinetrack.ui.models.UserModel
 
 fun getMockMovies(): List<MovieModel> {
     return listOf(
@@ -15,8 +15,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
             year = "1999",
             genres = "Drame, Thriller",
-            gradientStart = Color(0xFF1a1a2e),
-            gradientEnd = Color(0xFF16213e),
             ratingCoef = 10,
             duration = "2h 19min",
             synopsis = "Un employé de bureau insomniaque et un vendeur de savon peu scrupuleux créent un club de combat underground qui évolue en quelque chose de bien plus grand.",
@@ -35,7 +33,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/rHJmw5KNH3VYF9SOUv9BiF5yBmn.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 1,
                     comment = "Un chef-d'œuvre absolu ! La fin est incroyable.",
@@ -54,7 +52,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-02-10",
                     updatedAt = "2024-02-10"
                 )
-            )
+            ),
+            isOnFavorite = true,
+            isOnWatchlist = false,
+            isOnWatched = true,
+            isRated = true
         ),
         MovieModel(
             id = 238,
@@ -63,8 +65,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
             year = "1972",
             genres = "Drame, Crime",
-            gradientStart = Color(0xFF2c1810),
-            gradientEnd = Color(0xFF1a0f0a),
             ratingCoef = 10,
             duration = "2h 55min",
             synopsis = "Le patriarche vieillissant d'une dynastie criminelle transfère le contrôle de son empire clandestin à son fils réticent.",
@@ -83,7 +83,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/lCjYW4dlsDfn69n0MZWLDIh1YdG.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 3,
                     comment = "Le meilleur film de tous les temps.",
@@ -93,7 +93,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-01-20",
                     updatedAt = "2024-01-20"
                 )
-            )
+            ),
+            isOnFavorite = true,
+            isOnWatchlist = true,
+            isOnWatched = true,
+            isRated = true
         ),
         MovieModel(
             id = 155,
@@ -102,8 +106,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
             year = "2008",
             genres = "Action, Crime, Drame",
-            gradientStart = Color(0xFF0f1419),
-            gradientEnd = Color(0xFF1c2833),
             ratingCoef = 10,
             duration = "2h 32min",
             synopsis = "Lorsque la menace connue sous le nom de Joker fait des ravages et du chaos sur les habitants de Gotham, Batman doit accepter l'un des plus grands tests psychologiques et physiques.",
@@ -126,7 +128,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/bVZRMlpjTAO2pJK6v90buFgVbSW.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 4,
                     comment = "Heath Ledger est incroyable en Joker !",
@@ -145,7 +147,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-03-05",
                     updatedAt = "2024-03-05"
                 )
-            )
+            ),
+            isOnFavorite = false,
+            isOnWatchlist = true,
+            isOnWatched = false,
+            isRated = false
         ),
         MovieModel(
             id = 13,
@@ -154,8 +160,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
             year = "1994",
             genres = "Comédie, Drame, Romance",
-            gradientStart = Color(0xFF2c5f2d),
-            gradientEnd = Color(0xFF97bc62),
             ratingCoef = 10,
             duration = "2h 22min",
             synopsis = "Les présidences de Kennedy et Johnson, la guerre du Vietnam, le scandale du Watergate et d'autres événements historiques se déroulent du point de vue d'un homme de l'Alabama avec un QI de 75.",
@@ -174,7 +178,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/7G1lyPGWqX1m5SnOHNi7TYkYf3E.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 6,
                     comment = "Un film émouvant qui touche le cœur.",
@@ -184,7 +188,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-02-15",
                     updatedAt = "2024-02-15"
                 )
-            )
+            ),
+            isOnFavorite = true,
+            isOnWatchlist = false,
+            isOnWatched = true,
+            isRated = true
         ),
         MovieModel(
             id = 680,
@@ -193,8 +201,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
             year = "1994",
             genres = "Thriller, Crime",
-            gradientStart = Color(0xFF1a1a1a),
-            gradientEnd = Color(0xFFe74c3c),
             ratingCoef = 10,
             duration = "2h 34min",
             synopsis = "Les vies de deux tueurs à gages de la mafia, un boxeur, la femme d'un gangster et deux bandits s'entremêlent dans quatre histoires de violence et de rédemption.",
@@ -217,7 +223,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/w3aXr1e7gQCn8MSp1vW4sXHn99P.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 7,
                     comment = "Tarantino à son meilleur. Dialogues brillants.",
@@ -236,7 +242,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-02-20",
                     updatedAt = "2024-02-20"
                 )
-            )
+            ),
+            isOnFavorite = false,
+            isOnWatchlist = false,
+            isOnWatched = true,
+            isRated = true
         ),
         MovieModel(
             id = 424,
@@ -245,8 +255,6 @@ fun getMockMovies(): List<MovieModel> {
             posterUrl = "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
             year = "1993",
             genres = "Drame, Histoire, Guerre",
-            gradientStart = Color(0xFF1c1c1c),
-            gradientEnd = Color(0xFF4a4a4a),
             ratingCoef = 10,
             duration = "3h 15min",
             synopsis = "En Pologne pendant la Seconde Guerre mondiale, Oskar Schindler devient progressivement préoccupé par sa main-d'œuvre juive après avoir été témoin de leur persécution par les nazis.",
@@ -265,7 +273,7 @@ fun getMockMovies(): List<MovieModel> {
                     profilePictureUrl = "https://image.tmdb.org/t/p/w185/vQtBqpF2HDdzbfXHDzR4u37i1Ac.jpg"
                 )
             ),
-            internalCommentsAndRatings = listOf(
+            reviews = listOf(
                 ReviewModel(
                     id = 9,
                     comment = "Bouleversant. Un film qui doit être vu par tous.",
@@ -275,7 +283,11 @@ fun getMockMovies(): List<MovieModel> {
                     createdAt = "2024-03-10",
                     updatedAt = "2024-03-10"
                 )
-            )
+            ),
+            isOnFavorite = false,
+            isOnWatchlist = true,
+            isOnWatched = false,
+            isRated = false
         )
     )
 }
