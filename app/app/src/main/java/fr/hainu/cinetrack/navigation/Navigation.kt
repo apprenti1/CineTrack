@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
-import fr.hainu.cinetrack.ui.models.MovieModel
+import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.screens.AuthChoiceScreen
 import fr.hainu.cinetrack.ui.screens.HomeScreen
 import fr.hainu.cinetrack.ui.screens.LoginScreen
@@ -111,7 +111,7 @@ fun NavGraph() {
                     }
                 },
                 onForgotPasswordClick = {
-                    // TODO: Implémenter l'écran de récupération de mot de passe
+                    // TODO: mot de passe oublié
                 }
             )
         }
@@ -135,7 +135,10 @@ fun NavGraph() {
                 MovieDetailsScreen(
                     movie = it,
                     onBackClick = {
-                        navController.popBackStack()
+                        navController.popBackStack(route = Destinations.HOME, inclusive = false)
+                    },
+                    onRateClick = {
+                        // TODO: noter le film
                     }
                 )
             }
