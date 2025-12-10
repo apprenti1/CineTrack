@@ -49,6 +49,28 @@ export class ListsService {
     return list;
   }
 
+  async findAll() {
+    const lists = await this.prisma.list.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            pseudo: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!lists || lists.length === 0) {
+      throw new NotFoundException('Aucune liste trouvée');
+    }
+
+    return lists;
+  }
+
   async update(listId: string, userId: string, updateListDto: UpdateListDto) {
     const list = await this.prisma.list.findUnique({
       where: { id: listId },
