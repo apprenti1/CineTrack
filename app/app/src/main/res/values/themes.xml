@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.CineTrack" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">#7E22CE</item>
+        <item name="android:windowBackground">#280E52FF</item>
     </style>
 </resources>

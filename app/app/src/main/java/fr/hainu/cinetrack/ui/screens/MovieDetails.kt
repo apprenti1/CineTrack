@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
-import fr.hainu.cinetrack.ui.getMockMovies
+import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.ui.theme.*
 
 @Composable
@@ -57,8 +57,6 @@ fun MovieDetailsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             MovieDetailsHeader(
-                title = movie.title,
-                year = movie.year,
                 backdropUrl = movie.posterUrl,
                 onBackClick = onBackClick,
                 onShareClick = {
@@ -124,7 +122,6 @@ fun MovieDetailsScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun MovieDetailsScreenPreview(
-    modifier: Modifier = Modifier.height(6000.dp)
 ) {
     MovieDetailsScreen(getMockMovies()[0])
 }

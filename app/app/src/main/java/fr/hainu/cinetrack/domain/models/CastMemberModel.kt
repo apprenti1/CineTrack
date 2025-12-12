@@ -1,7 +1,6 @@
 package fr.hainu.cinetrack.ui.models
 
 import androidx.compose.ui.graphics.Color
-import fr.hainu.cinetrack.ui.getRandomColor
 import fr.hainu.cinetrack.ui.theme.Indigo600
 import fr.hainu.cinetrack.ui.theme.Purple700
 

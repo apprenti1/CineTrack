@@ -27,23 +27,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.draw.drawBehind
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray800
 import fr.hainu.cinetrack.ui.theme.Indigo600
-import fr.hainu.cinetrack.ui.theme.Pink600
-import fr.hainu.cinetrack.ui.theme.Purple600
 import fr.hainu.cinetrack.ui.theme.Purple700
 import fr.hainu.cinetrack.ui.theme.Yellow400
 
 @Composable
 fun BigMovieCard(
+    modifier: Modifier = Modifier,
     title: String,
     rating: Double,
     posterUrl: String? = null,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     Box(
@@ -137,11 +134,11 @@ fun BigMovieCard(
 
 @Composable
 fun MovieCard(
+    modifier: Modifier = Modifier,
     title: String,
     rating: Double,
     withRating: Boolean = false,
     posterUrl: String? = null,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -213,12 +210,12 @@ fun MovieCard(
 
 @Composable
 fun MovieCardHorizontal(
+    modifier: Modifier = Modifier,
     title: String,
     year: String,
     genres: String,
     rating: Double,
     posterUrl: String? = null,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     Row(

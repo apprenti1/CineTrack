@@ -43,10 +43,10 @@ data class Review(
 
 @Composable
 fun ReviewItem(
+    modifier: Modifier = Modifier,
     review: Review,
     onLikeClick: () -> Unit = {},
     onReplyClick: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -197,10 +197,10 @@ fun ReviewItem(
 
 @Composable
 fun ReviewsSection(
+    modifier: Modifier = Modifier,
     reviews: List<Review>,
     onAddReviewClick: () -> Unit = {},
     onLoadMoreClick: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth()

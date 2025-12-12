@@ -35,15 +35,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.getMockMovies
+import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.ui.models.CastMemberModel
 import fr.hainu.cinetrack.ui.theme.*
 
 
 @Composable
 fun MovieDetailsHeader(
-    title: String = "",
-    year: String = "",
     backdropUrl: String? = null,
     onBackClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
@@ -141,12 +139,12 @@ fun MovieDetailsHeader(
 
 @Composable
 fun MoviePosterInfo(
+    modifier: Modifier = Modifier,
     title: String,
     year: String,
     duration: String,
     rating: Double,
     posterUrl: String? = null,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -278,6 +276,7 @@ fun GenreChips(
 
 @Composable
 fun ActionButtons(
+    modifier: Modifier = Modifier,
     onFavoriteClick: () -> Unit = {},
     onWatchlistClick: () -> Unit = {},
     onWatchedClick: () -> Unit = {},
@@ -286,7 +285,6 @@ fun ActionButtons(
     isOnWatchlist: Boolean = false,
     isOnWatched: Boolean = false,
     isRated: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -436,21 +434,12 @@ private fun CastMemberItem(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (member.profilePictureUrl != null) {
-                AsyncImage(
-                    model = member.profilePictureUrl,
-                    contentDescription = member.name,
-                    modifier = Modifier.size(80.dp),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    painter = painterResource(id = R.drawable.person),
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                    tint = Color.White
-                )
-            }
+            AsyncImage(
+                model = member.profilePictureUrl,
+                contentDescription = member.name,
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Crop
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -468,9 +457,9 @@ private fun CastMemberItem(
 
 @Composable
 fun SimilarMoviesSection(
+    modifier: Modifier = Modifier,
     movies: List<MovieModel>,
     onMovieClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -516,11 +505,6 @@ fun SimilarMoviesSection(
     }
 }
 
-data class CastMember(
-    val name: String,
-    val photoUrl: String? = null,
-)
-
 @Preview(showBackground = true, backgroundColor = 0xFF111827)
 @Composable
 fun MovieDetailsComponentsPreview() {
@@ -529,10 +513,7 @@ fun MovieDetailsComponentsPreview() {
             .background(Gray900)
             .padding(bottom = 16.dp)
     ) {
-        MovieDetailsHeader(
-            title = "Dune: Part Two",
-            year = "2024"
-        )
+        MovieDetailsHeader()
 
         Spacer(modifier = Modifier.height(16.dp))
 
