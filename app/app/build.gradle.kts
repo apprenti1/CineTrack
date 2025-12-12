@@ -22,6 +22,9 @@ android {
 
         buildConfigField("String", "TMDB_API_KEY", "\"${properties.getProperty("tmdb.api.key", "")}\"")
         buildConfigField("String", "TMDB_BASE_URL", "\"${properties.getProperty("tmdb.base.url", "https://api.themoviedb.org/3/")}\"")
+        buildConfigField("String", "TMDB_IMAGE_URL", "\"${properties.getProperty("tmdb.image.url", "https://image.tmdb.org/t/p/")}\"")
+        buildConfigField("String", "TMDB_IMAGE_POSTERSIZE", "\"${properties.getProperty("tmdb.image.postersize", "w500")}\"")
+        buildConfigField("String", "TMDB_IMAGE_BACKDROPSIZE", "\"${properties.getProperty("tmdb.image.backdropsize", "w500")}\"")
         buildConfigField("String", "CINETRACK_API_URL", "\"${properties.getProperty("cinetrack.api.url", "http://10.0.2.2:3000")}\"")
     }
 
