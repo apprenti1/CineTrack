@@ -20,29 +20,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.getMockMovies
-import fr.hainu.cinetrack.ui.theme.Amber600
-import fr.hainu.cinetrack.ui.theme.Blue600
-import fr.hainu.cinetrack.ui.theme.Cyan600
-import fr.hainu.cinetrack.ui.theme.Emerald600
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository
+import fr.hainu.cinetrack.ui.mock.getMockMovies
+
 import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.theme.Green600
-import fr.hainu.cinetrack.ui.theme.Indigo600
-import fr.hainu.cinetrack.ui.theme.Orange600
-import fr.hainu.cinetrack.ui.theme.Pink600
 import fr.hainu.cinetrack.ui.theme.Purple400
-import fr.hainu.cinetrack.ui.theme.Purple600
-import fr.hainu.cinetrack.ui.theme.Red600
-import fr.hainu.cinetrack.ui.theme.Rose600
 
 
 
 @Composable
 fun TrendingSection(
+    movies: List<MovieModel> = emptyList(),
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val trendingMovies = getMockMovies()
-
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -63,7 +53,7 @@ fun TrendingSection(
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            trendingMovies.forEach { movie ->
+            movies.forEach { movie ->
                 BigMovieCard(
                     title = movie.title,
                     rating = movie.rating,
@@ -79,11 +69,9 @@ fun TrendingSection(
 
 @Composable
 fun PopularMoviesSection(
+    movies: List<MovieModel> = emptyList(),
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val popularMovies = getMockMovies()
-
-
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -114,7 +102,7 @@ fun PopularMoviesSection(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            repeat((popularMovies.size + 2) / 3) { rowIndex ->
+            repeat((movies.size + 2) / 3) { rowIndex ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -122,8 +110,8 @@ fun PopularMoviesSection(
                 ) {
                     repeat(3) { colIndex ->
                         val itemIndex = rowIndex * 3 + colIndex
-                        if (itemIndex < popularMovies.size) {
-                            val movie = popularMovies[itemIndex]
+                        if (itemIndex < movies.size) {
+                            val movie = movies[itemIndex]
                             MovieCard(
                                 title = movie.title,
                                 rating = movie.rating,
@@ -144,10 +132,9 @@ fun PopularMoviesSection(
 
 @Composable
 fun NewReleasesSection(
+    movies: List<MovieModel> = emptyList(),
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
-    val newReleases = getMockMovies().take(3)
-
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -166,7 +153,7 @@ fun NewReleasesSection(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            newReleases.forEachIndexed { index, movie ->
+            movies.take(3).forEachIndexed { index, movie ->
                 MovieCardHorizontal(
                     title = movie.title,
                     year = movie.year,
@@ -175,7 +162,7 @@ fun NewReleasesSection(
                     posterUrl = movie.posterUrl,
                     onClick = { onMovieClick(movie) }
                 )
-                if (index < newReleases.size - 1) {
+                if (index < movies.take(3).size - 1) {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
