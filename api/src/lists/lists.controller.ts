@@ -54,14 +54,6 @@ export class ListsController {
     return this.listsService.findOne(id);
   }
 
-  @Get()
-  @ApiOperation({ summary: 'Obtenir toutes les listes' })
-  @ApiResponse({ status: 200, description: 'Listes récupérée avec succès' })
-  @ApiResponse({ status: 404, description: 'Listes non trouvée' })
-  async findAll() {
-    return this.listsService.findAll();
-  }
-
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()

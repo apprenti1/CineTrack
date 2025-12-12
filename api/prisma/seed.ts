@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,10 @@ async function main() {
     const created = await prisma.user.upsert({
       where: { pseudo: user.pseudo },
       update: {},
-      create: user,
+      create: {
+        ...user,
+        password: await bcrypt.hash(String(user.password), 10),
+      },
     });
 
     users.push(created);
