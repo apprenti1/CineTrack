@@ -15,11 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
+import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 
 @Composable
 fun SplashScreen(
+    viewModel: MoviesViewModel = viewModel(),
     onNavigateToOnboarding: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {

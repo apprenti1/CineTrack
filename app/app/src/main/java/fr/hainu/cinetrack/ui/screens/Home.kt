@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.BottomNavigationBar
 import fr.hainu.cinetrack.ui.components.HomeHeader
@@ -24,11 +27,20 @@ import fr.hainu.cinetrack.ui.components.NewReleasesSection
 import fr.hainu.cinetrack.ui.components.PopularMoviesSection
 import fr.hainu.cinetrack.ui.components.TrendingSection
 import fr.hainu.cinetrack.ui.theme.Gray900
+import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 
 @Composable
-fun HomeScreen(onMovieClick: (MovieModel) -> Unit = {}) {
+fun HomeScreen(
+    viewModel: MoviesViewModel = viewModel(),
+    onMovieClick: (MovieModel) -> Unit = {}
+) {
     val activeNav = remember { mutableStateOf(NavItem.HOME) }
     val searchText = remember { mutableStateOf("") }
+
+    val trendingMoviesWeek: List<MovieModel> by viewModel.trendingMoviesWeek.collectAsState()
+    val trendingMovies: List<MovieModel> by viewModel.trendingMovies.collectAsState()
+    val recentMovies: List<MovieModel> by viewModel.recentMovies.collectAsState()
+
 
     Box(
         modifier = Modifier
@@ -50,17 +62,22 @@ fun HomeScreen(onMovieClick: (MovieModel) -> Unit = {}) {
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
                 ) {
-                    TrendingSection(onMovieClick = onMovieClick)
+                    TrendingSection(
+                        movies = trendingMoviesWeek,
+                        onMovieClick = onMovieClick
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     PopularMoviesSection(
+                        movies = trendingMovies,
                         onMovieClick = onMovieClick
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     NewReleasesSection(
+                        movies = recentMovies,
                         onMovieClick = onMovieClick
                     )
 
