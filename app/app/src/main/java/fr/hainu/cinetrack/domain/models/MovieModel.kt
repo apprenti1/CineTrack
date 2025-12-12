@@ -10,6 +10,7 @@ import fr.hainu.cinetrack.ui.models.CastMemberModel
  * @param title: Le titre du film
  * @param rating: La note du film sur TMDB
  * @param posterUrl: L'URL de l'affiche du film
+ * @param backdropUrl: L'URL de l'affiche de fond du film
  * @param year: L'année de sortie du film
  * @param genres: Les genres du film
  * @param ratingCoef: Le coefficient de note sur TMDB
@@ -30,6 +31,7 @@ data class MovieModel(
     val title: String,
     val rating: Double,
     val posterUrl: String,
+    val backdropUrl: String = "",
     val year: String,
     val genres: String,
     val ratingCoef: Int = 0,
