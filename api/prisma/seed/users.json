@@ -1,8 +1,16 @@
 [
   {
+    "id":"admin",
+    "pseudo": "admin",
+    "email": "admin@admin.io",
+    "password": "Azerty1234!",
+    "watchlist": [],
+    "likes": []
+  },
+  {
     "pseudo": "john_doe",
     "email": "john@example.com",
-    "password": "hashed_password_123",
+    "password": "Azerty1234!",
     "watchlist": [101, 102],
     "likes": [201, 202]
   },
