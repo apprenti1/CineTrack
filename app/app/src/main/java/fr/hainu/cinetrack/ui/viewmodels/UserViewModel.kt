@@ -1,17 +1,20 @@
 package fr.hainu.cinetrack.ui.viewmodels
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import fr.hainu.cinetrack.data.local.SecurePreferencesManager
 import fr.hainu.cinetrack.domain.models.UserModel
+import fr.hainu.cinetrack.ui.mock.MockUserRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val sharedPreferences = application.getSharedPreferences("CineTrackPrefs", Context.MODE_PRIVATE)
+    private val securePrefs = SecurePreferencesManager(application)
+    private val repository = MockUserRepository()
 
     private val _currentUser = MutableStateFlow<UserModel?>(null)
     val currentUser = _currentUser.asStateFlow()
@@ -25,21 +28,50 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val _hasCompletedOnboarding = MutableStateFlow(false)
     val hasCompletedOnboarding = _hasCompletedOnboarding.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
     init {
         // Charger l'état de l'onboarding au démarrage
-        _hasCompletedOnboarding.value = sharedPreferences.getBoolean("has_completed_onboarding", false)
+        _hasCompletedOnboarding.value = securePrefs.hasCompletedOnboarding()
+
+        // Charger le token si existant
+        if (securePrefs.isLoggedIn()) {
+            _isLoggedIn.value = true
+            loadUserProfile()
+        }
     }
 
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
+    fun login(pseudo: String, password: String) {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
+            _errorMessage.value = null
             try {
-                // TODO: Appel au repository pour authentifier l'utilisateur
-                // val user = repository.login(email, password)
-                // _currentUser.value = user
-                // _isLoggedIn.value = true
+                val result = repository.login(pseudo, password)
+                result.onSuccess { authResponse ->
+                    // Sauvegarder dans le stockage sécurisé
+                    securePrefs.saveAuthToken(authResponse.accessToken)
+                    securePrefs.saveUserId(authResponse.user.id)
+                    securePrefs.saveUserInfo(authResponse.user.pseudo, authResponse.user.email)
+
+                    _currentUser.value = UserModel(
+                        id = authResponse.user.id,
+                        pseudo = authResponse.user.pseudo,
+                        email = authResponse.user.email,
+                        password = "",
+                        watchlist = authResponse.user.watchlist,
+                        likes = authResponse.user.likes,
+                        createdAt = authResponse.user.createdAt,
+                        updatedAt = authResponse.user.updatedAt
+                    )
+                    _isLoggedIn.value = true
+                }.onFailure { error ->
+                    _errorMessage.value = error.message
+                    _isLoggedIn.value = false
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
                 _isLoggedIn.value = false
             } finally {
                 _isLoading.value = false
@@ -48,15 +80,35 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun register(pseudo: String, email: String, password: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
+            _errorMessage.value = null
             try {
-                // TODO: Appel au repository pour créer un compte utilisateur
-                // val user = repository.register(pseudo, email, password)
-                // _currentUser.value = user
-                // _isLoggedIn.value = true
+                val result = repository.register(pseudo, email, password)
+                result.onSuccess { authResponse ->
+                    // Sauvegarder dans le stockage sécurisé
+                    securePrefs.saveAuthToken(authResponse.accessToken)
+                    securePrefs.saveUserId(authResponse.user.id)
+                    securePrefs.saveUserInfo(authResponse.user.pseudo, authResponse.user.email)
+
+                    _currentUser.value = UserModel(
+                        id = authResponse.user.id,
+                        pseudo = authResponse.user.pseudo,
+                        email = authResponse.user.email,
+                        password = "",
+                        watchlist = authResponse.user.watchlist,
+                        likes = authResponse.user.likes,
+                        createdAt = authResponse.user.createdAt,
+                        updatedAt = authResponse.user.updatedAt
+                    )
+                    _isLoggedIn.value = true
+                }.onFailure { error ->
+                    _errorMessage.value = error.message
+                    _isLoggedIn.value = false
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
                 _isLoggedIn.value = false
             } finally {
                 _isLoading.value = false
@@ -66,24 +118,39 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     fun logout() {
         viewModelScope.launch {
-            // TODO: Nettoyer les données de session (tokens, cache, etc.)
+            securePrefs.clearAll()
             _currentUser.value = null
             _isLoggedIn.value = false
         }
     }
 
-    fun updateProfile(pseudo: String? = null, email: String? = null) {
-        viewModelScope.launch {
+    private fun loadUserProfile() {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
-                val user = _currentUser.value
-                if (user != null) {
-                    // TODO: Appel au repository pour mettre à jour le profil
-                    // val updatedUser = repository.updateProfile(user.id, pseudo, email)
-                    // _currentUser.value = updatedUser
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.getProfile(it)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                        _isLoggedIn.value = false
+                        securePrefs.clearAll()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
             } finally {
                 _isLoading.value = false
             }
@@ -91,84 +158,95 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addToWatchlist(movieId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val user = _currentUser.value
-                if (user != null) {
-                    // TODO: Appel au repository pour ajouter à la watchlist
-                    // repository.addToWatchlist(user.id, movieId)
-                    // Mettre à jour l'utilisateur local
-                    // _currentUser.value = user.copy(watchlist = user.watchlist + movieId)
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.addToWatchlist(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            watchlist = userResponse.watchlist
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
             }
         }
     }
 
     fun removeFromWatchlist(movieId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val user = _currentUser.value
-                if (user != null) {
-                    // TODO: Appel au repository pour retirer de la watchlist
-                    // repository.removeFromWatchlist(user.id, movieId)
-                    // Mettre à jour l'utilisateur local
-                    // _currentUser.value = user.copy(watchlist = user.watchlist - movieId)
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.removeFromWatchlist(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            watchlist = userResponse.watchlist
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
             }
         }
     }
 
     fun addToLikes(movieId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val user = _currentUser.value
-                if (user != null) {
-                    // TODO: Appel au repository pour ajouter aux likes
-                    // repository.addToLikes(user.id, movieId)
-                    // _currentUser.value = user.copy(likes = user.likes + movieId)
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.addToLikes(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            likes = userResponse.likes
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = e.message
             }
         }
     }
 
     fun removeFromLikes(movieId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val user = _currentUser.value
-                if (user != null) {
-                    // TODO: Appel au repository pour retirer des likes
-                    // repository.removeFromLikes(user.id, movieId)
-                    // _currentUser.value = user.copy(likes = user.likes - movieId)
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.removeFromLikes(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            likes = userResponse.likes
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-            }
-        }
-    }
-
-    fun loadUserProfile(userId: Int) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                // TODO: Appel au repository pour charger le profil utilisateur
-                // val user = repository.getUserProfile(userId)
-                // _currentUser.value = user
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                _isLoading.value = false
+                _errorMessage.value = e.message
             }
         }
     }
 
     fun completeOnboarding() {
-        sharedPreferences.edit().putBoolean("has_completed_onboarding", true).apply()
+        securePrefs.setOnboardingCompleted(true)
         _hasCompletedOnboarding.value = true
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 }
