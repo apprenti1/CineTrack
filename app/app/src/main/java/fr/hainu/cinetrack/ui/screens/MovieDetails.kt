@@ -1,33 +1,58 @@
 package fr.hainu.cinetrack.ui.screens
 
 import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
-import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+
+fun extractVideoId(ytUrl: String): String? {
+    return try {
+        val uri = Uri.parse(ytUrl)
+        uri.getQueryParameter("v")
+    } catch (e: Exception) {
+        null
+    }
+}
 
 @Composable
 fun MovieDetailsScreen(
@@ -37,6 +62,7 @@ fun MovieDetailsScreen(
     onRateClick: () -> Unit = {}
 ) {
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
+    var showTrailer by remember { mutableStateOf(false) }
 
     LaunchedEffect(movie.id) {
         viewModel.loadMovieDetails(movie)
@@ -84,6 +110,14 @@ fun MovieDetailsScreen(
                     }
                     context.startActivity(Intent.createChooser(shareIntent, "Partager"))
                 },
+                onPlayClick = {
+                    if (displayMovie.trailerUrl.isNotBlank()) {
+                        showTrailer = true
+                    } else {
+                        Toast.makeText(context, "Bande-annonce non disponible", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
             )
 
             MoviePosterInfo(
@@ -133,6 +167,57 @@ fun MovieDetailsScreen(
             ReviewsSection(reviews = reviews)
 
             Spacer(modifier = Modifier.height(48.dp))
+        }
+
+        if (showTrailer) {
+            Dialog(onDismissRequest = { showTrailer = false }) {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AndroidView(
+                        factory = {
+                            YouTubePlayerView(it).apply {
+                                addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                                        val videoId = extractVideoId(displayMovie.trailerUrl)
+                                        if (videoId != null) {
+                                            youTubePlayer.loadVideo(videoId, 0f)
+                                        } else {
+                                            showTrailer = false
+                                            Toast.makeText(context, "URL de bande-annonce invalide", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+
+                                    override fun onError(youTubePlayer: YouTubePlayer, error: PlayerConstants.PlayerError) {
+                                        if (error == PlayerConstants.PlayerError.VIDEO_NOT_PLAYABLE_IN_EMBEDDED_PLAYER) {
+                                            showTrailer = false
+                                            Toast.makeText(context, "Lecture impossible dans l'app, ouverture sur YouTube", Toast.LENGTH_LONG).show()
+                                            val playIntent = Intent(Intent.ACTION_VIEW, Uri.parse(displayMovie.trailerUrl))
+                                            context.startActivity(playIntent)
+                                        } else {
+                                            showTrailer = false
+                                            Toast.makeText(context, "Erreur de lecture: $error", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                })
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16 / 9f)
+                    )
+                    IconButton(
+                        onClick = { showTrailer = false },
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Fermer",
+                            tint = Color.White
+                        )
+                    }
+                }
+            }
         }
     }
 }

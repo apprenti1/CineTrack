@@ -110,6 +110,9 @@ class MockMovieRepository {
                         } else ""
                     )
                 }
+                val videos = movieDetails.getAsJsonObject("videos")?.getAsJsonArray("results")
+                val trailer = videos?.find { val videoObj = it.asJsonObject; videoObj.get("site").asString == "YouTube" && videoObj.get("type").asString == "Trailer" }?.asJsonObject
+                movie.trailerUrl = if (trailer != null) "https://www.youtube.com/watch?v=${trailer.get("key").asString}" else ""
                 movie.isDetailed = true
 
             } else {
