@@ -49,12 +49,12 @@ fun MovieDetailsHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(256.dp)
+            .height(300.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(256.dp)
+                .height(300.dp)
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(Indigo600, Purple700)
@@ -65,7 +65,7 @@ fun MovieDetailsHeader(
                 AsyncImage(
                     model = backdropUrl,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(256.dp),
+                    modifier = Modifier.fillMaxWidth().height(300.dp),
                     contentScale = ContentScale.Crop
                 )
             }
@@ -95,7 +95,7 @@ fun MovieDetailsHeader(
                     brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Black.copy(alpha = 0f),
-                            Color.Black.copy(alpha = 0.9f)
+                            Gray900.copy(alpha = 0.9f)
                         )
                     )
                 )
@@ -104,7 +104,7 @@ fun MovieDetailsHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 32 .dp)
                 .align(Alignment.TopCenter),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

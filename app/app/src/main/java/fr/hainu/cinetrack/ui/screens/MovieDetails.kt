@@ -12,28 +12,46 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.ui.theme.*
+import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 
 @Composable
 fun MovieDetailsScreen(
     movie: MovieModel,
+    viewModel: MoviesViewModel = viewModel(),
     onBackClick: () -> Unit = {},
     onRateClick: () -> Unit = {}
 ) {
+    val currentMovie by viewModel.currentMovieDetails.collectAsState()
+
+    LaunchedEffect(movie.id) {
+        viewModel.loadMovieDetails(movie)
+    }
+
     val context = LocalContext.current
 
+    // Use currentMovie if available, otherwise use the parameter
+    val displayMovie = currentMovie ?: movie
+
     // Utiliser les données du film passé en paramètre
-    val similarMovies = getMockMovies().filter { it.id != movie.id }.take(3)
+    val similarMovies = getMockMovies().filter { it.id != displayMovie.id }.take(3)
 
     // Convertir les reviews internes en format Review pour l'affichage
-    val reviews = movie.reviews.map { review ->
+    val reviews = displayMovie.reviews.map { review ->
         Review(
             userName = "Utilisateur ${review.refUser}",
             rating = review.rating,
@@ -44,7 +62,7 @@ fun MovieDetailsScreen(
     }
 
     // Séparer les genres s'ils sont sous forme de string
-    val genresList = movie.genres.split(",").map { it.trim() }
+    val genresList = displayMovie.genres.split(",").map { it.trim() }
 
     Box(
         modifier = Modifier
@@ -57,23 +75,23 @@ fun MovieDetailsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             MovieDetailsHeader(
-                backdropUrl = movie.posterUrl,
+                backdropUrl = displayMovie.posterUrl,
                 onBackClick = onBackClick,
                 onShareClick = {
                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, "${movie.title} (${movie.year}) - ${movie.synopsis}")
+                        putExtra(Intent.EXTRA_TEXT, "${displayMovie.title} (${displayMovie.year}) - ${displayMovie.synopsis}")
                     }
                     context.startActivity(Intent.createChooser(shareIntent, "Partager"))
                 },
             )
 
             MoviePosterInfo(
-                title = movie.title,
-                year = movie.year,
-                duration = movie.duration,
-                rating = movie.rating,
-                posterUrl = movie.posterUrl,
+                title = displayMovie.title,
+                year = displayMovie.year,
+                duration = displayMovie.duration,
+                rating = displayMovie.rating,
+                posterUrl = displayMovie.posterUrl,
                 modifier = Modifier.padding(16.dp).offset(y = (-0).dp)
             )
 
@@ -86,25 +104,25 @@ fun MovieDetailsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ActionButtons(
-                isOnFavorite = movie.isOnFavorite,
-                isOnWatchlist = movie.isOnWatchlist,
-                isOnWatched = movie.isOnWatched,
-                isRated = movie.isRated,
-                onFavoriteClick = { movie.switchFavoriteState() },
-                onWatchlistClick = { movie.switchWatchlistState() },
-                onWatchedClick = { movie.switchWatchedState() },
+                isOnFavorite = displayMovie.isOnFavorite,
+                isOnWatchlist = displayMovie.isOnWatchlist,
+                isOnWatched = displayMovie.isOnWatched,
+                isRated = displayMovie.isRated,
+                onFavoriteClick = { displayMovie.switchFavoriteState() },
+                onWatchlistClick = { displayMovie.switchWatchlistState() },
+                onWatchedClick = { displayMovie.switchWatchedState() },
                 onRateClick = onRateClick
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             SynopsisSection(
-                synopsis = movie.synopsis
+                synopsis = displayMovie.synopsis
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            CastSection(cast = movie.cast)
+            CastSection(cast = displayMovie.cast)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -121,7 +139,15 @@ fun MovieDetailsScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun MovieDetailsScreenPreview(
-) {
-    MovieDetailsScreen(getMockMovies()[0])
+private fun MovieDetailsScreenPreview() {
+    val movie = remember { mutableStateOf<MovieModel?>(null) }
+    LaunchedEffect(Unit) {
+        val loadedMovie = MockMovieRepository().getMovies(MockMovieRepository.MovieType.TREND)[0]
+        loadedMovie.pullMoreDetails()
+        movie.value = loadedMovie
+    }
+
+    movie.value?.let {
+        MovieDetailsScreen(it)
+    }
 }

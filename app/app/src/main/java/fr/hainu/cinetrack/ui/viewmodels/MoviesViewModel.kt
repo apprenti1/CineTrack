@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.mock.MockMovieRepository
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository.MovieType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,9 @@ class MoviesViewModel : ViewModel() {
     val trendingMovies = MutableStateFlow<List<MovieModel>>(emptyList())
     val recentMovies = MutableStateFlow<List<MovieModel>>(emptyList())
 
+    private val _currentMovieDetails = MutableStateFlow<MovieModel?>(null)
+    val currentMovieDetails = _currentMovieDetails.asStateFlow()
+
 
 
     init {
@@ -26,19 +30,31 @@ class MoviesViewModel : ViewModel() {
 
     fun fetchTrendingMoviesWeek() {
         viewModelScope.launch(Dispatchers.IO) {
-            trendingMoviesWeek.value = repository.getTrendingMoviesWeek()
+            trendingMoviesWeek.value = repository.getMovies(MovieType.TREND_WEEK)
         }
     }
 
     fun fetchTrendingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            trendingMovies.value = repository.getTrendingMoviesWeek()
+            trendingMovies.value = repository.getMovies(MovieType.TREND)
         }
     }
 
     fun fetchRecentMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            recentMovies.value = repository.getTrendingMoviesWeek()
+            recentMovies.value = repository.getMovies(MovieType.RECENT)
+
+        }
+    }
+
+    fun loadMovieDetails(movie: MovieModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _currentMovieDetails.value = movie
+            if (!movie.isDetailed) {
+                repository.getMovieDetails(movie)
+                // Trigger StateFlow update by reassigning the same object
+                _currentMovieDetails.value = _currentMovieDetails.value
+            }
         }
     }
 }
