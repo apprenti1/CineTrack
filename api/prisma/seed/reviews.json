@@ -1,0 +1,12 @@
+[
+  {
+    "filmId": 101,
+    "rating": 4.5,
+    "comment": "Excellent film, très immersif !"
+  },
+  {
+    "filmId": 102,
+    "rating": 3.0,
+    "comment": "Sympa mais un peu long."
+  }
+]
