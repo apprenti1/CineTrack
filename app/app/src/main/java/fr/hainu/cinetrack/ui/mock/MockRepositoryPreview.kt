@@ -66,7 +66,8 @@ fun MovieListDebugPreview() {
     var movies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        movies = repository.getTrendingMoviesWeek()
+        movies = repository.getMovies(MockMovieRepository.MovieType.TREND)
+        movies.get(0).pullMoreDetails()
     }
 
     MovieListDebug(movies)

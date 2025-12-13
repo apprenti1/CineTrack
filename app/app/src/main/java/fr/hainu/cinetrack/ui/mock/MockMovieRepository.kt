@@ -4,8 +4,11 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import fr.hainu.cinetrack.BuildConfig
 import fr.hainu.cinetrack.domain.models.MovieModel
+import fr.hainu.cinetrack.domain.models.ReviewModel
+import fr.hainu.cinetrack.ui.models.CastMemberModel
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.Int
 
 class MockMovieRepository {
 
@@ -16,9 +19,21 @@ class MockMovieRepository {
     private val posterSize = BuildConfig.TMDB_IMAGE_POSTERSIZE
     private val backdropSize = BuildConfig.TMDB_IMAGE_BACKDROPSIZE
 
-    suspend fun getTrendingMoviesWeek(): List<MovieModel> {
+
+    enum class MovieType {
+        TREND_WEEK,
+        TREND,
+        RECENT
+    }
+
+    suspend fun getMovies(type: MovieType): List<MovieModel> {
+
         try {
-            val connection = URL("${baseUrl}trending/movie/week?api_key=$apiKey&language=fr-FR").openConnection() as HttpURLConnection
+            val connection: HttpURLConnection = when (type) {
+                MovieType.TREND_WEEK -> URL("${baseUrl}trending/movie/week?api_key=$apiKey&language=fr-FR").openConnection() as HttpURLConnection
+                MovieType.TREND -> URL("${baseUrl}movie/popular?api_key=$apiKey&language=fr-FR&page=1").openConnection() as HttpURLConnection
+                MovieType.RECENT -> URL("${baseUrl}movie/now_playing?api_key=$apiKey&language=fr-FR&page=1").openConnection() as HttpURLConnection
+            }
             connection.requestMethod = "GET"
             connection.setRequestProperty("Accept", "application/json")
 
@@ -49,11 +64,6 @@ class MockMovieRepository {
                             } else {
                                 ""
                             },
-                            genres = if (trendingMovie.has("genre_ids")) {
-                                trendingMovie.getAsJsonArray("genre_ids").joinToString(", ") { it.asInt.toString() }
-                            } else {
-                                ""
-                            },
                             ratingCoef = trendingMovie.get("vote_count").asInt,
                             synopsis = if (trendingMovie.has("overview") && !trendingMovie.get("overview").isJsonNull) {
                                 trendingMovie.get("overview").asString
@@ -74,6 +84,39 @@ class MockMovieRepository {
         } catch (e: Exception) {
             e.printStackTrace()
             return emptyList()
+        }
+
+    }
+
+    suspend fun getMovieDetails(movie: MovieModel) {
+        try {
+            val detailsConnection =
+                URL("${baseUrl}movie/${movie.id}?api_key=$apiKey&language=fr-FR&append_to_response=videos,credits").openConnection() as HttpURLConnection
+            detailsConnection.requestMethod = "GET"
+            detailsConnection.setRequestProperty("Accept", "application/json")
+
+            if (detailsConnection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = detailsConnection.inputStream.bufferedReader().use { it.readText() }
+                val movieDetails = gson.fromJson(json, JsonObject::class.java)
+
+                movie.duration = movieDetails.get("runtime")?.asInt?.let { "${it / 60}h ${it % 60}min" } ?: ""
+                movie.genres = movieDetails.getAsJsonArray("genres").joinToString(", ") { it.asJsonObject.get("name").asString }
+                movie.cast = movieDetails.getAsJsonObject("credits").getAsJsonArray("cast").map { castElement ->
+                    val castObj = castElement.asJsonObject
+                    CastMemberModel(
+                        name = castObj.get("name").asString,
+                        profilePictureUrl = if (castObj.has("profile_path") && !castObj.get("profile_path").isJsonNull) {
+                            "${imageUrl}w185${castObj.get("profile_path").asString}"
+                        } else ""
+                    )
+                }
+                movie.isDetailed = true
+
+            } else {
+                Exception("Failed to fetch movie details").printStackTrace()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

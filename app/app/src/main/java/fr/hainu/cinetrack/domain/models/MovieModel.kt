@@ -1,5 +1,6 @@
 package fr.hainu.cinetrack.domain.models
 
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.models.CastMemberModel
 
 
@@ -27,24 +28,38 @@ import fr.hainu.cinetrack.ui.models.CastMemberModel
  * @param isRated: Indique si le film a été noté
  **/
 data class MovieModel(
-    val id: Int,
-    val title: String,
-    val rating: Double,
-    val posterUrl: String,
+    val id: Int = 0,
+    val title: String = "",
+    val rating: Double = 0.0,
+    val posterUrl: String = "",
     val backdropUrl: String = "",
-    val year: String,
-    val genres: String,
+    val year: String = "",
+    var genres: String = "",
     val ratingCoef: Int = 0,
-    val duration: String = "",
+    var duration: String = "",
     val synopsis: String = "",
-    val trailerUrl: String = "",
+    var trailerUrl: String = "",
     var cast: List<CastMemberModel> = emptyList(),
     val reviews: List<ReviewModel> = emptyList(),
     var isOnFavorite: Boolean = false,
     var isOnWatchlist: Boolean = false,
     var isOnWatched: Boolean = false,
-    val isRated: Boolean = false
+    val isRated: Boolean = false,
+    var isDetailed: Boolean = false
 ){
+
+    suspend fun pullMoreDetails() {
+
+        MockMovieRepository().getMovieDetails(this)
+//        if (movieDetails != null) {
+//            this.duration = movieDetails.duration
+//            this.trailerUrl = movieDetails.trailerUrl
+//            this.cast = movieDetails.cast
+//        }
+
+
+    }
+
 
     fun switchFavoriteState() {
         isOnFavorite = !isOnFavorite
