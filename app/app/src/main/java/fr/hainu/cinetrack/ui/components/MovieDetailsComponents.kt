@@ -45,6 +45,7 @@ fun MovieDetailsHeader(
     backdropUrl: String? = null,
     onBackClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
+    onPlayClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -71,7 +72,7 @@ fun MovieDetailsHeader(
             }
 
             IconButton(
-                onClick = {},
+                onClick = {onPlayClick()},
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(64.dp)

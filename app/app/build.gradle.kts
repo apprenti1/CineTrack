@@ -73,6 +73,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 
     // Security - Encrypted SharedPreferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
