@@ -42,24 +42,34 @@ object RetrofitInstance {
     }
 
     //The Movie Data Bse HTTP API
-    val apiTmdb: TmdbApi by lazy {
+    val apiTmdb: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(TMDB_API_URL)
             .client(okHttpClientTmdb)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(TmdbApi::class.java)
+            .create(Retrofit::class.java)
     }
 
     //DB API
-    val apiDB: DBApi by lazy {
+    val apiDB: Retrofit =
         Retrofit.Builder()
             .baseUrl(DB_API_URL)
             .client(okHttpClientDB)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(DBApi::class.java)
-    }
+            .create(Retrofit::class.java)
+
 }
 
+/*prof :
+object RetrofitInstance {
+    private val BASE_URL = "https://my-json-server.typicode.com/RamzyK/"
+
+    val api: Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+}
 //work in progress
+*/

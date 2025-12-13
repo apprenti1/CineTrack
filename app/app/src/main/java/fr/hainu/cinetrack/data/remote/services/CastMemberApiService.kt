@@ -21,11 +21,6 @@ interface CastMemberApiService {
         @Path("id") id: Int
     ): CastMemberDto
 
-    @GET("api/castmember/movies/{movieId}")
-    suspend fun getMovieReview(
-        @Path("movieId") id: Int
-    ): List<CastMemberDto>
-
     //POST REQUEST
 
     @POST("api/castmember")
@@ -38,7 +33,7 @@ interface CastMemberApiService {
     @PUT("api/castmember/{id}")
     suspend fun updateCastMember(
         @Path("id") id: Int,
-        @Body note: CastMemberDto
+        @Body castMembers: CastMemberDto
     ):CastMemberDto
 
     //DELETE REQUEST
