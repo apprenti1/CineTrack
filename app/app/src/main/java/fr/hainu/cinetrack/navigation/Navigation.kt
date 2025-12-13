@@ -10,8 +10,8 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.screens.AuthChoiceScreen
-import fr.hainu.cinetrack.ui.screens.HomeScreen
 import fr.hainu.cinetrack.ui.screens.LoginScreen
+import fr.hainu.cinetrack.ui.screens.MainScreen
 import fr.hainu.cinetrack.ui.screens.MovieDetailsScreen
 import fr.hainu.cinetrack.ui.screens.OnboardingScreen
 import fr.hainu.cinetrack.ui.screens.RegisterScreen
@@ -45,6 +45,11 @@ fun NavGraph() {
             SplashScreen(
                 onNavigateToOnboarding = {
                     navController.navigate(Destinations.ONBOARDING) {
+                        popUpTo(Destinations.SPLASH) { inclusive = true }
+                    }
+                },
+                onNavigateToAuth = {
+                    navController.navigate(Destinations.AUTH) {
                         popUpTo(Destinations.SPLASH) { inclusive = true }
                     }
                 }
@@ -117,7 +122,7 @@ fun NavGraph() {
         }
 
         composable(route = Destinations.HOME) {
-            HomeScreen(
+            MainScreen(
                 onMovieClick = { movie ->
                     navController.navigate(Destinations.movieDetails(movie))
                 }

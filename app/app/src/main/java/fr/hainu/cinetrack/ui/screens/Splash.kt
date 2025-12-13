@@ -19,15 +19,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun SplashScreen(
-    viewModel: MoviesViewModel = viewModel(),
-    onNavigateToOnboarding: () -> Unit = {}
+    moviesViewModel: MoviesViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel(),
+    onNavigateToOnboarding: () -> Unit = {},
+    onNavigateToAuth: () -> Unit = {}
 ) {
+    val hasCompletedOnboarding by userViewModel.hasCompletedOnboarding.collectAsState()
+
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(2500)
-        onNavigateToOnboarding()
+        kotlinx.coroutines.delay(1000)
+        if (hasCompletedOnboarding) {
+            onNavigateToAuth()
+        } else {
+            onNavigateToOnboarding()
+        }
     }
 
     val infiniteTransition = rememberInfiniteTransition(label = "splash_animation")

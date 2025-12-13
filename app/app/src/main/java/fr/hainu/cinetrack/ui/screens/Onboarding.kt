@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.CustomButton
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.ui.theme.*
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -37,7 +39,10 @@ data class OnboardingPage(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(onFinish: () -> Unit = {}) {
+fun OnboardingScreen(
+    userViewModel: UserViewModel = viewModel(),
+    onFinish: () -> Unit = {}
+) {
     val pages = listOf(
         OnboardingPage(
             icon = R.drawable.film,
@@ -69,7 +74,9 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
     )
     {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 30.dp)
         )
         {
             // Skip button
@@ -80,7 +87,10 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                         .padding(24.dp),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    TextButton(onClick = onFinish) {
+                    TextButton(onClick = {
+                        userViewModel.completeOnboarding()
+                        onFinish()
+                    }) {
                         Text(
                             text = "Passer",
                             color = Gray400,
@@ -140,6 +150,7 @@ fun OnboardingScreen(onFinish: () -> Unit = {}) {
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         } else {
+                            userViewModel.completeOnboarding()
                             onFinish()
                         }
                     }
