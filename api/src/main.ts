@@ -34,7 +34,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  // Enable CORS for mobile development
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap().catch((err) => {
   console.error("Erreur lors du démarrage de l'application :", err);
