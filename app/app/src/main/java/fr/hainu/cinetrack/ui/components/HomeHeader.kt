@@ -38,38 +38,26 @@ import kotlin.String
 
 @Composable
 fun HomeHeader(
-    searchText: MutableState<String>
+    searchText: MutableState<String>,
+    onSearchFocus: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Gray900)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 50.dp, bottom = 16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "CineTrack",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
 
-        Spacer(modifier = Modifier.height(12.dp))
 
-        SearchBar(searchText)
+        SearchBar(searchText, onSearchFocus = onSearchFocus)
     }
 }
 
 @Composable
 fun SearchBar(
     searchText: MutableState<String>,
-    onSearchChange: (String) -> Unit = {}
+    onSearchChange: (String) -> Unit = {},
+    onSearchFocus: (String) -> Unit = {}
 ) {
 
 
@@ -109,13 +97,22 @@ fun SearchBar(
         ),
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
-
+        interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+            .also { interactionSource ->
+                androidx.compose.runtime.LaunchedEffect(interactionSource) {
+                    interactionSource.interactions.collect { interaction ->
+                        if (interaction is androidx.compose.foundation.interaction.FocusInteraction.Focus) {
+                            onSearchFocus(searchText.value)
+                        }
+                    }
+                }
+            },
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                // Handle search action
+                onSearchFocus(searchText.value)
             }
         )
     )
