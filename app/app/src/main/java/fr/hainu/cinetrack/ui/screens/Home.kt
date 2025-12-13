@@ -32,11 +32,13 @@ import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 @Composable
 fun HomeScreen(
     viewModel: MoviesViewModel = viewModel(),
-    onMovieClick: (MovieModel) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {},
+    activeNavItem: NavItem = NavItem.HOME,
+    onNavItemClick: (NavItem) -> Unit = {},
+    hideBottomNav: Boolean = false,
+    hideSearchBar: Boolean = false,
+    onSeeAllClick: () -> Unit = {}
 ) {
-    val activeNav = remember { mutableStateOf(NavItem.HOME) }
-    val searchText = remember { mutableStateOf("") }
-
     val trendingMoviesWeek: List<MovieModel> by viewModel.trendingMoviesWeek.collectAsState()
     val trendingMovies: List<MovieModel> by viewModel.trendingMovies.collectAsState()
     val recentMovies: List<MovieModel> by viewModel.recentMovies.collectAsState()
@@ -52,56 +54,47 @@ fun HomeScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            HomeHeader(searchText)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            ) {
+                TrendingSection(
+                    movies = trendingMoviesWeek,
+                    onMovieClick = onMovieClick
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            if (searchText.value.isEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {
-                    TrendingSection(
-                        movies = trendingMoviesWeek,
-                        onMovieClick = onMovieClick
-                    )
+                PopularMoviesSection(
+                    movies = trendingMovies,
+                    onMovieClick = onMovieClick,
+                    onSeeAllClick = onSeeAllClick
+                )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    PopularMoviesSection(
-                        movies = trendingMovies,
-                        onMovieClick = onMovieClick
-                    )
+                NewReleasesSection(
+                    movies = recentMovies,
+                    onMovieClick = onMovieClick
+                )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    NewReleasesSection(
-                        movies = recentMovies,
-                        onMovieClick = onMovieClick
-                    )
-
-                    Spacer(modifier = Modifier.height(120.dp))
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                ) {}
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(androidx.compose.ui.Alignment.BottomCenter)
-        )
-        {
-            BottomNavigationBar(
-                activeItem = activeNav.value,
-                onItemClick = { activeNav.value = it }
+        if (!hideBottomNav) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(androidx.compose.ui.Alignment.BottomCenter)
             )
+            {
+                BottomNavigationBar(
+                    activeItem = activeNavItem,
+                    onItemClick = onNavItemClick
+                )
+            }
         }
     }
 }

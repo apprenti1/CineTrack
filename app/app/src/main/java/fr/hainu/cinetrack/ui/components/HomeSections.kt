@@ -1,6 +1,7 @@
 package fr.hainu.cinetrack.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,7 +60,9 @@ fun TrendingSection(
                     rating = movie.rating,
                     posterUrl = movie.posterUrl,
                     modifier = Modifier.width(160.dp),
-                    onClick = { onMovieClick(movie) }
+                    onClick = {
+                        onMovieClick(movie)
+                    }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
             }
@@ -70,7 +73,8 @@ fun TrendingSection(
 @Composable
 fun PopularMoviesSection(
     movies: List<MovieModel> = emptyList(),
-    onMovieClick: (MovieModel) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {},
+    onSeeAllClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -91,7 +95,8 @@ fun PopularMoviesSection(
             Text(
                 text = "Voir tout",
                 fontSize = 12.sp,
-                color = Purple400
+                color = Purple400,
+                modifier = Modifier.clickable { onSeeAllClick() }
             )
         }
 
@@ -118,7 +123,8 @@ fun PopularMoviesSection(
                                 posterUrl = movie.posterUrl,
                                 modifier = Modifier
                                     .weight(1f)
-                                    .padding(4.dp)
+                                    .padding(4.dp),
+                                onClick = { onMovieClick(movie) }
                             )
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
