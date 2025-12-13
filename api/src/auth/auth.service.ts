@@ -47,7 +47,10 @@ export class AuthService {
         id: true,
         pseudo: true,
         email: true,
+        watchlist: true,
+        likes: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -56,7 +59,15 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return {
-      user,
+      user: {
+        id: user.id,
+        pseudo: user.pseudo,
+        email: user.email,
+        watchlist: user.watchlist,
+        likes: user.likes,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
       access_token: token,
     };
   }
@@ -93,6 +104,7 @@ export class AuthService {
         watchlist: user.watchlist,
         likes: user.likes,
         createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
       access_token: token,
     };
