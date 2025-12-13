@@ -92,7 +92,7 @@ fun NavGraph() {
                         popUpTo(Destinations.AUTH)
                     }
                 },
-                onRegister = {
+                onRegisterSuccess = {
                     navController.navigate(Destinations.HOME) {
                         popUpTo(Destinations.AUTH) { inclusive = true }
                     }
@@ -105,7 +105,7 @@ fun NavGraph() {
                 onBackClick = {
                     navController.popBackStack()
                 },
-                onLogin = {
+                onLoginSuccess = {
                     navController.navigate(Destinations.HOME) {
                         popUpTo(Destinations.AUTH) { inclusive = true }
                     }

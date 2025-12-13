@@ -2,6 +2,7 @@ package fr.hainu.cinetrack.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.ButtonVariant
 import fr.hainu.cinetrack.ui.components.CustomButton
@@ -23,17 +25,29 @@ import fr.hainu.cinetrack.ui.components.CustomInput
 import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400
+import fr.hainu.cinetrack.ui.theme.Rose500
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun LoginScreen(
+    userViewModel: UserViewModel = viewModel(),
     onBackClick: () -> Unit = {},
-    onLogin: () -> Unit = {},
+    onLoginSuccess: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {}
 ) {
-    var email by remember { mutableStateOf("") }
+    var pseudo by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isEmailValid by remember { mutableStateOf(true) }
+
+    val isLoading by userViewModel.isLoading.collectAsState()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
+    val errorMessage by userViewModel.errorMessage.collectAsState()
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            onLoginSuccess()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -85,27 +99,39 @@ fun LoginScreen(
 
                 // Form
                 CustomInput(
-                    value = email,
+                    value = pseudo,
                     onValueChange = {
-                        email = it
-                        isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches() || it.isEmpty()
+                        pseudo = it
+                        userViewModel.clearError()
                     },
-                    label = "Email",
-                    placeholder = "votre@email.com",
-                    keyboardType = KeyboardType.Email,
-                    isError = !isEmailValid,
-                    errorMessage = if (!isEmailValid) "Adresse email invalide" else null
+                    label = "Pseudo",
+                    placeholder = "Votre pseudo",
+                    keyboardType = KeyboardType.Text
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CustomInput(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                        userViewModel.clearError()
+                    },
                     label = "Mot de passe",
                     placeholder = "••••••••",
                     isPassword = true
                 )
+
+                // Error message
+                if (errorMessage != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = errorMessage ?: "",
+                        fontSize = 14.sp,
+                        color = Rose500,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -127,10 +153,24 @@ fun LoginScreen(
 
                 // Login button
                 CustomButton(
-                    text = "Se connecter",
-                    onClick = onLogin,
-                    variant = ButtonVariant.PRIMARY
+                    text = if (isLoading) "" else "Se connecter",
+                    onClick = {
+                        if (!isLoading && pseudo.isNotBlank() && password.isNotBlank()) {
+                            userViewModel.login(pseudo, password)
+                        }
+                    },
+                    variant = ButtonVariant.PRIMARY,
+                    enabled = !isLoading && pseudo.isNotBlank() && password.isNotBlank()
                 )
+
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Purple400)
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
