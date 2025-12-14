@@ -14,7 +14,7 @@ class ReviewRemoteDataSource {
     suspend fun fetchMovieReviewReview(id: Int) = reviewService.getMovieReview(id)
 
     suspend fun fetchReviewById(id: Int) = reviewService.getReviewById(id)
-    suspend fun postReviewById(id: Int, review: ReviewDto) = reviewService.createMovieReview(id, review)
+    suspend fun postReview(id: Int, review: ReviewDto) = reviewService.createMovieReview(id, review)
 
     suspend fun updateReview(id: Int, review: ReviewDto) = reviewService.updateReview(id, review)
     suspend fun removeReview(id: Int) = reviewService.deleteReview(id)

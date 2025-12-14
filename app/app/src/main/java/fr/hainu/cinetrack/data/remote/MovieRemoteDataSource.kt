@@ -13,7 +13,7 @@ class MovieRemoteDataSource {
     suspend fun fetchUserMovieList() = movieService.getUserMovie()
 
     suspend fun fetchMovieById(id: Int) = movieService.getMovieById(id)
-    suspend fun postMovieById(list: MovieDto) = movieService.createMovie(list)
+    suspend fun postMovie(list: MovieDto) = movieService.createMovie(list)
     
     suspend fun updateMovie(id: Int, list: MovieDto) = movieService.updateMovie(id, list)
     suspend fun removeMovie(id: Int) = movieService.deleteMovie(id)

@@ -10,10 +10,10 @@ class UserRemoteDataSource {
     private val userService = api.create(UserApiService::class.java)
 
     suspend fun fetchUserUser() = userService.getAllUser()
-    suspend fun fetchMovieUserUser(id: Int) = userService.getUserMovies(id)
+    suspend fun fetchMovieUser(id: Int) = userService.getUserMovies(id)
 
     suspend fun fetchUserById(id: Int) = userService.getUserById(id)
-    suspend fun postUserById(id: Int, user: UserDto) = userService.createMovieUser(id, user)
+    suspend fun postUser(user: UserDto) = userService.createUser(user)
     suspend fun addWatchListMovies(id: Int) = userService.addWatchListMovies(id)
 
     suspend fun updateUser(id: Int, user: UserDto) = userService.updateUser(id, user)

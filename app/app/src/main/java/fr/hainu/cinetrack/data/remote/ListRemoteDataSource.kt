@@ -10,10 +10,10 @@ class ListRemoteDataSource {
     private val castMemberService = api.create(ListApiService::class.java)
 
     suspend fun fetchListList() = castMemberService.getAllList()
-    suspend fun fetchUserListList() = castMemberService.getUserList()
+    suspend fun fetchUserList() = castMemberService.getUserList()
 
     suspend fun fetchListById(id: Int) = castMemberService.getListById(id)
-    suspend fun postListById(list: ListDto) = castMemberService.createList(list)
+    suspend fun postList(list: ListDto) = castMemberService.createList(list)
     suspend fun postListToMovie(id: Int, list: ListDto) = castMemberService.addListToMovie(id, list)
 
     suspend fun updateList(id: Int, list: ListDto) = castMemberService.updateList(id, list)

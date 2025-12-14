@@ -25,7 +25,7 @@ interface CastMemberApiService {
 
     @POST("api/castmember")
     suspend fun createCastMember(
-        @Body list: CastMemberDto
+        @Body castMembers: CastMemberDto
     ): CastMemberDto
 
     //PUT REQUEST

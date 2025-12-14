@@ -29,9 +29,8 @@ interface UserApiService {
 
     //POST REQUEST
 
-    @POST("api/users/movie/{movieId}")
-    suspend fun createMovieUser(
-        @Path("movieId") id: Int,
+    @POST("api/users/newuser")
+    suspend fun createUser(
         @Body list: UserDto
     ): UserDto
 

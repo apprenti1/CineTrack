@@ -9,10 +9,10 @@ class CastMemberRemoteDataSource {
 
     private val castMemberService = api.create(CastMemberApiService::class.java)
 
-    suspend fun fetchCastMemberList() = castMemberService.getAllCastMember()
+    suspend fun fetchAllCastMembers() = castMemberService.getAllCastMember()
 
     suspend fun fetchCastMemberById(id: Int) = castMemberService.getCastMemberById(id)
-    suspend fun postCastMemberById(castMembers: CastMemberDto) = castMemberService.createCastMember(castMembers)
+    suspend fun postCastMember(castMembers: CastMemberDto) = castMemberService.createCastMember(castMembers)
 
     suspend fun updateCastMember(id: Int, castMembers: CastMemberDto) = castMemberService.updateCastMember(id, castMembers)
     suspend fun removeCastMember(id: Int) = castMemberService.deleteCastMember(id)
