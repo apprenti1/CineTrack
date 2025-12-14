@@ -9,9 +9,9 @@ class ReviewRemoteDataSource {
 
     private val reviewService = api.create(ReviewApiService::class.java)
 
-    suspend fun fetchReviewReview() = reviewService.getAllReview()
-    suspend fun fetchUserReviewReview(id: Int) = reviewService.getUserReview(id)
-    suspend fun fetchMovieReviewReview(id: Int) = reviewService.getMovieReview(id)
+    suspend fun fetchReviews() = reviewService.getAllReview()
+    suspend fun fetchUserReviewById(id: Int) = reviewService.getUserReview(id)
+    suspend fun fetchMovieReviewList(id: Int) = reviewService.getMovieReview(id)
 
     suspend fun fetchReviewById(id: Int) = reviewService.getReviewById(id)
     suspend fun postReview(id: Int, review: ReviewDto) = reviewService.createMovieReview(id, review)

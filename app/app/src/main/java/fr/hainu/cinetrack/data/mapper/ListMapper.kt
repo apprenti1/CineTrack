@@ -13,3 +13,20 @@ fun mapListDtoToListModel(dto: ListDto): ListModel {
         updatedAt = dto.updatedAt
     )
 }
+
+fun mapListDtoToListModel(dtos: List<ListDto>): List<ListModel> {
+    return dtos.map { mapListDtoToListModel(it) }
+}
+fun mapListModelToListDto(model: ListModel): ListDto {
+    return ListDto(
+        id = model.id,
+        name = model.name,
+        userId = model.userId,
+        filmIds = model.filmIds,
+        createdAt = model.createdAt,
+        updatedAt = model.updatedAt
+    )
+}
+fun mapListModelToListDto(models: List<ListModel>): List<ListDto> {
+    return models.map { mapListModelToListDto(it) }
+}

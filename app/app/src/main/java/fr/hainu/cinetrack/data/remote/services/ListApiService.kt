@@ -16,8 +16,10 @@ interface ListApiService {
     @GET("api/lists")
     suspend fun getAllList(): List<ListDto>
 
-    @GET("api/lists/my-lists")
-    suspend fun getUserList(): List<ListDto>
+    @GET("api/lists/my-lists/{id}")
+    suspend fun getUserList(
+        @Path("id") id: Int
+    ): List<ListDto>
 
     @GET("api/lists/{id}")
     suspend fun getListById(

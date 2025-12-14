@@ -9,7 +9,7 @@ class MovieRemoteDataSource {
 
     private val movieService = api.create(MovieApiService::class.java)
 
-    suspend fun fetchMovie() = movieService.getAllMovie()
+    suspend fun fetchMovies() = movieService.getAllMovie()
     suspend fun fetchUserMovieList() = movieService.getUserMovie()
 
     suspend fun fetchMovieById(id: Int) = movieService.getMovieById(id)

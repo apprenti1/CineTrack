@@ -34,11 +34,6 @@ interface UserApiService {
         @Body list: UserDto
     ): UserDto
 
-    @POST("api/users/watchlist/{movieId}")
-    suspend fun addWatchListMovies(
-        @Path("movieId") id: Int
-    ): List<MovieDto>
-
     //PUT REQUEST
 
     @PUT("api/users/{id}")

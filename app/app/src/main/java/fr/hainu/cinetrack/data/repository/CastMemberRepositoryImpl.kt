@@ -1,6 +1,7 @@
 package fr.hainu.cinetrack.data.repository
 
-import fr.hainu.cinetrack.data.remote.models.CastMemberDto
+import fr.hainu.cinetrack.data.mapper.mapCastMemberDtoToModel
+import fr.hainu.cinetrack.data.mapper.mapCastMemberModelToDto
 import fr.hainu.cinetrack.data.remote.CastMemberRemoteDataSource
 import fr.hainu.cinetrack.domain.repository.CastMemberRepository
 import fr.hainu.cinetrack.domain.models.CastMemberModel
@@ -10,27 +11,20 @@ class CastMemberRepositoryImpl(
 ) : CastMemberRepository {
 
 
-    override suspend fun fetchAll(): List<CastMemberDto> {
-        return remote.fetchAllCastMembers()
+    override suspend fun fetchAll(): List<CastMemberModel> {
+        val dto = remote.fetchAllCastMembers()
+        return mapCastMemberDtoToModel(dto)
     }
 
     override suspend fun fetchById(id: Int): CastMemberModel? {
-        val castMemberData = remote.fetchCastMemberById(id)
-
-        return CastMemberModel(
-            castMemberData.id,
-            castMemberData.name,
-            castMemberData.profilePictureUrl
-        )
+        val dto = remote.fetchCastMemberById(id)
+        return mapCastMemberDtoToModel(dto)
     }
 
     override suspend fun add(castMember: CastMemberModel) {
-        val dto = CastMemberDto(
-            id = castMember.id,
-            name = castMember.name,
-            profilePictureUrl = castMember.profilePictureUrl
-        )
+        val dto = mapCastMemberModelToDto(castMember)
         remote.postCastMember(dto)
+
     }
 
     override suspend fun remove(castMember: CastMemberModel): Boolean {
@@ -39,11 +33,7 @@ class CastMemberRepositoryImpl(
     }
 
     override suspend fun update(castMember: CastMemberModel) {
-        val dto = CastMemberDto(
-            id = castMember.id,
-            name = castMember.name,
-            profilePictureUrl = castMember.profilePictureUrl
-        )
+        val dto = mapCastMemberModelToDto(castMember)
         remote.updateCastMember(dto.id, dto)
 
     }
