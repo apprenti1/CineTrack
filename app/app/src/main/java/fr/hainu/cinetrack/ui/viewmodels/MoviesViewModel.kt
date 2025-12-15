@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.http.Query
 
 class MoviesViewModel : ViewModel() {
 
@@ -16,6 +17,8 @@ class MoviesViewModel : ViewModel() {
     val trendingMoviesWeek = MutableStateFlow<List<MovieModel>>(emptyList())
     val trendingMovies = MutableStateFlow<List<MovieModel>>(emptyList())
     val recentMovies = MutableStateFlow<List<MovieModel>>(emptyList())
+
+    val moviesWithSearch = MutableStateFlow<List<MovieModel>>(emptyList())
 
     private val _currentMovieDetails = MutableStateFlow<MovieModel?>(null)
     val currentMovieDetails = _currentMovieDetails.asStateFlow()
@@ -44,6 +47,12 @@ class MoviesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             recentMovies.value = repository.getMovies(MovieType.RECENT)
 
+        }
+    }
+
+    fun fetchMoviesBySearch(query: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            moviesWithSearch.value = repository.getMoviesWithSearch(query)
         }
     }
 
