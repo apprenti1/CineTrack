@@ -65,12 +65,13 @@ fun ExploreScreen(
     activeNavItem: NavItem = NavItem.EXPLORE,
     onNavItemClick: (NavItem) -> Unit = {},
     hideBottomNav: Boolean = false,
-    hideSearchBar: Boolean = false
 ) {
     val selectedTab = remember { mutableStateOf(ExploreTab.FILMS) }
     val selectedGenre = remember { mutableStateOf<String?>(null) }
 
     val trendingMovies: List<MovieModel> by viewModel.trendingMovies.collectAsState()
+
+    val searchMovies: List<MovieModel> by viewModel.moviesWithSearch.collectAsState()
 
     val genres = listOf("Action", "Comédie", "Drame", "Sci-Fi", "Thriller", "Romance")
 
@@ -168,13 +169,12 @@ fun ExploreScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Movies Grid
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
-                repeat((trendingMovies.size + 2) / 3) { rowIndex ->
+                repeat((searchMovies.size + 2) / 3) { rowIndex ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -183,8 +183,8 @@ fun ExploreScreen(
                     ) {
                         repeat(3) { colIndex ->
                             val itemIndex = rowIndex * 3 + colIndex
-                            if (itemIndex < trendingMovies.size) {
-                                val movie = trendingMovies[itemIndex]
+                            if (itemIndex < searchMovies.size) {
+                                val movie = searchMovies[itemIndex]
                                 MovieCard(
                                     title = movie.title,
                                     rating = movie.rating,

@@ -44,6 +44,8 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val searchText = remember { mutableStateOf("") }
 
+    viewModel.fetchMoviesBySearch(searchText.value)
+
     LaunchedEffect(pagerState.currentPage) {
         currentPage.value = when (pagerState.currentPage) {
             0 -> NavItem.HOME
@@ -154,8 +156,7 @@ fun ExploreScreenContent(
         onMovieClick = onMovieClick,
         activeNavItem = NavItem.EXPLORE,
         onNavItemClick = {},
-        hideBottomNav = true,
-        hideSearchBar = true
+        hideBottomNav = true
     )
 }
 

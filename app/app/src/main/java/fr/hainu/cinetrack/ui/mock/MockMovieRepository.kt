@@ -122,4 +122,59 @@ class MockMovieRepository {
             e.printStackTrace()
         }
     }
+
+    suspend fun getMoviesWithSearch(query: String): List<MovieModel> {
+        try {
+            val connection: HttpURLConnection = URL("${baseUrl}search/movie?api_key=$apiKey&language=fr-FR&query=${query.replace(" ", "%20")}&page=1&include_adult=false").openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Accept", "application/json")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = connection.inputStream.bufferedReader().use { it.readText() }
+                val jsonObject = gson.fromJson(json, JsonObject::class.java)
+                val results = jsonObject.getAsJsonArray("results")
+                val movies: MutableList<MovieModel> = emptyList<MovieModel>().toMutableList()
+                results.forEach { movieElement ->
+                    val searchMovie = movieElement.asJsonObject
+                    movies.add(
+                        MovieModel(
+                            id = searchMovie.get("id").asInt,
+                            title = searchMovie.get("title").asString,
+                            rating = searchMovie.get("vote_average").asDouble,
+                            posterUrl = if (searchMovie.has("poster_path") && !searchMovie.get("poster_path").isJsonNull) {
+                                "${imageUrl}${posterSize}${searchMovie.get("poster_path").asString}"
+                            } else {
+                                ""
+                            },
+                            backdropUrl = if (searchMovie.has("backdrop_path") && !searchMovie.get("backdrop_path").isJsonNull) {
+                                "${imageUrl}${backdropSize}${searchMovie.get("backdrop_path").asString}"
+                            } else {
+                                ""
+                            },
+                            year = if (searchMovie.has("release_date") && !searchMovie.get("release_date").isJsonNull) {
+                                searchMovie.get("release_date").asString.substringBefore("-")
+                            } else {
+                                ""
+                            },
+                            ratingCoef = searchMovie.get("vote_count").asInt,
+                            synopsis = if (searchMovie.has("overview") && !searchMovie.get("overview").isJsonNull) {
+                                searchMovie.get("overview").asString
+                            } else {
+                                ""
+                            },
+                        )
+                    )
+                }
+                return movies
+
+
+            } else {
+                Exception("Echec de récupération").printStackTrace()
+                return emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return emptyList()
+        }
+    }
 }
