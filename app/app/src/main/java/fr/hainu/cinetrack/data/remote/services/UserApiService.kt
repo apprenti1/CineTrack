@@ -18,7 +18,7 @@ interface UserApiService {
     suspend fun getAllUser(): List<UserDto>
 
     @GET("api/users/{id}")
-    suspend fun getUserUser(
+    suspend fun getUserById(
         @Path("id") id: Int
     ): UserDto
 
@@ -27,23 +27,12 @@ interface UserApiService {
         @Path("movieId") id: Int
     ): List<MovieDto>
 
-    @GET("api/users/watchlist/{movieId}")
-    suspend fun getUserMovie(
-        @Path("movieId") id: Int
-    ): MovieDto
-
     //POST REQUEST
 
-    @POST("api/users/movie/{movieId}")
-    suspend fun createMovieUser(
-        @Path("movieId") id: Int,
+    @POST("api/users/newuser")
+    suspend fun createUser(
         @Body list: UserDto
     ): UserDto
-
-    @POST("api/users/watchlist/{movieId}")
-    suspend fun addWatchListMovies(
-        @Path("movieId") id: Int
-    ): List<MovieDto>
 
     //PUT REQUEST
 

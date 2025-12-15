@@ -1,4 +1,4 @@
-package fr.hainu.cinetrack.ui.models
+package fr.hainu.cinetrack.domain.models
 
 import androidx.compose.ui.graphics.Color
 import fr.hainu.cinetrack.ui.theme.Indigo600
@@ -10,6 +10,7 @@ import fr.hainu.cinetrack.ui.theme.Purple700
  * @param profilePictureUrl: L'URL de la photo de profil
  */
 data class CastMemberModel(
+    val id: Int,
     val name: String,
     val profilePictureUrl: String,
 )

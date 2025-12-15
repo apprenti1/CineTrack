@@ -1,7 +1,7 @@
 package fr.hainu.cinetrack.domain.models
 
 import fr.hainu.cinetrack.ui.mock.MockMovieRepository
-import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.domain.models.CastMemberModel
 
 
 

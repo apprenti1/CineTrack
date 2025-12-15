@@ -16,7 +16,28 @@ fun mapUserDtoToUserModel(dto: UserDto): UserModel {
         likes = dto.likes,
         createdAt = dto.createdAt,
         updatedAt = dto.updatedAt,
-        reviews = dto.reviews.map { mapReviewDtoToReviewModel(it) },
-        lists = dto.lists.map { mapListDtoToListModel(it) }
+        reviews = mapReviewDtoToReviewModel(dto.reviews),
+        lists = mapListDtoToListModel(dto.lists)
     )
+}
+fun mapUserDtoToUserModel(dtos: List<UserDto>): List<UserModel> {
+    return dtos.map { mapUserDtoToUserModel(it) }
+}
+
+fun mapUserModelToUserDto(model: UserModel): UserDto {
+    return UserDto(
+        id = model.id,
+        pseudo = model.pseudo,
+        email = model.email,
+        password = model.password,
+        watchlist = model.watchlist,
+        likes = model.likes,
+        createdAt = model.createdAt,
+        updatedAt = model.updatedAt,
+        reviews = mapReviewModelToReviewDto(model.reviews),
+        lists = mapListModelToListDto(model.lists)
+    )
+}
+fun mapUserModelToUserDto(models: List<UserModel>): List<UserDto> {
+    return models.map { mapUserModelToUserDto(it) }
 }
