@@ -141,7 +141,6 @@ fun HomeScreenContent(
         activeNavItem = NavItem.HOME,
         onNavItemClick = {},
         hideBottomNav = true,
-        hideSearchBar = true,
         onSeeAllClick = onSeeAllClick
     )
 }

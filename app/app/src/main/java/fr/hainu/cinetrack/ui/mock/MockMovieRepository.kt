@@ -4,11 +4,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import fr.hainu.cinetrack.BuildConfig
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.domain.models.ReviewModel
 import fr.hainu.cinetrack.domain.models.CastMemberModel
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.Int
 
 class MockMovieRepository {
 
@@ -26,7 +24,7 @@ class MockMovieRepository {
         RECENT
     }
 
-    suspend fun getMovies(type: MovieType): List<MovieModel> {
+    fun getMovies(type: MovieType): List<MovieModel> {
 
         try {
             val connection: HttpURLConnection = when (type) {
@@ -88,7 +86,7 @@ class MockMovieRepository {
 
     }
 
-    suspend fun getMovieDetails(movie: MovieModel) {
+    fun getMovieDetails(movie: MovieModel) {
         try {
             val detailsConnection =
                 URL("${baseUrl}movie/${movie.id}?api_key=$apiKey&language=fr-FR&append_to_response=videos,credits").openConnection() as HttpURLConnection
@@ -123,7 +121,7 @@ class MockMovieRepository {
         }
     }
 
-    suspend fun getMoviesWithSearch(query: String): List<MovieModel> {
+    fun getMoviesWithSearch(query: String): List<MovieModel> {
         try {
             val connection: HttpURLConnection = URL("${baseUrl}search/movie?api_key=$apiKey&language=fr-FR&query=${query.replace(" ", "%20")}&page=1&include_adult=false").openConnection() as HttpURLConnection
             connection.requestMethod = "GET"

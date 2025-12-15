@@ -18,12 +18,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun SplashScreen(
-    moviesViewModel: MoviesViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
     onNavigateToOnboarding: () -> Unit = {},
     onNavigateToAuth: () -> Unit = {}

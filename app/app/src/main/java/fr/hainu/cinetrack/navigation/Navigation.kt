@@ -146,9 +146,6 @@ fun NavGraph() {
                     movie = it,
                     onBackClick = {
                         navController.popBackStack(route = Destinations.HOME, inclusive = false)
-                    },
-                    onRateClick = {
-                        // TODO: noter le film
                     }
                 )
             }

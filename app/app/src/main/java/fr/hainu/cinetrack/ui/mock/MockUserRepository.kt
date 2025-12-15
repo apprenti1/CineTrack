@@ -1,10 +1,8 @@
 package fr.hainu.cinetrack.ui.mock
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import fr.hainu.cinetrack.BuildConfig
-import fr.hainu.cinetrack.domain.models.UserModel
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -40,7 +38,7 @@ class MockUserRepository {
         val likes: List<Int>
     )
 
-    suspend fun register(pseudo: String, email: String, password: String): Result<AuthResponse> {
+    fun register(pseudo: String, email: String, password: String): Result<AuthResponse> {
         return try {
             val connection = URL("${baseUrl}/auth/register").openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
@@ -65,7 +63,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun login(pseudo: String, password: String): Result<AuthResponse> {
+    fun login(pseudo: String, password: String): Result<AuthResponse> {
         return try {
             val connection = URL("${baseUrl}/auth/login").openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
@@ -90,7 +88,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun getProfile(token: String): Result<UserResponse> {
+    fun getProfile(token: String): Result<UserResponse> {
         return try {
             val connection = URL("${baseUrl}/users/profile").openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
@@ -111,7 +109,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun addToWatchlist(token: String, filmId: Int): Result<UserResponse> {
+    fun addToWatchlist(token: String, filmId: Int): Result<UserResponse> {
         return try {
             val connection = URL("${baseUrl}/users/watchlist").openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
@@ -137,7 +135,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun removeFromWatchlist(token: String, filmId: Int): Result<UserResponse> {
+    fun removeFromWatchlist(token: String, filmId: Int): Result<UserResponse> {
         return try {
             val connection = URL("${baseUrl}/users/watchlist/$filmId").openConnection() as HttpURLConnection
             connection.requestMethod = "DELETE"
@@ -158,7 +156,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun addToLikes(token: String, filmId: Int): Result<UserResponse> {
+    fun addToLikes(token: String, filmId: Int): Result<UserResponse> {
         return try {
             val connection = URL("${baseUrl}/users/likes").openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
@@ -184,7 +182,7 @@ class MockUserRepository {
         }
     }
 
-    suspend fun removeFromLikes(token: String, filmId: Int): Result<UserResponse> {
+    fun removeFromLikes(token: String, filmId: Int): Result<UserResponse> {
         return try {
             val connection = URL("${baseUrl}/users/likes/$filmId").openConnection() as HttpURLConnection
             connection.requestMethod = "DELETE"
