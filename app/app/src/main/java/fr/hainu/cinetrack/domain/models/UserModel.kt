@@ -14,7 +14,7 @@ package fr.hainu.cinetrack.domain.models
  * @param lists: La liste des listes personnalisées de l'utilisateur
  **/
 data class UserModel(
-    val id: Int,
+    val id: String,
     val pseudo: String,
     val email: String,
     val password: String,

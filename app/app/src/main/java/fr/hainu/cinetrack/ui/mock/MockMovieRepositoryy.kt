@@ -3,7 +3,7 @@ package fr.hainu.cinetrack.ui.mock
 import com.google.gson.Gson
 import fr.hainu.cinetrack.BuildConfig
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.domain.models.CastMemberModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection

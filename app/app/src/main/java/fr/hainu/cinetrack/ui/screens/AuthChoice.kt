@@ -5,6 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,19 +19,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.ButtonVariant
 import fr.hainu.cinetrack.ui.components.CustomButton
 import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple600
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun AuthChoiceScreen(
+    userViewModel: UserViewModel = viewModel(),
+    onLoginSuccess: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
     onContinueWithoutAccount: () -> Unit = {}
 ) {
+
+
+    val isLoading by userViewModel.isLoading.collectAsState()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
+    val errorMessage by userViewModel.errorMessage.collectAsState()
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            onLoginSuccess()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()

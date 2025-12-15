@@ -68,6 +68,11 @@ fun NavGraph() {
 
         composable(route = Destinations.AUTH) {
             AuthChoiceScreen(
+                onLoginSuccess = {
+                    navController.navigate(Destinations.HOME) {
+                        popUpTo(Destinations.AUTH) { inclusive = true }
+                    }
+                },
                 onLoginClick = {
                     navController.navigate(Destinations.LOGIN)
                 },

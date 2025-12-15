@@ -10,7 +10,6 @@ import fr.hainu.cinetrack.ui.theme.Purple700
  * @param profilePictureUrl: L'URL de la photo de profil
  */
 data class CastMemberModel(
-    val id: Int,
     val name: String,
     val profilePictureUrl: String,
 )

@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.mock.getMockMovies
-import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.domain.models.CastMemberModel
 import fr.hainu.cinetrack.ui.theme.*
 
 
