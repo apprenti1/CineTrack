@@ -94,7 +94,9 @@ fun MainScreen(
                         viewModel = viewModel,
                         onMovieClick = onMovieClick
                     )
-                    2 -> PlaceholderScreenContent(title = "Collection")
+                    2 -> CollectionScreen(
+                        onMovieClick = onMovieClick
+                    )
                     3 -> PlaceholderScreenContent(title = "Profil")
                 }
             }
