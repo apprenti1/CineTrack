@@ -42,8 +42,10 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
 import fr.hainu.cinetrack.ui.mock.getMockMovies
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 fun extractVideoId(ytUrl: String): String? {
     return try {
@@ -58,11 +60,14 @@ fun extractVideoId(ytUrl: String): String? {
 fun MovieDetailsScreen(
     movie: MovieModel,
     viewModel: MoviesViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel(),
     onBackClick: () -> Unit = {},
     onRateClick: () -> Unit = {}
 ) {
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
     var showTrailer by remember { mutableStateOf(false) }
+    var showRatingModal by remember { mutableStateOf(false) }
 
     LaunchedEffect(movie.id) {
         viewModel.loadMovieDetails(movie)
@@ -137,18 +142,20 @@ fun MovieDetailsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ActionButtons(
-                isOnFavorite = displayMovie.isOnFavorite,
-                isOnWatchlist = displayMovie.isOnWatchlist,
-                isOnWatched = displayMovie.isOnWatched,
-                isRated = displayMovie.isRated,
-                onFavoriteClick = { displayMovie.switchFavoriteState() },
-                onWatchlistClick = { displayMovie.switchWatchlistState() },
-                onWatchedClick = { displayMovie.switchWatchedState() },
-                onRateClick = onRateClick
-            )
+            if (isLoggedIn) {
+                ActionButtons(
+                    isOnFavorite = displayMovie.isOnFavorite,
+                    isOnWatchlist = displayMovie.isOnWatchlist,
+                    isOnWatched = displayMovie.isOnWatched,
+                    isRated = displayMovie.isRated,
+                    onFavoriteClick = { displayMovie.switchFavoriteState() },
+                    onWatchlistClick = { displayMovie.switchWatchlistState() },
+                    onWatchedClick = { displayMovie.switchWatchedState() },
+                    onRateClick = { showRatingModal = true }
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            }
 
             SynopsisSection(
                 synopsis = displayMovie.synopsis
@@ -164,9 +171,14 @@ fun MovieDetailsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ReviewsSection(reviews = reviews)
+            if (isLoggedIn) {
+                ReviewsSection(
+                    reviews = reviews,
+                    onAddReviewClick = { showRatingModal = true }
+                )
 
-            Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(48.dp))
+            }
         }
 
         if (showTrailer) {
@@ -219,6 +231,21 @@ fun MovieDetailsScreen(
                 }
             }
         }
+    }
+    if (showRatingModal) {
+        RatingModal(
+            movie = displayMovie,
+            onDismiss = { showRatingModal = false },
+            onSubmit = { rating, comment ->
+                // TODO: Implement rating submission
+                showRatingModal = false
+                android.widget.Toast.makeText(
+                    context,
+                    "Note enregistrée : $rating/5",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
     }
 }
 
