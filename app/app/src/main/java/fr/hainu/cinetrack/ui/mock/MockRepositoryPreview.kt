@@ -66,8 +66,9 @@ fun MovieListDebugPreview() {
     var movies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        movies = repository.getMovies(MockMovieRepository.MovieType.TREND)
-        movies[0].pullMoreDetails()
+        //movies = repository.getMovies(MockMovieRepository.MovieType.TREND)
+        //movies[0].pullMoreDetails()
+        movies = repository.getMoviesByIds(listOf(798645))
     }
 
     MovieListDebug(movies)

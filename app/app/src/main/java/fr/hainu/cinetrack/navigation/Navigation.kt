@@ -131,6 +131,7 @@ fun NavGraph() {
                 onMovieClick = { movie ->
                     navController.navigate(Destinations.movieDetails(movie))
                 }
+
             )
         }
 

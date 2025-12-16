@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     viewModel: MoviesViewModel = viewModel(),
+    
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
@@ -97,7 +98,7 @@ fun MainScreen(
                         onMovieClick = onMovieClick
                     )
                     2 -> CollectionScreen(
-                        onMovieClick = onMovieClick
+                        onMovieClick = onMovieClick,
                     )
                     3 -> PlaceholderScreenContent(title = "Profil")
                 }
