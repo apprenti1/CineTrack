@@ -7,6 +7,7 @@ import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.domain.models.CastMemberModel
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.collections.joinToString
 
 class MockMovieRepository {
 
@@ -173,6 +174,78 @@ class MockMovieRepository {
         } catch (e: Exception) {
             e.printStackTrace()
             return emptyList()
+        }
+    }
+
+    fun getMovieById(movieId: Int): MovieModel? {
+        try {
+
+            val connection = URL("${baseUrl}movie/${movieId}?api_key=$apiKey&language=fr-FR&append_to_response=videos,credits").openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Accept", "application/json")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = connection.inputStream.bufferedReader().use { it.readText() }
+                val movieObj = gson.fromJson(json, JsonObject::class.java)
+                val trailer = movieObj.getAsJsonObject("videos")?.getAsJsonArray("results")?.find { val videoObj = it.asJsonObject; videoObj.get("site").asString == "YouTube" && videoObj.get("type").asString == "Trailer" }?.asJsonObject
+
+                return MovieModel(
+                    id = movieObj.get("id").asInt,
+                    title = movieObj.get("title").asString,
+                    rating = movieObj.get("vote_average").asDouble,
+                    posterUrl = if (movieObj.has("poster_path") && !movieObj.get("poster_path").isJsonNull) {
+                        "${imageUrl}${posterSize}${movieObj.get("poster_path").asString}"
+                    } else {
+                        ""
+                    },
+                    backdropUrl = if (movieObj.has("backdrop_path") && !movieObj.get("backdrop_path").isJsonNull) {
+                        "${imageUrl}${backdropSize}${movieObj.get("backdrop_path").asString}"
+                    } else {
+                        ""
+                    },
+                    year = if (movieObj.has("release_date") && !movieObj.get("release_date").isJsonNull) {
+                        movieObj.get("release_date").asString.substringBefore("-")
+                    } else {
+                        ""
+                    },
+                    genres = movieObj.getAsJsonArray("genres").joinToString(", ") { it.asJsonObject.get("name").asString },
+                    ratingCoef = movieObj.get("vote_count").asInt,
+                    duration = movieObj.get("runtime")?.asInt?.let { "${it / 60}h ${it % 60}min" } ?: "",
+                    synopsis = if (movieObj.has("overview") && !movieObj.get("overview").isJsonNull) {
+                        movieObj.get("overview").asString
+                    } else {
+                        ""
+                    },
+                    cast = movieObj.getAsJsonObject("credits").getAsJsonArray("cast").map { castElement ->
+                        val castObj = castElement.asJsonObject
+                        CastMemberModel(
+                            name = castObj.get("name").asString,
+                            profilePictureUrl = if (castObj.has("profile_path") && !castObj.get("profile_path").isJsonNull) {
+                                "${imageUrl}w185${castObj.get("profile_path").asString}"
+                            } else ""
+                        )
+                    },
+                    trailerUrl = if (trailer != null) "https://www.youtube.com/watch?v=${trailer.get("key").asString}" else "",
+                    isDetailed = true
+                )
+            } else {
+                Exception("Failed to fetch movie by ID").printStackTrace()
+                return null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    suspend fun getMoviesByIds(movieIds: List<Int>): List<MovieModel> {
+        return movieIds.mapNotNull { id ->
+            try {
+                getMovieById(id)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 }
