@@ -1,6 +1,7 @@
 package fr.hainu.cinetrack.ui.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.hainu.cinetrack.data.local.SecurePreferencesManager
@@ -163,20 +164,32 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun addToWatchlist(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                Log.d("UserViewModel", "addToWatchlist called for movieId: $movieId")
                 val token = securePrefs.getAuthToken()
+                Log.d("UserViewModel", "Token: ${token?.take(20)}...")
                 token?.let {
                     val result = repository.addToWatchlist(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        Log.d("UserViewModel", "addToWatchlist success: watchlist=${userResponse.watchlist}")
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
+                        Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watchlist}")
                     }.onFailure { error ->
+                        Log.e("UserViewModel", "addToWatchlist failed: ${error.message}")
                         _errorMessage.value = error.message
                     }
                 }
             } catch (e: Exception) {
+                Log.e("UserViewModel", "addToWatchlist exception", e)
                 e.printStackTrace()
                 _errorMessage.value = e.message
             }
@@ -190,10 +203,16 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 token?.let {
                     val result = repository.removeFromWatchlist(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
@@ -209,20 +228,31 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun addToLikes(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                Log.d("UserViewModel", "addToLikes called for movieId: $movieId")
                 val token = securePrefs.getAuthToken()
                 token?.let {
                     val result = repository.addToLikes(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        Log.d("UserViewModel", "addToLikes success: likes=${userResponse.likes}")
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
+                        Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.likes}")
                     }.onFailure { error ->
+                        Log.e("UserViewModel", "addToLikes failed: ${error.message}")
                         _errorMessage.value = error.message
                     }
                 }
             } catch (e: Exception) {
+                Log.e("UserViewModel", "addToLikes exception", e)
                 e.printStackTrace()
                 _errorMessage.value = e.message
             }
@@ -236,10 +266,16 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 token?.let {
                     val result = repository.removeFromLikes(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
@@ -255,20 +291,31 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     fun addToWatched(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                Log.d("UserViewModel", "addToWatched called for movieId: $movieId")
                 val token = securePrefs.getAuthToken()
                 token?.let {
                     val result = repository.addToWatched(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        Log.d("UserViewModel", "addToWatched success: watched=${userResponse.watched}")
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
+                        Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watched}")
                     }.onFailure { error ->
+                        Log.e("UserViewModel", "addToWatched failed: ${error.message}")
                         _errorMessage.value = error.message
                     }
                 }
             } catch (e: Exception) {
+                Log.e("UserViewModel", "addToWatched exception", e)
                 e.printStackTrace()
                 _errorMessage.value = e.message
             }
@@ -282,10 +329,16 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 token?.let {
                     val result = repository.removeFromWatched(it, movieId)
                     result.onSuccess { userResponse ->
-                        _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist,
-                            likes = userResponse.likes,
-                            watched = userResponse.watched
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
