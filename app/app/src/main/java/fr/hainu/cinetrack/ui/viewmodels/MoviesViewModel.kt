@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.http.Query
 
-class MoviesViewModel : ViewModel() {
-
-    private val repository = MockMovieRepository()
+class MoviesViewModel(
+    private val repository: MockMovieRepository = MockMovieRepository()
+) : ViewModel() {
     val trendingMoviesWeek = MutableStateFlow<List<MovieModel>>(emptyList())
     val trendingMovies = MutableStateFlow<List<MovieModel>>(emptyList())
     val recentMovies = MutableStateFlow<List<MovieModel>>(emptyList())
