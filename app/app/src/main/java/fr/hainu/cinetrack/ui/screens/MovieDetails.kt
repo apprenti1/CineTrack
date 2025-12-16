@@ -1,6 +1,7 @@
 package fr.hainu.cinetrack.ui.screens
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -78,10 +79,17 @@ fun MovieDetailsScreen(
     // Use currentMovie if available, otherwise use the parameter
     val displayMovie = currentMovie ?: movie
 
-    // Determine movie states based on user data
+    // Determine movie states based on user data - recalculate on every composition when lists change
     val isOnWatchlist = currentUser?.watchlist?.contains(displayMovie.id) ?: false
     val isOnFavorite = currentUser?.likes?.contains(displayMovie.id) ?: false
     val isOnWatched = currentUser?.watched?.contains(displayMovie.id) ?: false
+
+    Log.d("MovieDetails", "Movie: ${displayMovie.title} (${displayMovie.id})")
+    Log.d("MovieDetails", "CurrentUser: ${currentUser?.pseudo}, isLoggedIn: $isLoggedIn")
+    Log.d("MovieDetails", "isOnWatchlist: $isOnWatchlist, isOnFavorite: $isOnFavorite, isOnWatched: $isOnWatched")
+    Log.d("MovieDetails", "User watchlist: ${currentUser?.watchlist}")
+    Log.d("MovieDetails", "User likes: ${currentUser?.likes}")
+    Log.d("MovieDetails", "User watched: ${currentUser?.watched}")
 
     // Utiliser les données du film passé en paramètre
     val similarMovies = getMockMovies().filter { it.id != displayMovie.id }.take(3)
@@ -154,6 +162,7 @@ fun MovieDetailsScreen(
                     isOnWatched = isOnWatched,
                     isRated = displayMovie.isRated,
                     onFavoriteClick = {
+                        Log.d("MovieDetails", "Favorite button clicked, isOnFavorite: $isOnFavorite, movieId: ${displayMovie.id}")
                         if (isOnFavorite) {
                             userViewModel.removeFromLikes(displayMovie.id)
                         } else {
@@ -161,6 +170,7 @@ fun MovieDetailsScreen(
                         }
                     },
                     onWatchlistClick = {
+                        Log.d("MovieDetails", "Watchlist button clicked, isOnWatchlist: $isOnWatchlist, movieId: ${displayMovie.id}")
                         if (isOnWatchlist) {
                             userViewModel.removeFromWatchlist(displayMovie.id)
                         } else {
@@ -168,6 +178,7 @@ fun MovieDetailsScreen(
                         }
                     },
                     onWatchedClick = {
+                        Log.d("MovieDetails", "Watched button clicked, isOnWatched: $isOnWatched, movieId: ${displayMovie.id}")
                         if (isOnWatched) {
                             userViewModel.removeFromWatched(displayMovie.id)
                         } else {
