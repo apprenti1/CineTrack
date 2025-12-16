@@ -14,27 +14,27 @@ interface ReviewApiService {
     // https://my-json-server.typicode.com/RamzyK//demo/notes
 
     //GET REQUEST
-    @GET("api/reviews")
+    @GET("reviews")
     suspend fun getAllReview(): List<ReviewDto>
 
-    @GET("api/reviews/user/{userId}")
+    @GET("reviews/user/{userId}")
     suspend fun getUserReview(
         @Path("userId") id: Int
     ): List<ReviewDto>
 
-    @GET("api/reviews/movies/{movieId}")
+    @GET("movie/{movieId}/reviews")
     suspend fun getMovieReview(
         @Path("movieId") id: Int
     ): List<ReviewDto>
 
-    @GET("api/reviews/{id}")
+    @GET("reviews/{id}")
     suspend fun getReviewById(
         @Path("id") id: Int
     ): ReviewDto
 
     //POST REQUEST
 
-    @POST("api/reviews/movie/{movieId}")
+    @POST("reviews/movie/{movieId}")
     suspend fun createMovieReview(
         @Path("movieId") id: Int,
         @Body list: ReviewDto
@@ -42,7 +42,7 @@ interface ReviewApiService {
 
     //PUT REQUEST
 
-    @PUT("api/reviews/{id}")
+    @PUT("reviews/{id}")
     suspend fun updateReview(
         @Path("id") id: Int,
         @Body note: ReviewDto
@@ -50,7 +50,7 @@ interface ReviewApiService {
 
     //DELETE REQUEST
 
-    @DELETE("api/reviews/{id}")
+    @DELETE("reviews/{id}")
     suspend fun deleteReview(
         @Path("id") id: Int
     ): Response<Unit>

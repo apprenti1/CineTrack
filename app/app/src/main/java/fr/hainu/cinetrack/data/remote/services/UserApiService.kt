@@ -14,29 +14,29 @@ interface UserApiService {
     // https://my-json-server.typicode.com/RamzyK//demo/notes
 
     //GET REQUEST
-    @GET("api/users")
+    @GET("users")
     suspend fun getAllUser(): List<UserDto>
 
-    @GET("api/users/{id}")
+    @GET("users/{id}")
     suspend fun getUserById(
         @Path("id") id: Int
     ): UserDto
 
-    @GET("api/users/watchlist")
+    @GET("users/watchlist")
     suspend fun getUserMovies(
         @Path("movieId") id: Int
     ): List<MovieDto>
 
     //POST REQUEST
 
-    @POST("api/users/newuser")
+    @POST("users/newUser")
     suspend fun createUser(
         @Body list: UserDto
     ): UserDto
 
     //PUT REQUEST
 
-    @PUT("api/users/{id}")
+    @PUT("users/{id}")
     suspend fun updateUser(
         @Path("id") id: Int,
         @Body note: UserDto
@@ -44,7 +44,7 @@ interface UserApiService {
 
     //DELETE REQUEST
 
-    @DELETE("api/users/{id}")
+    @DELETE("users/{id}")
     suspend fun deleteUser(
         @Path("id") id: Int
     ): Response<Unit>

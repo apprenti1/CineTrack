@@ -13,27 +13,27 @@ interface ListApiService {
     // https://my-json-server.typicode.com/RamzyK//demo/notes
 
     //GET REQUEST
-    @GET("api/lists")
+    @GET("lists")
     suspend fun getAllList(): List<ListDto>
 
-    @GET("api/lists/my-lists/{id}")
+    @GET("lists/my-lists/{id}")
     suspend fun getUserList(
         @Path("id") id: Int
     ): List<ListDto>
 
-    @GET("api/lists/{id}")
+    @GET("lists/{id}")
     suspend fun getListById(
         @Path("id") id: Int
     ): ListDto
 
     //POST REQUEST
 
-    @POST("api/lists/new-list")
+    @POST("lists/new-list")
     suspend fun createList(
         @Body list: ListDto
     ): ListDto
 
-    @POST("api/lists/movie/{movieId}")
+    @POST("lists/movie/{movieId}")
     suspend fun addListToMovie(
         @Path("movieId") id: Int,
         @Body list: ListDto
@@ -41,7 +41,7 @@ interface ListApiService {
 
     //PUT REQUEST
 
-    @PUT("api/lists/{id}")
+    @PUT("lists/{id}")
     suspend fun updateList(
         @Path("id") id: Int,
         @Body note: ListDto
@@ -49,7 +49,7 @@ interface ListApiService {
 
     //DELETE REQUEST
 
-    @DELETE("api/lists/{id}")
+    @DELETE("lists/{id}")
     suspend fun deleteList(
         @Path("id") id: Int
     ): Response<Unit>

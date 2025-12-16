@@ -16,7 +16,7 @@ interface CastMemberApiService {
     @GET("api/castmember")
     suspend fun getAllCastMember(): List<CastMemberDto>
 
-    @GET("api/castmember/{id}")
+    @GET("credit/{id}")
     suspend fun getCastMemberById(
         @Path("id") id: Int
     ): CastMemberDto

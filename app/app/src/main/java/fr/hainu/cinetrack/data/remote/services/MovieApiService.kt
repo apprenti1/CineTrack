@@ -13,27 +13,27 @@ interface MovieApiService {
     // https://my-json-server.typicode.com/RamzyK//demo/notes
 
     //GET REQUEST
-    @GET("api/movie")
+    @GET("movie/changes")
     suspend fun getAllMovie(): List<MovieDto>
 
-    @GET("api/movie/my-movie")
+    @GET("movie/my-movie")
     suspend fun getUserMovie(): List<MovieDto>
 
-    @GET("api/movie/{id}")
+    @GET("movie/{id}")
     suspend fun getMovieById(
         @Path("id") id: Int
     ): MovieDto
 
     //POST REQUEST
 
-    @POST("api/movie")
+    @POST("movie")
     suspend fun createMovie(
         @Body list: MovieDto
     ): MovieDto
 
     //PUT REQUEST
 
-    @PUT("api/movie/{id}")
+    @PUT("movie/{id}")
     suspend fun updateMovie(
         @Path("id") id: Int,
         @Body note: MovieDto
@@ -41,7 +41,7 @@ interface MovieApiService {
 
     //DELETE REQUEST
 
-    @DELETE("api/movie/{id}")
+    @DELETE("movie/{id}")
     suspend fun deleteMovie(
         @Path("id") id: Int
     ): Response<Unit>
