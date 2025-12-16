@@ -12,10 +12,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel(application: Application) : AndroidViewModel(application) {
+class UserViewModel(
+    application: Application,
+    private val repository: MockUserRepository,
+    private val securePrefs: SecurePreferencesManager
+) : AndroidViewModel(application) {
 
-    private val securePrefs = SecurePreferencesManager(application)
-    private val repository = MockUserRepository()
+    constructor(application: Application) : this(
+        application,
+        MockUserRepository(),
+        SecurePreferencesManager(application)
+    )
 
     private val _currentUser = MutableStateFlow<UserModel?>(null)
     val currentUser = _currentUser.asStateFlow()
