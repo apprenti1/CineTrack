@@ -3,12 +3,10 @@ package fr.hainu.cinetrack.ui.mock
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import fr.hainu.cinetrack.BuildConfig
+import fr.hainu.cinetrack.domain.models.CastMemberModel
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.domain.models.ReviewModel
-import fr.hainu.cinetrack.ui.models.CastMemberModel
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.Int
 
 class MockMovieRepository {
 

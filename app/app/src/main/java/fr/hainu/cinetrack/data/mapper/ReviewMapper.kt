@@ -3,36 +3,36 @@ package fr.hainu.cinetrack.data.mapper
 import fr.hainu.cinetrack.data.remote.models.ReviewDto
 import fr.hainu.cinetrack.domain.models.ReviewModel
 
-fun mapReviewDtoToReviewModel(dto: ReviewDto): ReviewModel {
+fun mapReviewDtoToModel(dto: ReviewDto): ReviewModel {
     return ReviewModel(
         id = dto.id,
         comment = dto.comment,
         rating = dto.rating,
         refUser = dto.refUser,
         refMovie = dto.refMovie,
-        userModel = dto.userDto?.let { mapUserDtoToUserModel(it) },
-        movieModel = dto.movieDto?.let { mapMovieDtoToMovieModel(it) },
+        userModel = dto.userDto?.let { mapUserDtoToModel(it) },
+        movieModel = dto.movieDto?.let { mapMovieDtoToModel(it) },
         createdAt = dto.createdAt,
         updatedAt = dto.updatedAt
     )
 }
-fun mapReviewDtoToReviewModel(dtos: List<ReviewDto>): List<ReviewModel> {
-    return dtos.map { mapReviewDtoToReviewModel(it) }
+fun mapReviewDtoToModel(dtos: List<ReviewDto>): List<ReviewModel> {
+    return dtos.map { mapReviewDtoToModel(it) }
 }
-fun mapReviewModelToReviewDto(model: ReviewModel): ReviewDto {
+fun mapReviewModelToDto(model: ReviewModel): ReviewDto {
     return ReviewDto(
         id = model.id,
         comment = model.comment,
         rating = model.rating,
         refUser = model.refUser,
         refMovie = model.refMovie,
-        userDto = model.userModel?.let { mapUserModelToUserDto(it) },
-        movieDto = model.movieModel?.let { mapMovieModelToMovieDto(it) },
+        userDto = model.userModel?.let { mapUserModelToDto(it) },
+        movieDto = model.movieModel?.let { mapMovieModelToDto(it) },
         createdAt = model.createdAt,
         updatedAt = model.updatedAt
     )
 }
-fun mapReviewModelToReviewDto(models: List<ReviewModel>): List<ReviewDto> {
-    return models.map { mapReviewModelToReviewDto(it) }
+fun mapReviewModelToDto(models: List<ReviewModel>): List<ReviewDto> {
+    return models.map { mapReviewModelToDto(it) }
 }
 

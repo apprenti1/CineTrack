@@ -1,7 +1,7 @@
 package fr.hainu.cinetrack.data.repository
 
-import fr.hainu.cinetrack.data.mapper.mapListDtoToListModel
-import fr.hainu.cinetrack.data.mapper.mapListModelToListDto
+import fr.hainu.cinetrack.data.mapper.mapListDtoToModel
+import fr.hainu.cinetrack.data.mapper.mapListModelToDto
 import fr.hainu.cinetrack.data.remote.ListRemoteDataSource
 import fr.hainu.cinetrack.domain.repository.ListRepository
 import fr.hainu.cinetrack.domain.models.ListModel
@@ -13,25 +13,25 @@ class ListRepositoryImpl(
 
     override suspend fun fetchAll(): List<ListModel> {
         val dto = remote.fetchLists()
-        return mapListDtoToListModel(dto)
+        return mapListDtoToModel(dto)
     }
 
     override suspend fun fetchFromUser(id: Int): List<ListModel> {
         val dto = remote.fetchFromUser(id)
-        return mapListDtoToListModel(dto)
+        return mapListDtoToModel(dto)
     }
     override suspend fun fetchById(id: Int): ListModel? {
         val dto = remote.fetchListById(id)
-        return mapListDtoToListModel(dto)
+        return mapListDtoToModel(dto)
     }
 
     override suspend fun add(list: ListModel) {
-        val dto = mapListModelToListDto(list)
+        val dto = mapListModelToDto(list)
         remote.postList(dto)
     }
 
     override suspend fun addToMovie(list: ListModel) {
-        val dto = mapListModelToListDto(list)
+        val dto = mapListModelToDto(list)
         remote.postToMovie(dto.id, dto)
     }
 
@@ -41,7 +41,7 @@ class ListRepositoryImpl(
     }
 
     override suspend fun update(list: ListModel) {
-        val dto = mapListModelToListDto(list)
+        val dto = mapListModelToDto(list)
         remote.updateList(dto.id, dto)
 
     }

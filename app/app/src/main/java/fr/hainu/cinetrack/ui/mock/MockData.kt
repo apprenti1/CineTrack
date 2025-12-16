@@ -2,7 +2,7 @@ package fr.hainu.cinetrack.ui.mock
 
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.domain.models.ReviewModel
-import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.domain.models.CastMemberModel
 
 fun getMockMovies(): List<MovieModel> {
     return listOf(

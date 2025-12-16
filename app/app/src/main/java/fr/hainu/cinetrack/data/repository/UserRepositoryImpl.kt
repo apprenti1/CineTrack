@@ -1,9 +1,9 @@
 package fr.hainu.cinetrack.data.repository
 
-import fr.hainu.cinetrack.data.mapper.mapMovieDtoToMovieModel
-import fr.hainu.cinetrack.data.mapper.mapMovieModelToMovieDto
-import fr.hainu.cinetrack.data.mapper.mapUserDtoToUserModel
-import fr.hainu.cinetrack.data.mapper.mapUserModelToUserDto
+import fr.hainu.cinetrack.data.mapper.mapMovieDtoToModel
+import fr.hainu.cinetrack.data.mapper.mapMovieModelToDto
+import fr.hainu.cinetrack.data.mapper.mapUserDtoToModel
+import fr.hainu.cinetrack.data.mapper.mapUserModelToDto
 import fr.hainu.cinetrack.data.remote.UserRemoteDataSource
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.domain.repository.UserRepository
@@ -16,21 +16,21 @@ class UserRepositoryImpl(
 
     override suspend fun fetchAll(): List<UserModel> {
         val dto = remote.fetchUsers()
-        return mapUserDtoToUserModel(dto)
+        return mapUserDtoToModel(dto)
     }
 
     override suspend fun fetchById(id: Int): UserModel? {
         val dto = remote.fetchById(id)
-        return mapUserDtoToUserModel(dto)
+        return mapUserDtoToModel(dto)
     }
 
     override suspend fun fetchMovies(id : Int): List<MovieModel> {
         val dto = remote.fetchMovieList(id)
-        return mapMovieDtoToMovieModel(dto)
+        return mapMovieDtoToModel(dto)
     }
 
     override suspend fun add(user: UserModel) {
-        val dto = mapUserModelToUserDto(user)
+        val dto = mapUserModelToDto(user)
         remote.postUser(dto)
     }
     override suspend fun remove(user: UserModel): Boolean {
@@ -39,7 +39,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun update(user: UserModel) {
-        val dto = mapUserModelToUserDto(user)
+        val dto = mapUserModelToDto(user)
         remote.updateUser(dto.id, dto)
     }
 }

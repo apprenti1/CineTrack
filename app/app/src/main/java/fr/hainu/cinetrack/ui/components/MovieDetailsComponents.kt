@@ -34,10 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
+import fr.hainu.cinetrack.data.repository.CastMemberRepositoryImpl
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.mock.getMockMovies
-import fr.hainu.cinetrack.ui.models.CastMemberModel
+import fr.hainu.cinetrack.domain.models.CastMemberModel
+import fr.hainu.cinetrack.domain.usecase.castMember.AddCastMemberUseCase
+import fr.hainu.cinetrack.domain.usecase.castMember.CastMemberUseCase
+import fr.hainu.cinetrack.domain.usecase.castMember.GetAllCastMemberUseCase
+import fr.hainu.cinetrack.domain.usecase.castMember.GetCastMemberByIdUseCase
+import fr.hainu.cinetrack.domain.usecase.castMember.RemoveCastMemberUseCase
+import fr.hainu.cinetrack.domain.usecase.castMember.UpdateCastMemberUseCase
 import fr.hainu.cinetrack.ui.theme.*
+import fr.hainu.cinetrack.viewModel.CastMemberViewModel
 
 
 @Composable
@@ -509,6 +517,16 @@ fun SimilarMoviesSection(
 @Preview(showBackground = true, backgroundColor = 0xFF111827)
 @Composable
 fun MovieDetailsComponentsPreview() {
+    val castMemberRepository: CastMemberRepositoryImpl = CastMemberRepositoryImpl()
+    val castMemberUseCases: CastMemberUseCase = CastMemberUseCase(
+        getAllCastMember = GetAllCastMemberUseCase(castMemberRepository),
+        getCastMemberById = GetCastMemberByIdUseCase(castMemberRepository),
+        addCastMember = AddCastMemberUseCase(castMemberRepository),
+        updateCastMember = UpdateCastMemberUseCase(castMemberRepository),
+        removeCastMember = RemoveCastMemberUseCase(castMemberRepository),
+    )
+    val castMemberViewModel: CastMemberViewModel =
+        CastMemberViewModel(useCases = castMemberUseCases)
     Column(
         modifier = Modifier
             .background(Gray900)

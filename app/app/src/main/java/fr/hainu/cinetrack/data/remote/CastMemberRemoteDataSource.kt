@@ -14,8 +14,8 @@ class CastMemberRemoteDataSource {
     suspend fun fetchCastMemberById(id: Int) = castMemberService.getCastMemberById(id)
     suspend fun postCastMember(castMembers: CastMemberDto) = castMemberService.createCastMember(castMembers)
 
-    suspend fun updateCastMember(id: Int, castMembers: CastMemberDto) = castMemberService.updateCastMember(id, castMembers)
-    suspend fun removeCastMember(id: Int) = castMemberService.deleteCastMember(id)
+    suspend fun updateCastMember(id: Int? = null, castMembers: CastMemberDto) = castMemberService.updateCastMember(id, castMembers)
+    suspend fun removeCastMember(id: Int? = null) = castMemberService.deleteCastMember(id)
 
 }
 

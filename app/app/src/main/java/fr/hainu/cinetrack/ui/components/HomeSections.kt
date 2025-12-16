@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.mock.MockMovieRepository
-import fr.hainu.cinetrack.ui.mock.getMockMovies
+//import fr.hainu.cinetrack.ui.mock.getMockMovies
 
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400

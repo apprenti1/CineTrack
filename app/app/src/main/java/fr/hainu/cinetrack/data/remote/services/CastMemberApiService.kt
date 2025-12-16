@@ -32,7 +32,7 @@ interface CastMemberApiService {
 
     @PUT("api/castmember/{id}")
     suspend fun updateCastMember(
-        @Path("id") id: Int,
+        @Path("id") id: Int? = null,
         @Body castMembers: CastMemberDto
     ):CastMemberDto
 
@@ -40,7 +40,7 @@ interface CastMemberApiService {
 
     @DELETE("api/castmember/{id}")
     suspend fun deleteCastMember(
-        @Path("id") id: Int
+        @Path("id") id: Int? = null
     ): Response<Unit>
 
 }

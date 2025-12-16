@@ -1,10 +1,10 @@
 package fr.hainu.cinetrack.data.mapper
 
 import fr.hainu.cinetrack.data.remote.models.MovieDto
-import fr.hainu.cinetrack.data.mapper.mapReviewDtoToReviewModel
+import fr.hainu.cinetrack.data.mapper.mapReviewDtoToModel
 import fr.hainu.cinetrack.domain.models.MovieModel
 
-fun mapMovieDtoToMovieModel(dto: MovieDto): MovieModel {
+fun mapMovieDtoToModel(dto: MovieDto): MovieModel {
     return MovieModel(
         id = dto.id,
         title = dto.title,
@@ -18,7 +18,7 @@ fun mapMovieDtoToMovieModel(dto: MovieDto): MovieModel {
         synopsis = dto.synopsis,
         trailerUrl = dto.trailerUrl,
         cast = mapCastMemberDtoToModel(dto.cast),
-        reviews = mapReviewDtoToReviewModel(dto.reviews),
+        reviews = mapReviewDtoToModel(dto.reviews),
         isOnFavorite = dto.isOnFavorite,
         isOnWatchlist = dto.isOnWatchlist,
         isOnWatched = dto.isOnWatched,
@@ -26,10 +26,10 @@ fun mapMovieDtoToMovieModel(dto: MovieDto): MovieModel {
         isDetailed = dto.isDetailed
     )
 }
-fun mapMovieDtoToMovieModel(dtos: List<MovieDto>): List<MovieModel> {
-    return dtos.map { mapMovieDtoToMovieModel(it) }
+fun mapMovieDtoToModel(dtos: List<MovieDto>): List<MovieModel> {
+    return dtos.map { mapMovieDtoToModel(it) }
 }
-fun mapMovieModelToMovieDto(model: MovieModel): MovieDto {
+fun mapMovieModelToDto(model: MovieModel): MovieDto {
     return MovieDto(
         id = model.id,
         title = model.title,
@@ -43,7 +43,7 @@ fun mapMovieModelToMovieDto(model: MovieModel): MovieDto {
         synopsis = model.synopsis,
         trailerUrl = model.trailerUrl,
         cast = mapCastMemberModelToDto(model.cast),
-        reviews = mapReviewModelToReviewDto(model.reviews),
+        reviews = mapReviewModelToDto(model.reviews),
         isOnFavorite = model.isOnFavorite,
         isOnWatchlist = model.isOnWatchlist,
         isOnWatched = model.isOnWatched,
@@ -51,7 +51,7 @@ fun mapMovieModelToMovieDto(model: MovieModel): MovieDto {
         isDetailed = model.isDetailed
     )
 }
-fun mapMovieModelToMovieDto(models: List<MovieModel>): List<MovieDto> {
-    return models.map { mapMovieModelToMovieDto(it) }
+fun mapMovieModelToDto(models: List<MovieModel>): List<MovieDto> {
+    return models.map { mapMovieModelToDto(it) }
 }
 

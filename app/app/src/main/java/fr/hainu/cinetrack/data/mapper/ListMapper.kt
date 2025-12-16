@@ -3,7 +3,7 @@ package fr.hainu.cinetrack.data.mapper
 import fr.hainu.cinetrack.data.remote.models.ListDto
 import fr.hainu.cinetrack.domain.models.ListModel
 
-fun mapListDtoToListModel(dto: ListDto): ListModel {
+fun mapListDtoToModel(dto: ListDto): ListModel {
     return ListModel(
         id = dto.id,
         name = dto.name,
@@ -14,10 +14,10 @@ fun mapListDtoToListModel(dto: ListDto): ListModel {
     )
 }
 
-fun mapListDtoToListModel(dtos: List<ListDto>): List<ListModel> {
-    return dtos.map { mapListDtoToListModel(it) }
+fun mapListDtoToModel(dtos: List<ListDto>): List<ListModel> {
+    return dtos.map { mapListDtoToModel(it) }
 }
-fun mapListModelToListDto(model: ListModel): ListDto {
+fun mapListModelToDto(model: ListModel): ListDto {
     return ListDto(
         id = model.id,
         name = model.name,
@@ -27,6 +27,6 @@ fun mapListModelToListDto(model: ListModel): ListDto {
         updatedAt = model.updatedAt
     )
 }
-fun mapListModelToListDto(models: List<ListModel>): List<ListDto> {
-    return models.map { mapListModelToListDto(it) }
+fun mapListModelToDto(models: List<ListModel>): List<ListDto> {
+    return models.map { mapListModelToDto(it) }
 }
