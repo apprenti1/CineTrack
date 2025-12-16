@@ -17,4 +17,4 @@ tmdb.base.url=https://api.themoviedb.org/3/
 # CineTrack API (Backend)
 # Pour émulateur Android: 10.0.2.2 = localhost de votre machine
 # Pour appareil physique: utilisez l'IP de votre machine (ex: 192.168.1.x)
-cinetrack.api.url=http://10.0.2.2:3000
+cinetrack.api.url=http://192.168.1.56:3000

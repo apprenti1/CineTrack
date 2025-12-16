@@ -266,4 +266,35 @@ class MockUserRepository {
             Result.failure(e)
         }
     }
+
+    fun updateProfile(token: String, pseudo: String, email: String): Result<UserResponse> {
+        return try {
+            // Mock implementation since backend might not support it yet or we want to test locally
+            // In a real scenario, this would make a PUT request to /users/profile
+            // For now, we simulate a success response with updated data
+             val connection = URL("${baseUrl}/users/profile").openConnection() as HttpURLConnection
+            connection.requestMethod = "PUT"
+            connection.setRequestProperty("Authorization", "Bearer $token")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.doOutput = true
+
+            val requestBody = gson.toJson(mapOf("pseudo" to pseudo, "email" to email))
+            connection.outputStream.use { it.write(requestBody.toByteArray()) }
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = connection.inputStream.bufferedReader().use { it.readText() }
+                val response = gson.fromJson(json, UserResponse::class.java)
+                Result.success(response)
+            } else {
+                // Fallback for mock if backend fails (e.g. 404 or 405) or for local testing without valid backend
+                // This is purely for demonstration if the backend endpoint is missing
+                 val errorJson = connection.errorStream?.bufferedReader()?.use { it.readText() }
+                 Result.failure(Exception("Update profile failed: ${connection.responseCode} - $errorJson"))
+            }
+        } catch (e: Exception) {
+             e.printStackTrace()
+             Result.failure(e)
+        }
+    }
 }

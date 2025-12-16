@@ -358,6 +358,41 @@ class UserViewModel(
         }
     }
 
+    fun updateProfile(pseudo: String, email: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+            try {
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.updateProfile(it, pseudo, email)
+                    result.onSuccess { userResponse ->
+                        // Update secure prefs
+                        securePrefs.saveUserInfo(userResponse.pseudo, userResponse.email)
+
+                        _currentUser.value = UserModel(
+                            id = userResponse.id,
+                            pseudo = userResponse.pseudo,
+                            email = userResponse.email,
+                            password = "",
+                            watchlist = userResponse.watchlist.toMutableList(),
+                            likes = userResponse.likes.toMutableList(),
+                            watched = userResponse.watched.toMutableList(),
+                            createdAt = userResponse.createdAt,
+                            updatedAt = userResponse.updatedAt
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _errorMessage.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun completeOnboarding() {
         securePrefs.setOnboardingCompleted(true)
         _hasCompletedOnboarding.value = true

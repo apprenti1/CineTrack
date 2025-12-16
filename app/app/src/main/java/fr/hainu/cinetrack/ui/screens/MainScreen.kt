@@ -37,8 +37,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     viewModel: MoviesViewModel = viewModel(),
-    
-    onMovieClick: (MovieModel) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
     val currentPage = remember { mutableStateOf(NavItem.HOME) }
@@ -100,7 +100,14 @@ fun MainScreen(
                     2 -> CollectionScreen(
                         onMovieClick = onMovieClick,
                     )
-                    3 -> PlaceholderScreenContent(title = "Profil")
+                    3 -> ProfileScreen(
+                        viewModel = viewModel(), // We can perform simple injection here, ideally we should pass it from above or use Hilt properly
+                        onNavigateBack = {
+                            coroutineScope.launch { pagerState.animateScrollToPage(0) }
+                            currentPage.value = NavItem.HOME
+                        },
+                        onLogout = onLogout
+                    )
                 }
             }
         }
@@ -158,22 +165,4 @@ fun ExploreScreenContent(
         onNavItemClick = {},
         hideBottomNav = true
     )
-}
-
-@Composable
-fun PlaceholderScreenContent(title: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Gray900)
-    ) {
-        Text(
-            text = title,
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.Center)
-        )
-    }
 }
