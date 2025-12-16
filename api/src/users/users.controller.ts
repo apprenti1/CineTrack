@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Delete,
   Body,
   Param,
@@ -17,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateWatchlistDto } from './dto/update-watchlist.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('users')
@@ -32,6 +34,14 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Non autorisé' })
   async getProfile(@Request() req) {
     return this.usersService.getProfile(req.user.id as string);
+  }
+
+  @Put('profile')
+  @ApiOperation({ summary: "Mettre à jour le profil de l'utilisateur" })
+  @ApiResponse({ status: 200, description: 'Profil mis à jour avec succès' })
+  @ApiResponse({ status: 401, description: 'Non autorisé' })
+  async updateProfile(@Request() req, @Body() dto: UpdateProfileDto) {
+    return this.usersService.updateProfile(req.user.id as string, dto);
   }
 
   @Post('watchlist')

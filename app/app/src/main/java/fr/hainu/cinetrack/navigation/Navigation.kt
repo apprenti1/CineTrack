@@ -24,6 +24,7 @@ object Destinations {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val HOME = "home"
+    const val PROFILE = "profile"
     const val MOVIE_DETAILS = "movie_details/{movieJson}"
 
     fun movieDetails(movie: MovieModel): String {
@@ -130,8 +131,12 @@ fun NavGraph() {
             MainScreen(
                 onMovieClick = { movie ->
                     navController.navigate(Destinations.movieDetails(movie))
+                },
+                onLogout = {
+                    navController.navigate(Destinations.AUTH) {
+                        popUpTo(Destinations.HOME) { inclusive = true }
+                    }
                 }
-
             )
         }
 
