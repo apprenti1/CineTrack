@@ -37,7 +37,8 @@ class MockUserRepository {
         val createdAt: String,
         val updatedAt: String,
         val watchlist: List<Int>,
-        val likes: List<Int>
+        val likes: List<Int>,
+        val watched: List<Int>
     )
 
     suspend fun register(pseudo: String, email: String, password: String): Result<AuthResponse> {
@@ -198,6 +199,53 @@ class MockUserRepository {
             } else {
                 val errorJson = connection.errorStream?.bufferedReader()?.use { it.readText() }
                 Result.failure(Exception("Remove from likes failed: ${connection.responseCode} - $errorJson"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    suspend fun addToWatched(token: String, filmId: Int): Result<UserResponse> {
+        return try {
+            val connection = URL("${baseUrl}/users/watched").openConnection() as HttpURLConnection
+            connection.requestMethod = "POST"
+            connection.setRequestProperty("Authorization", "Bearer $token")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.doOutput = true
+
+            val requestBody = gson.toJson(mapOf("filmId" to filmId))
+            connection.outputStream.use { it.write(requestBody.toByteArray()) }
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = connection.inputStream.bufferedReader().use { it.readText() }
+                val response = gson.fromJson(json, UserResponse::class.java)
+                Result.success(response)
+            } else {
+                val errorJson = connection.errorStream?.bufferedReader()?.use { it.readText() }
+                Result.failure(Exception("Add to watched failed: ${connection.responseCode} - $errorJson"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    suspend fun removeFromWatched(token: String, filmId: Int): Result<UserResponse> {
+        return try {
+            val connection = URL("${baseUrl}/users/watched/$filmId").openConnection() as HttpURLConnection
+            connection.requestMethod = "DELETE"
+            connection.setRequestProperty("Authorization", "Bearer $token")
+            connection.setRequestProperty("Accept", "application/json")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val json = connection.inputStream.bufferedReader().use { it.readText() }
+                val response = gson.fromJson(json, UserResponse::class.java)
+                Result.success(response)
+            } else {
+                val errorJson = connection.errorStream?.bufferedReader()?.use { it.readText() }
+                Result.failure(Exception("Remove from watched failed: ${connection.responseCode} - $errorJson"))
             }
         } catch (e: Exception) {
             e.printStackTrace()

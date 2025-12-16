@@ -14,6 +14,7 @@ export class UsersService {
         email: true,
         watchlist: true,
         likes: true,
+        watched: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -36,19 +37,29 @@ export class UsersService {
     }
 
     if (user.watchlist.includes(filmId)) {
-      return { message: 'Film déjà dans la watchlist' };
+      return this.getProfile(userId);
     }
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         watchlist: {
           push: filmId,
         },
       },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    return { message: 'Film ajouté à la watchlist' };
+    return updatedUser;
   }
 
   async removeFromWatchlist(userId: string, filmId: number) {
@@ -62,14 +73,24 @@ export class UsersService {
 
     const updatedWatchlist = user.watchlist.filter((id) => id !== filmId);
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         watchlist: updatedWatchlist,
       },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    return { message: 'Film retiré de la watchlist' };
+    return updatedUser;
   }
 
   async addToLikes(userId: string, filmId: number) {
@@ -82,19 +103,29 @@ export class UsersService {
     }
 
     if (user.likes.includes(filmId)) {
-      return { message: 'Film déjà dans les likes' };
+      return this.getProfile(userId);
     }
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         likes: {
           push: filmId,
         },
       },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    return { message: 'Film ajouté aux likes' };
+    return updatedUser;
   }
 
   async removeFromLikes(userId: string, filmId: number) {
@@ -108,13 +139,89 @@ export class UsersService {
 
     const updatedLikes = user.likes.filter((id) => id !== filmId);
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data: {
         likes: updatedLikes,
       },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    return { message: 'Film retiré des likes' };
+    return updatedUser;
+  }
+
+  async addToWatched(userId: string, filmId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+
+    if (user.watched.includes(filmId)) {
+      return this.getProfile(userId);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        watched: {
+          push: filmId,
+        },
+      },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async removeFromWatched(userId: string, filmId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Utilisateur non trouvé');
+    }
+
+    const updatedWatched = user.watched.filter((id) => id !== filmId);
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        watched: updatedWatched,
+      },
+      select: {
+        id: true,
+        pseudo: true,
+        email: true,
+        watchlist: true,
+        likes: true,
+        watched: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return updatedUser;
   }
 }

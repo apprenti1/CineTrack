@@ -67,4 +67,21 @@ export class UsersController {
       parseInt(filmId),
     );
   }
+
+  @Post('watched')
+  @ApiOperation({ summary: 'Ajouter un film aux films vus' })
+  @ApiResponse({ status: 200, description: 'Film ajouté aux films vus' })
+  async addToWatched(@Request() req, @Body() dto: UpdateWatchlistDto) {
+    return this.usersService.addToWatched(req.user.id as string, dto.filmId);
+  }
+
+  @Delete('watched/:filmId')
+  @ApiOperation({ summary: 'Retirer un film des films vus' })
+  @ApiResponse({ status: 200, description: 'Film retiré des films vus' })
+  async removeFromWatched(@Request() req, @Param('filmId') filmId: string) {
+    return this.usersService.removeFromWatched(
+      req.user.id as string,
+      parseInt(filmId),
+    );
+  }
 }

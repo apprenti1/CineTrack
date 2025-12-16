@@ -20,6 +20,7 @@ model User {
   password  String
   watchlist Int[]    @default([])
   likes     Int[]    @default([])
+  watched   Int[]    @default([])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -66,6 +66,7 @@ fun MovieDetailsScreen(
 ) {
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
+    val currentUser by userViewModel.currentUser.collectAsState()
     var showTrailer by remember { mutableStateOf(false) }
     var showRatingModal by remember { mutableStateOf(false) }
 
@@ -77,6 +78,11 @@ fun MovieDetailsScreen(
 
     // Use currentMovie if available, otherwise use the parameter
     val displayMovie = currentMovie ?: movie
+
+    // Determine movie states based on user data
+    val isOnWatchlist = currentUser?.watchlist?.contains(displayMovie.id) ?: false
+    val isOnFavorite = currentUser?.likes?.contains(displayMovie.id) ?: false
+    val isOnWatched = currentUser?.watched?.contains(displayMovie.id) ?: false
 
     // Utiliser les données du film passé en paramètre
     val similarMovies = getMockMovies().filter { it.id != displayMovie.id }.take(3)
@@ -144,13 +150,31 @@ fun MovieDetailsScreen(
 
             if (isLoggedIn) {
                 ActionButtons(
-                    isOnFavorite = displayMovie.isOnFavorite,
-                    isOnWatchlist = displayMovie.isOnWatchlist,
-                    isOnWatched = displayMovie.isOnWatched,
+                    isOnFavorite = isOnFavorite,
+                    isOnWatchlist = isOnWatchlist,
+                    isOnWatched = isOnWatched,
                     isRated = displayMovie.isRated,
-                    onFavoriteClick = { displayMovie.switchFavoriteState() },
-                    onWatchlistClick = { displayMovie.switchWatchlistState() },
-                    onWatchedClick = { displayMovie.switchWatchedState() },
+                    onFavoriteClick = {
+                        if (isOnFavorite) {
+                            userViewModel.removeFromLikes(displayMovie.id)
+                        } else {
+                            userViewModel.addToLikes(displayMovie.id)
+                        }
+                    },
+                    onWatchlistClick = {
+                        if (isOnWatchlist) {
+                            userViewModel.removeFromWatchlist(displayMovie.id)
+                        } else {
+                            userViewModel.addToWatchlist(displayMovie.id)
+                        }
+                    },
+                    onWatchedClick = {
+                        if (isOnWatched) {
+                            userViewModel.removeFromWatched(displayMovie.id)
+                        } else {
+                            userViewModel.addToWatched(displayMovie.id)
+                        }
+                    },
                     onRateClick = { showRatingModal = true }
                 )
 

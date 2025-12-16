@@ -61,6 +61,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                         password = "",
                         watchlist = authResponse.user.watchlist,
                         likes = authResponse.user.likes,
+                        watched = authResponse.user.watched,
                         createdAt = authResponse.user.createdAt,
                         updatedAt = authResponse.user.updatedAt
                     )
@@ -98,6 +99,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                         password = "",
                         watchlist = authResponse.user.watchlist,
                         likes = authResponse.user.likes,
+                        watched = authResponse.user.watched,
                         createdAt = authResponse.user.createdAt,
                         updatedAt = authResponse.user.updatedAt
                     )
@@ -139,6 +141,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                             password = "",
                             watchlist = userResponse.watchlist,
                             likes = userResponse.likes,
+                            watched = userResponse.watched,
                             createdAt = userResponse.createdAt,
                             updatedAt = userResponse.updatedAt
                         )
@@ -165,7 +168,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                     val result = repository.addToWatchlist(it, movieId)
                     result.onSuccess { userResponse ->
                         _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
@@ -186,7 +191,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                     val result = repository.removeFromWatchlist(it, movieId)
                     result.onSuccess { userResponse ->
                         _currentUser.value = _currentUser.value?.copy(
-                            watchlist = userResponse.watchlist
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
@@ -207,7 +214,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                     val result = repository.addToLikes(it, movieId)
                     result.onSuccess { userResponse ->
                         _currentUser.value = _currentUser.value?.copy(
-                            likes = userResponse.likes
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message
@@ -228,7 +237,55 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                     val result = repository.removeFromLikes(it, movieId)
                     result.onSuccess { userResponse ->
                         _currentUser.value = _currentUser.value?.copy(
-                            likes = userResponse.likes
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _errorMessage.value = e.message
+            }
+        }
+    }
+
+    fun addToWatched(movieId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.addToWatched(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
+                        )
+                    }.onFailure { error ->
+                        _errorMessage.value = error.message
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _errorMessage.value = e.message
+            }
+        }
+    }
+
+    fun removeFromWatched(movieId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val token = securePrefs.getAuthToken()
+                token?.let {
+                    val result = repository.removeFromWatched(it, movieId)
+                    result.onSuccess { userResponse ->
+                        _currentUser.value = _currentUser.value?.copy(
+                            watchlist = userResponse.watchlist,
+                            likes = userResponse.likes,
+                            watched = userResponse.watched
                         )
                     }.onFailure { error ->
                         _errorMessage.value = error.message

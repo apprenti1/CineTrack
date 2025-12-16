@@ -18,6 +18,7 @@ app/.idea/
 *.swp
 *.swo
 *~
+CL*
 
 # OS
 .DS_Store
