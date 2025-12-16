@@ -21,6 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.domain.models.MovieModel
+<<<<<<< HEAD
+=======
+import fr.hainu.cinetrack.ui.mock.MockMovieRepository
+//import fr.hainu.cinetrack.ui.mock.getMockMovies
+>>>>>>> d6b09d2b72ad70fcd721470e9f58066faaa7dd3d
 
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400
