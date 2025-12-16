@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import androidx.core.content.edit
 
 class SecurePreferencesManager(context: Context) {
 
@@ -32,7 +33,7 @@ class SecurePreferencesManager(context: Context) {
 
     // Auth Token (sécurisé)
     fun saveAuthToken(token: String) {
-        encryptedPrefs.edit().putString(KEY_AUTH_TOKEN, token).apply()
+        encryptedPrefs.edit { putString(KEY_AUTH_TOKEN, token) }
     }
 
     fun getAuthToken(): String? {
@@ -40,12 +41,12 @@ class SecurePreferencesManager(context: Context) {
     }
 
     fun clearAuthToken() {
-        encryptedPrefs.edit().remove(KEY_AUTH_TOKEN).apply()
+        encryptedPrefs.edit { remove(KEY_AUTH_TOKEN) }
     }
 
     // User ID (sécurisé)
     fun saveUserId(userId: String) {
-        encryptedPrefs.edit().putString(KEY_USER_ID, userId).apply()
+        encryptedPrefs.edit { putString(KEY_USER_ID, userId) }
     }
 
     fun getUserId(): String? {
@@ -54,10 +55,10 @@ class SecurePreferencesManager(context: Context) {
 
     // User Info (régulier - pas sensible)
     fun saveUserInfo(pseudo: String, email: String) {
-        regularPrefs.edit()
-            .putString(KEY_USER_PSEUDO, pseudo)
-            .putString(KEY_USER_EMAIL, email)
-            .apply()
+        regularPrefs.edit {
+            putString(KEY_USER_PSEUDO, pseudo)
+                .putString(KEY_USER_EMAIL, email)
+        }
     }
 
     fun getUserPseudo(): String? {
@@ -70,7 +71,7 @@ class SecurePreferencesManager(context: Context) {
 
     // Onboarding (régulier)
     fun setOnboardingCompleted(completed: Boolean) {
-        regularPrefs.edit().putBoolean(KEY_HAS_COMPLETED_ONBOARDING, completed).apply()
+        regularPrefs.edit { putBoolean(KEY_HAS_COMPLETED_ONBOARDING, completed) }
     }
 
     fun hasCompletedOnboarding(): Boolean {
@@ -79,11 +80,11 @@ class SecurePreferencesManager(context: Context) {
 
     // Clear all user data
     fun clearAll() {
-        encryptedPrefs.edit().clear().apply()
-        regularPrefs.edit()
-            .remove(KEY_USER_PSEUDO)
-            .remove(KEY_USER_EMAIL)
-            .apply()
+        encryptedPrefs.edit { clear() }
+        regularPrefs.edit {
+            remove(KEY_USER_PSEUDO)
+                .remove(KEY_USER_EMAIL)
+        }
     }
 
     // Check if user is logged in

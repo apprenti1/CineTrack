@@ -8,9 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,9 +35,7 @@ fun AuthChoiceScreen(
 ) {
 
 
-    val isLoading by userViewModel.isLoading.collectAsState()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
-    val errorMessage by userViewModel.errorMessage.collectAsState()
 
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {

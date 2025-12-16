@@ -67,7 +67,7 @@ fun MovieListDebugPreview() {
 
     LaunchedEffect(Unit) {
         movies = repository.getMovies(MockMovieRepository.MovieType.TREND)
-        movies.get(0).pullMoreDetails()
+        movies[0].pullMoreDetails()
     }
 
     MovieListDebug(movies)

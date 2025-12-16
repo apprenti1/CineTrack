@@ -33,7 +33,6 @@ fun HomeScreen(
     activeNavItem: NavItem = NavItem.HOME,
     onNavItemClick: (NavItem) -> Unit = {},
     hideBottomNav: Boolean = false,
-    hideSearchBar: Boolean = false,
     onSeeAllClick: () -> Unit = {}
 ) {
     val trendingMoviesWeek: List<MovieModel> by viewModel.trendingMoviesWeek.collectAsState()

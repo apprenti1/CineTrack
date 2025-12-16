@@ -1,7 +1,6 @@
 package fr.hainu.cinetrack.ui.screens
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -46,12 +45,13 @@ import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import androidx.core.net.toUri
 
 fun extractVideoId(ytUrl: String): String? {
     return try {
-        val uri = Uri.parse(ytUrl)
+        val uri = ytUrl.toUri()
         uri.getQueryParameter("v")
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 }
@@ -61,8 +61,7 @@ fun MovieDetailsScreen(
     movie: MovieModel,
     viewModel: MoviesViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
-    onBackClick: () -> Unit = {},
-    onRateClick: () -> Unit = {}
+    onBackClick: () -> Unit = {}
 ) {
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
@@ -228,7 +227,8 @@ fun MovieDetailsScreen(
                                         if (error == PlayerConstants.PlayerError.VIDEO_NOT_PLAYABLE_IN_EMBEDDED_PLAYER) {
                                             showTrailer = false
                                             Toast.makeText(context, "Lecture impossible dans l'app, ouverture sur YouTube", Toast.LENGTH_LONG).show()
-                                            val playIntent = Intent(Intent.ACTION_VIEW, Uri.parse(displayMovie.trailerUrl))
+                                            val playIntent = Intent(Intent.ACTION_VIEW,
+                                                displayMovie.trailerUrl.toUri())
                                             context.startActivity(playIntent)
                                         } else {
                                             showTrailer = false
@@ -263,10 +263,10 @@ fun MovieDetailsScreen(
             onSubmit = { rating, comment ->
                 // TODO: Implement rating submission
                 showRatingModal = false
-                android.widget.Toast.makeText(
+                Toast.makeText(
                     context,
                     "Note enregistrée : $rating/5",
-                    android.widget.Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         )
