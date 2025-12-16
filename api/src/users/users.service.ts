@@ -36,8 +36,19 @@ export class UsersService {
       throw new NotFoundException('Utilisateur non trouvé');
     }
 
+    // Vérifier si le film n'est pas déjà dans la watchlist
     if (user.watchlist.includes(filmId)) {
-      return this.getProfile(userId);
+      // Retourner les données actuelles sans faire d'update
+      return {
+        id: user.id,
+        pseudo: user.pseudo,
+        email: user.email,
+        watchlist: user.watchlist,
+        likes: user.likes,
+        watched: user.watched,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
     }
 
     const updatedUser = await this.prisma.user.update({
@@ -103,7 +114,17 @@ export class UsersService {
     }
 
     if (user.likes.includes(filmId)) {
-      return this.getProfile(userId);
+      // Retourner les données actuelles sans faire d'update
+      return {
+        id: user.id,
+        pseudo: user.pseudo,
+        email: user.email,
+        watchlist: user.watchlist,
+        likes: user.likes,
+        watched: user.watched,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
     }
 
     const updatedUser = await this.prisma.user.update({
@@ -169,7 +190,17 @@ export class UsersService {
     }
 
     if (user.watched.includes(filmId)) {
-      return this.getProfile(userId);
+      // Retourner les données actuelles sans faire d'update
+      return {
+        id: user.id,
+        pseudo: user.pseudo,
+        email: user.email,
+        watchlist: user.watchlist,
+        likes: user.likes,
+        watched: user.watched,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
     }
 
     const updatedUser = await this.prisma.user.update({
