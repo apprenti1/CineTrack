@@ -39,8 +39,7 @@ fun MainScreen(
     moviesViewModel: MoviesViewModel,
     userViewModel: UserViewModel,
     onMovieClick: (MovieModel) -> Unit = {},
-    onNavigateToAuth: () -> Unit = {}
-    viewModel: MoviesViewModel = viewModel(),
+    onNavigateToAuth: () -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
     val viewModel = moviesViewModel
