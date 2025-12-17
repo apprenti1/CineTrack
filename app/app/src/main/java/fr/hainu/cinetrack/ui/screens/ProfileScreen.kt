@@ -10,10 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +34,16 @@ fun ProfileScreen(
     val currentUser by userViewModel.currentUser.collectAsState()
     val errorMessage by userViewModel.errorMessage.collectAsState()
     val context = LocalContext.current
+    var isEditing by remember { mutableStateOf(false) }
+    var editPseudo by remember { mutableStateOf("") }
+    var editEmail by remember { mutableStateOf("") }
+
+    LaunchedEffect(currentUser) {
+        currentUser?.let {
+            editPseudo = it.pseudo
+            editEmail = it.email
+        }
+    }
 
     LaunchedEffect(errorMessage) {
         errorMessage?.let {
@@ -59,6 +66,15 @@ fun ProfileScreen(
             // Profile Header
             ProfileHeader(
                 currentUser = currentUser,
+                isEditing = isEditing,
+                onEditClick = { isEditing = true },
+                onCancelEdit = {
+                    isEditing = false
+                    currentUser?.let {
+                        editPseudo = it.pseudo
+                        editEmail = it.email
+                    }
+                },
                 onLogout = {
                     userViewModel.logout()
                     onLogout()
@@ -68,23 +84,28 @@ fun ProfileScreen(
             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Main Stats (Films vus / Séries vues)
-                MainStatsSection(currentUser = currentUser)
+                if (isEditing) {
+                    // Edit Profile Form
+                    EditProfileSection(
+                        pseudo = editPseudo,
+                        email = editEmail,
+                        onPseudoChange = { editPseudo = it },
+                        onEmailChange = { editEmail = it },
+                        onSave = {
+                            // TODO: Add updateProfile method to UserViewModel when backend endpoint is ready
+                            Toast.makeText(context, "Fonctionnalité en cours de développement", Toast.LENGTH_SHORT).show()
+                            isEditing = false
+                        }
+                    )
+                } else {
+                    // User Info Display
+                    UserInfoCard(currentUser = currentUser)
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // Additional Stats Card
-                AdditionalStatsCard(currentUser = currentUser)
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Genres Favoris
-                FavoriteGenresSection()
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Badges
-                BadgesSection(currentUser = currentUser)
+                    // Main Stats
+                    StatsSection(currentUser = currentUser)
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -95,6 +116,9 @@ fun ProfileScreen(
 @Composable
 fun ProfileHeader(
     currentUser: UserModel?,
+    isEditing: Boolean,
+    onEditClick: () -> Unit,
+    onCancelEdit: () -> Unit,
     onLogout: () -> Unit
 ) {
     Row(
@@ -135,63 +159,267 @@ fun ProfileHeader(
                 color = Color.White
             )
             Text(
-                text = "Cinéphile depuis 2024",
+                text = currentUser?.email ?: "",
                 fontSize = 14.sp,
                 color = Gray400
             )
         }
 
-        // Logout button
-        IconButton(onClick = onLogout) {
+        // Action buttons
+        if (isEditing) {
+            IconButton(onClick = onCancelEdit) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Annuler",
+                    tint = Gray400,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        } else {
+            IconButton(onClick = onEditClick) {
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "Modifier",
+                    tint = Gray400,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+            IconButton(onClick = onLogout) {
+                Icon(
+                    Icons.Default.ExitToApp,
+                    contentDescription = "Déconnexion",
+                    tint = Color(0xFFEF4444),
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun EditProfileSection(
+    pseudo: String,
+    email: String,
+    onPseudoChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
+    Column {
+        Text(
+            text = "Modifier le profil",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Pseudo field
+        OutlinedTextField(
+            value = pseudo,
+            onValueChange = onPseudoChange,
+            label = { Text("Pseudo", color = Gray400) },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = Purple600
+                )
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Gray800,
+                unfocusedContainerColor = Gray800,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedBorderColor = Purple600,
+                unfocusedBorderColor = Gray700,
+                cursorColor = Purple600
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Email field
+        OutlinedTextField(
+            value = email,
+            onValueChange = onEmailChange,
+            label = { Text("Email", color = Gray400) },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Email,
+                    contentDescription = null,
+                    tint = Purple600
+                )
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Gray800,
+                unfocusedContainerColor = Gray800,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedBorderColor = Purple600,
+                unfocusedBorderColor = Gray700,
+                cursorColor = Purple600
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Save button
+        Button(
+            onClick = onSave,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Purple600),
+            shape = RoundedCornerShape(12.dp)
+        ) {
             Icon(
-                Icons.Default.ExitToApp,
-                contentDescription = "Déconnexion",
-                tint = Gray400,
-                modifier = Modifier.size(28.dp)
+                Icons.Default.Check,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Enregistrer les modifications",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
             )
         }
     }
 }
 
 @Composable
-fun MainStatsSection(currentUser: UserModel?) {
+fun UserInfoCard(currentUser: UserModel?) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Gray800)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Informations du compte",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Pseudo
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = Purple400,
+                    modifier = Modifier.size(20.dp)
+                )
+                Column {
+                    Text(
+                        text = "Pseudo",
+                        fontSize = 12.sp,
+                        color = Gray400
+                    )
+                    Text(
+                        text = currentUser?.pseudo ?: "Non défini",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Divider(color = Gray700, thickness = 1.dp)
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Email
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    Icons.Default.Email,
+                    contentDescription = null,
+                    tint = Purple400,
+                    modifier = Modifier.size(20.dp)
+                )
+                Column {
+                    Text(
+                        text = "Email",
+                        fontSize = 12.sp,
+                        color = Gray400
+                    )
+                    Text(
+                        text = currentUser?.email ?: "Non défini",
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun StatsSection(currentUser: UserModel?) {
+    val watchlistCount = currentUser?.watchlist?.size ?: 0
     val watchedCount = currentUser?.watched?.size ?: 0
-    val seriesCount = 0 // TODO: Add series when implemented
+    val likesCount = currentUser?.likes?.size ?: 0
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Films vus
-        GradientStatCard(
+        // Watchlist
+        StatCard(
             modifier = Modifier.weight(1f),
-            icon = Icons.Default.Star,
-            count = watchedCount,
-            label = "Films vus",
-            gradientColors = listOf(Color(0xFF581C87), Color(0xFF7E22CE)),
-            iconTint = Color(0xFFD8B4FE)
+            icon = Icons.Default.Notifications,
+            count = watchlistCount,
+            label = "À voir",
+            gradientColors = listOf(Color(0xFF7C3AED), Color(0xFF9333EA))
         )
 
-        // Séries vues (placeholder)
-        GradientStatCard(
+        // Watched
+        StatCard(
             modifier = Modifier.weight(1f),
-            icon = Icons.Default.PlayArrow,
-            count = seriesCount,
-            label = "Séries vues",
-            gradientColors = listOf(Color(0xFF831843), Color(0xFFC026D3)),
-            iconTint = Color(0xFFF9A8D4)
+            icon = Icons.Default.Check,
+            count = watchedCount,
+            label = "Vus",
+            gradientColors = listOf(Color(0xFF059669), Color(0xFF10B981))
+        )
+
+        // Likes
+        StatCard(
+            modifier = Modifier.weight(1f),
+            icon = Icons.Default.Favorite,
+            count = likesCount,
+            label = "J'aime",
+            gradientColors = listOf(Color(0xFFDC2626), Color(0xFFEF4444))
         )
     }
 }
 
 @Composable
-fun GradientStatCard(
+fun StatCard(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     count: Int,
     label: String,
-    gradientColors: List<Color>,
-    iconTint: Color
+    gradientColors: List<Color>
 ) {
     Card(
         modifier = modifier,
@@ -204,258 +432,31 @@ fun GradientStatCard(
                 .background(
                     brush = Brush.linearGradient(colors = gradientColors)
                 )
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(32.dp)
+                    tint = Color.White.copy(alpha = 0.9f),
+                    modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = count.toString(),
-                    fontSize = 32.sp,
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
                     text = label,
-                    fontSize = 14.sp,
-                    color = iconTint
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.9f)
                 )
             }
         }
-    }
-}
-
-@Composable
-fun AdditionalStatsCard(currentUser: UserModel?) {
-    val watchedCount = currentUser?.watched?.size ?: 0
-    val averageRating = 7.8f // TODO: Calculate from actual ratings
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Gray800)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Temps de visionnage (approximatif: 2h par film)
-            StatRow(
-                label = "Temps de visionnage",
-                value = "${watchedCount * 2}h"
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Note moyenne
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Note moyenne",
-                    fontSize = 14.sp,
-                    color = Gray400
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color(0xFFFBBF24),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = averageRating.toString(),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Films cette année
-            StatRow(
-                label = "Films cette année",
-                value = watchedCount.toString()
-            )
-        }
-    }
-}
-
-@Composable
-fun StatRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Gray400
-        )
-        Text(
-            text = value,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
-        )
-    }
-}
-
-@Composable
-fun FavoriteGenresSection() {
-    Column {
-        Text(
-            text = "Genres favoris",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Genre bars with progress
-        GenreBar(genre = "Sci-Fi", percentage = 0.85f, color = Purple600)
-        Spacer(modifier = Modifier.height(8.dp))
-        GenreBar(genre = "Action", percentage = 0.70f, color = Color(0xFF3B82F6))
-        Spacer(modifier = Modifier.height(8.dp))
-        GenreBar(genre = "Drame", percentage = 0.60f, color = Color(0xFFEC4899))
-        Spacer(modifier = Modifier.height(8.dp))
-        GenreBar(genre = "Comédie", percentage = 0.45f, color = Color(0xFF10B981))
-    }
-}
-
-@Composable
-fun GenreBar(genre: String, percentage: Float, color: Color) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Progress bar
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(Gray800)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(percentage)
-                    .background(color)
-            )
-        }
-
-        // Genre name
-        Text(
-            text = genre,
-            fontSize = 14.sp,
-            color = Color.White,
-            modifier = Modifier.width(80.dp)
-        )
-    }
-}
-
-@Composable
-fun BadgesSection(currentUser: UserModel?) {
-    val watchedCount = currentUser?.watched?.size ?: 0
-
-    Column {
-        Text(
-            text = "Badges",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            BadgeItem(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Star,
-                label = "100 Films",
-                gradientColors = listOf(Color(0xFFD97706), Color(0xFFEA580C)),
-                isUnlocked = watchedCount >= 100
-            )
-            BadgeItem(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Edit,
-                label = "Critique",
-                gradientColors = listOf(Purple600, Color(0xFFEC4899)),
-                isUnlocked = false // TODO: Check if user has written reviews
-            )
-            BadgeItem(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.DateRange,
-                label = "1 An",
-                gradientColors = listOf(Color(0xFF2563EB), Color(0xFF06B6D4)),
-                isUnlocked = false // TODO: Check account age
-            )
-            BadgeItem(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Warning,
-                label = "Marathon",
-                gradientColors = listOf(Color(0xFF059669), Color(0xFF10B981)),
-                isUnlocked = false // TODO: Check for viewing marathons
-            )
-        }
-    }
-}
-
-@Composable
-fun BadgeItem(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    label: String,
-    gradientColors: List<Color>,
-    isUnlocked: Boolean
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-                .background(
-                    brush = if (isUnlocked) {
-                        Brush.linearGradient(colors = gradientColors)
-                    } else {
-                        Brush.linearGradient(colors = listOf(Gray800, Gray800))
-                    }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = if (isUnlocked) Color.White else Gray600,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = Color.White
-        )
     }
 }
