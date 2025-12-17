@@ -29,14 +29,15 @@ import fr.hainu.cinetrack.ui.components.BottomNavigationBar
 import fr.hainu.cinetrack.ui.components.HomeHeader
 import fr.hainu.cinetrack.ui.components.NavItem
 import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
     moviesViewModel: MoviesViewModel,
-    userViewModel: fr.hainu.cinetrack.ui.viewmodels.UserViewModel,
+    userViewModel: UserViewModel,
     onMovieClick: (MovieModel) -> Unit = {},
     onNavigateToAuth: () -> Unit = {}
 ) {

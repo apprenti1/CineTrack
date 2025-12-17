@@ -1,4 +1,4 @@
-package fr.hainu.cinetrack.ui.viewmodels
+package fr.hainu.cinetrack.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

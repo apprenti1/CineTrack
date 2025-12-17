@@ -43,9 +43,10 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import androidx.core.net.toUri
+import fr.hainu.cinetrack.viewmodels.ReviewViewModel
 
 fun extractVideoId(ytUrl: String): String? {
     return try {
@@ -92,7 +93,7 @@ fun formatTimeAgo(isoDate: String): String {
 fun MovieDetailsScreen(
     moviesViewModel: MoviesViewModel,
     userViewModel: UserViewModel,
-    reviewViewModel: fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel,
+    reviewViewModel: ReviewViewModel,
     movie: MovieModel,
     onBackClick: () -> Unit = {}
 ) {

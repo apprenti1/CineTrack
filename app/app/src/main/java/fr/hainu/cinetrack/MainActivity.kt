@@ -16,9 +16,9 @@ import fr.hainu.cinetrack.domain.usecase.user.*
 import fr.hainu.cinetrack.navigation.NavGraph
 import fr.hainu.cinetrack.network.RetrofitInstance
 import fr.hainu.cinetrack.ui.theme.CineTrackTheme
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
-import fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.ReviewViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 class MainActivity : ComponentActivity() {
 

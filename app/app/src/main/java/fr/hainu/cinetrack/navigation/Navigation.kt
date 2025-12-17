@@ -16,8 +16,9 @@ import fr.hainu.cinetrack.ui.screens.MovieDetailsScreen
 import fr.hainu.cinetrack.ui.screens.OnboardingScreen
 import fr.hainu.cinetrack.ui.screens.RegisterScreen
 import fr.hainu.cinetrack.ui.screens.SplashScreen
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.ReviewViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 object Destinations {
     const val SPLASH = "splash"
@@ -39,7 +40,7 @@ object Destinations {
 fun NavGraph(
     moviesViewModel: MoviesViewModel,
     userViewModel: UserViewModel,
-    reviewViewModel: fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel
+    reviewViewModel: ReviewViewModel
 ) {
     val navController = rememberNavController()
 

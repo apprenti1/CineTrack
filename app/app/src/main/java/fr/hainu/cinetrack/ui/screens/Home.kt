@@ -24,7 +24,7 @@ import fr.hainu.cinetrack.ui.components.NewReleasesSection
 import fr.hainu.cinetrack.ui.components.PopularMoviesSection
 import fr.hainu.cinetrack.ui.components.TrendingSection
 import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
 
 @Composable
 fun HomeScreen(

@@ -30,7 +30,7 @@ import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400
 import fr.hainu.cinetrack.ui.theme.Purple600
 import fr.hainu.cinetrack.ui.theme.Rose500
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 @Composable
 fun RegisterScreen(

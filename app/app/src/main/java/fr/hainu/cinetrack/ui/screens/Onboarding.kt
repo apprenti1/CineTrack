@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.CustomButton
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
