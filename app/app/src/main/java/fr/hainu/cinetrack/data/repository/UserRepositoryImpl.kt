@@ -1,45 +1,117 @@
 package fr.hainu.cinetrack.data.repository
 
-import fr.hainu.cinetrack.data.mapper.mapMovieDtoToModel
-import fr.hainu.cinetrack.data.mapper.mapMovieModelToDto
-import fr.hainu.cinetrack.data.mapper.mapUserDtoToModel
-import fr.hainu.cinetrack.data.mapper.mapUserModelToDto
+import android.util.Log
+import fr.hainu.cinetrack.data.local.SecurePreferencesManager
+import fr.hainu.cinetrack.data.mapper.mapUserResponseDtoToModel
 import fr.hainu.cinetrack.data.remote.UserRemoteDataSource
-import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.domain.repository.UserRepository
 import fr.hainu.cinetrack.domain.models.UserModel
 
 class UserRepositoryImpl(
-    val remote: UserRemoteDataSource = UserRemoteDataSource()
+    private val remoteDataSource: UserRemoteDataSource
 ) : UserRepository {
 
-
-    override suspend fun fetchAll(): List<UserModel> {
-        val dto = remote.fetchUsers()
-        return mapUserDtoToModel(dto)
+    // ============ AUTH ============
+    override suspend fun register(pseudo: String, email: String, password: String): Result<Pair<String, UserModel>> {
+        return try {
+            val authResponse = remoteDataSource.register(pseudo, email, password)
+            val userModel = mapUserResponseDtoToModel(authResponse.user)
+            Result.success(Pair(authResponse.accessToken, userModel))
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Register failed", e)
+            Result.failure(e)
+        }
     }
 
-    override suspend fun fetchById(id: Int): UserModel? {
-        val dto = remote.fetchById(id)
-        return mapUserDtoToModel(dto)
+    override suspend fun login(pseudo: String, password: String): Result<Pair<String, UserModel>> {
+        return try {
+            val authResponse = remoteDataSource.login(pseudo, password)
+            val userModel = mapUserResponseDtoToModel(authResponse.user)
+            Result.success(Pair(authResponse.accessToken, userModel))
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Login failed", e)
+            Result.failure(e)
+        }
     }
 
-    override suspend fun fetchMovies(id : Int): List<MovieModel> {
-        val dto = remote.fetchMovieList(id)
-        return mapMovieDtoToModel(dto)
+    // ============ USERS ============
+    override suspend fun getProfile(): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.getProfile()
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Get profile failed", e)
+            Result.failure(e)
+        }
     }
 
-    override suspend fun add(user: UserModel) {
-        val dto = mapUserModelToDto(user)
-        remote.postUser(dto)
-    }
-    override suspend fun remove(user: UserModel): Boolean {
-        remote.removeUser(user.id)
-        return true
+    // ============ WATCHLIST ============
+    override suspend fun addToWatchlist(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.addToWatchlist(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Add to watchlist failed", e)
+            Result.failure(e)
+        }
     }
 
-    override suspend fun update(user: UserModel) {
-        val dto = mapUserModelToDto(user)
-        remote.updateUser(dto.id, dto)
+    override suspend fun removeFromWatchlist(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.removeFromWatchlist(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Remove from watchlist failed", e)
+            Result.failure(e)
+        }
+    }
+
+    // ============ LIKES ============
+    override suspend fun addToLikes(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.addToLikes(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Add to likes failed", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun removeFromLikes(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.removeFromLikes(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Remove from likes failed", e)
+            Result.failure(e)
+        }
+    }
+
+    // ============ WATCHED ============
+    override suspend fun addToWatched(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.addToWatched(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Add to watched failed", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun removeFromWatched(filmId: Int): Result<UserModel> {
+        return try {
+            val userResponse = remoteDataSource.removeFromWatched(filmId)
+            val userModel = mapUserResponseDtoToModel(userResponse)
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Remove from watched failed", e)
+            Result.failure(e)
+        }
     }
 }
