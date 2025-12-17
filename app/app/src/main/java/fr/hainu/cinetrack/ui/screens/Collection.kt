@@ -28,7 +28,7 @@ import fr.hainu.cinetrack.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 enum class CollectionTab {
-    WATCHLIST, WATCHED, FAVORITES, COLLECTIONS
+    WATCHLIST, WATCHED, FAVORITES
 }
 
 @Composable
@@ -124,7 +124,6 @@ fun CollectionScreen(
             CollectionTab.WATCHLIST -> watchlistMovies
             CollectionTab.WATCHED -> watchedMovies
             CollectionTab.FAVORITES -> favoriteMovies
-            CollectionTab.COLLECTIONS -> emptyList()
         }
 
         if (!isLoggedIn) {
@@ -181,7 +180,6 @@ fun CollectionScreen(
                                     CollectionTab.WATCHLIST -> "Aucun film dans votre watchlist"
                                     CollectionTab.WATCHED -> "Aucun film vu"
                                     CollectionTab.FAVORITES -> "Aucun film favori"
-                                    CollectionTab.COLLECTIONS -> "Aucune collection"
                                 },
                                 fontSize = 14.sp,
                                 color = Gray400
@@ -198,7 +196,6 @@ fun CollectionScreen(
                                 CollectionTab.WATCHLIST -> userViewModel.removeFromWatchlist(movie.id)
                                 CollectionTab.WATCHED -> userViewModel.removeFromWatched(movie.id)
                                 CollectionTab.FAVORITES -> userViewModel.removeFromLikes(movie.id)
-                                CollectionTab.COLLECTIONS -> { /* TODO */ }
                             }
                         }
                     )
@@ -226,7 +223,6 @@ fun CollectionTabs(
                 CollectionTab.WATCHLIST -> "Watchlist"
                 CollectionTab.WATCHED -> "Vus"
                 CollectionTab.FAVORITES -> "Favoris"
-                CollectionTab.COLLECTIONS -> "Collections"
             }
 
             Button(
