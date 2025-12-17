@@ -38,7 +38,8 @@ enum class CollectionTab {
 fun CollectionScreen(
     moviesViewModel: MoviesViewModel,
     userViewModel: UserViewModel,
-    onMovieClick: (MovieModel) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {},
+    onNavigateToAuth: () -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(CollectionTab.WATCHLIST) }
     val currentUser by userViewModel.currentUser.collectAsState()
@@ -55,58 +56,42 @@ fun CollectionScreen(
     var favoriteMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     val isLoading by moviesViewModel.isLoading.collectAsState()
 
-    // Charger les films pour watchlist
-    LaunchedEffect(watchlistIds.hashCode()) {
-        if (watchlistIds.isNotEmpty()) {
-            moviesViewModel.getMoviesByIds(watchlistIds)
-        }
-    }
-
-    // Observer les résultats et les assigner à watchlistMovies quand selectedTab == WATCHLIST
-    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
+    // Charger les films selon l'onglet sélectionné et les IDs
+    LaunchedEffect(selectedTab, watchlistIds.hashCode(), watchedIds.hashCode(), favoriteIds.hashCode()) {
         when (selectedTab) {
             CollectionTab.WATCHLIST -> {
                 if (watchlistIds.isNotEmpty()) {
-                    watchlistMovies = moviesViewModel.moviesByIds.value
+                    moviesViewModel.getMoviesByIds(watchlistIds)
                 } else {
                     watchlistMovies = emptyList()
                 }
             }
-            else -> {}
-        }
-    }
-
-    // Charger les films pour watched
-    LaunchedEffect(watchedIds.hashCode(), selectedTab) {
-        if (watchedIds.isNotEmpty() && selectedTab == CollectionTab.WATCHED) {
-            moviesViewModel.getMoviesByIds(watchedIds)
-        }
-    }
-
-    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
-        if (selectedTab == CollectionTab.WATCHED) {
-            if (watchedIds.isNotEmpty()) {
-                watchedMovies = moviesViewModel.moviesByIds.value
-            } else {
-                watchedMovies = emptyList()
+            CollectionTab.WATCHED -> {
+                if (watchedIds.isNotEmpty()) {
+                    moviesViewModel.getMoviesByIds(watchedIds)
+                } else {
+                    watchedMovies = emptyList()
+                }
             }
-        }
-    }
-
-    // Charger les films pour favorites
-    LaunchedEffect(favoriteIds.hashCode(), selectedTab) {
-        if (favoriteIds.isNotEmpty() && selectedTab == CollectionTab.FAVORITES) {
-            moviesViewModel.getMoviesByIds(favoriteIds)
-        }
-    }
-
-    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
-        if (selectedTab == CollectionTab.FAVORITES) {
-            if (favoriteIds.isNotEmpty()) {
-                favoriteMovies = moviesViewModel.moviesByIds.value
-            } else {
-                favoriteMovies = emptyList()
+            CollectionTab.FAVORITES -> {
+                if (favoriteIds.isNotEmpty()) {
+                    moviesViewModel.getMoviesByIds(favoriteIds)
+                } else {
+                    favoriteMovies = emptyList()
+                }
             }
+            CollectionTab.COLLECTIONS -> {}
+        }
+    }
+
+    // Observer les résultats et les assigner à la bonne liste
+    LaunchedEffect(moviesViewModel.moviesByIds.collectAsState().value) {
+        val movies = moviesViewModel.moviesByIds.value
+        when (selectedTab) {
+            CollectionTab.WATCHLIST -> watchlistMovies = movies
+            CollectionTab.WATCHED -> watchedMovies = movies
+            CollectionTab.FAVORITES -> favoriteMovies = movies
+            CollectionTab.COLLECTIONS -> {}
         }
     }
 
@@ -163,12 +148,30 @@ fun CollectionScreen(
                     .padding(24.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Connectez-vous pour voir votre collection",
-                    fontSize = 16.sp,
-                    color = Gray400,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(bottom = 100.dp)
-                )
+                ) {
+                    Text(
+                        text = "Connectez-vous pour voir votre collection",
+                        fontSize = 16.sp,
+                        color = Gray400
+                    )
+                    Button(
+                        onClick = onNavigateToAuth,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Purple600
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Se connecter",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         } else {
             LazyColumn(

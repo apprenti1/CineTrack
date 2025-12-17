@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     moviesViewModel: MoviesViewModel,
     userViewModel: fr.hainu.cinetrack.ui.viewmodels.UserViewModel,
-    onMovieClick: (MovieModel) -> Unit = {}
+    onMovieClick: (MovieModel) -> Unit = {},
+    onNavigateToAuth: () -> Unit = {}
 ) {
     val viewModel = moviesViewModel
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
@@ -101,7 +102,8 @@ fun MainScreen(
                     2 -> CollectionScreen(
                         moviesViewModel = viewModel,
                         userViewModel = userViewModel,
-                        onMovieClick = onMovieClick
+                        onMovieClick = onMovieClick,
+                        onNavigateToAuth = onNavigateToAuth
                     )
                     3 -> PlaceholderScreenContent(title = "Profil")
                 }

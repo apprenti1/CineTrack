@@ -147,8 +147,10 @@ fun NavGraph(
                 userViewModel = userViewModel,
                 onMovieClick = { movie ->
                     navController.navigate(Destinations.movieDetails(movie))
+                },
+                onNavigateToAuth = {
+                    navController.navigate(Destinations.AUTH)
                 }
-
             )
         }
 
