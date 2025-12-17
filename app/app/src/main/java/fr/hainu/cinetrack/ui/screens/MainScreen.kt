@@ -107,7 +107,7 @@ fun MainScreen(
                         onNavigateToAuth = onNavigateToAuth
                     )
                     3 -> ProfileScreen(
-                        viewModel = viewModel(), // We can perform simple injection here, ideally we should pass it from above or use Hilt properly
+                        userViewModel = userViewModel,
                         onNavigateBack = {
                             coroutineScope.launch { pagerState.animateScrollToPage(0) }
                             currentPage.value = NavItem.HOME

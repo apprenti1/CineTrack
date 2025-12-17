@@ -18,21 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -41,9 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,36 +42,24 @@ import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.ui.theme.Gray800
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple600
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import fr.hainu.cinetrack.domain.models.UserModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    viewModel: UserViewModel,
+    userViewModel: UserViewModel,
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit
 ) {
-    val currentUser by viewModel.currentUser.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val errorMessage by userViewModel.errorMessage.collectAsState()
     val context = LocalContext.current
-
-    var isEditing by remember { mutableStateOf(false) }
-    var pseudo by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-
-    LaunchedEffect(currentUser) {
-        currentUser?.let {
-            pseudo = it.pseudo
-            email = it.email
-        }
-    }
 
     LaunchedEffect(errorMessage) {
         errorMessage?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-            viewModel.clearError()
+            userViewModel.clearError()
         }
     }
 
@@ -98,17 +73,8 @@ fun ProfileScreen(
                     }
                 },
                 actions = {
-                    if (!isEditing) {
-                        IconButton(onClick = { isEditing = true }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Éditer", tint = Color.White)
-                        }
-                    } else {
-                        IconButton(onClick = { isEditing = false }) {
-                            Icon(Icons.Default.Close, contentDescription = "Annuler", tint = Color.White)
-                        }
-                    }
                     IconButton(onClick = {
-                        viewModel.logout()
+                        userViewModel.logout()
                         onLogout()
                     }) {
                         Icon(Icons.Default.ExitToApp, contentDescription = "Déconnexion", tint = Color.Red)
@@ -149,66 +115,7 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                if (isEditing) {
-                    OutlinedTextField(
-                        value = pseudo,
-                        onValueChange = { pseudo = it },
-                        label = { Text("Pseudo", color = Color.Gray) },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Purple600) },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Gray800,
-                            unfocusedContainerColor = Gray800,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White,
-                            focusedBorderColor = Purple600,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Email", color = Color.Gray) },
-                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Purple600) },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Gray800,
-                            unfocusedContainerColor = Gray800,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White,
-                            focusedBorderColor = Purple600,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = {
-                            viewModel.updateProfile(pseudo, email)
-                            isEditing = false
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple600),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        if (isLoading) {
-                            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                        } else {
-                            Text("Enregistrer", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        }
-                    }
-
-                } else {
-                     CurrentUserProfileView(currentUser = currentUser)
-                }
+                CurrentUserProfileView(currentUser = currentUser)
             }
         }
     }
