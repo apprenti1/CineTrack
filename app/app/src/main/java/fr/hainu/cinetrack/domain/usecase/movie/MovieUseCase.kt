@@ -1,9 +1,11 @@
 package fr.hainu.cinetrack.domain.usecase.movie
 
 data class MovieUseCase (
-    val getAllMovie: GetAllMovieUseCase,
-    val getMovieById: GetMovieByIdUseCase,
-    val addMovie: AddMovieUseCase,
-    val updateMovie: UpdateMovieUseCase,
-    val removeMovie: RemoveMovieUseCase,
+    val getTrendingWeek: GetTrendingWeekUseCase,
+    val getPopular: GetPopularUseCase,
+    val getNowPlaying: GetNowPlayingUseCase,
+    val searchMovies: SearchMoviesUseCase,
+    val getMovieDetails: GetMovieDetailsUseCase,
+    val getMoviesByIds: GetMoviesByIdsUseCase,
+    val getSimilarMovies: GetSimilarMoviesUseCase
 )

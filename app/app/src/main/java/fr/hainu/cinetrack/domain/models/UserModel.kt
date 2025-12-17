@@ -9,10 +9,7 @@ package fr.hainu.cinetrack.domain.models
  * @param watchlist: La liste des IDs de films dans la watchlist
  * @param likes: La liste des IDs de films aimés
  * @param watched: La liste des IDs de films vus
- * @param createdAt: La date de création du compte
- * @param updatedAt: La date de dernière modification du compte
  * @param reviews: La liste des reviews/commentaires de l'utilisateur
- * @param lists: La liste des listes personnalisées de l'utilisateur
  **/
 data class UserModel(
     val id: String,
@@ -22,8 +19,5 @@ data class UserModel(
     val watchlist: List<Int> = emptyList(),
     val likes: List<Int> = emptyList(),
     val watched: List<Int> = emptyList(),
-    val createdAt: String,
-    val updatedAt: String,
     val reviews: List<ReviewModel> = emptyList(),
-    val lists: List<ListModel> = emptyList()
 )

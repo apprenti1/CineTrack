@@ -12,16 +12,14 @@ package fr.hainu.cinetrack.domain.models
  * @param movieModel: Le modèle film associé (optionnel)
  * majoritairement utilisé par un objet Movie donc pas toujours utile de le récupérer
  * @param createdAt: La date de création du commentaire
- * @param updatedAt: La date de mise à jour du commentaire
  **/
 data class ReviewModel(
     val id: Int,
     val comment: String,
     val rating: Int,
-    val refUser: Int,
+    val refUser: String,
     val refMovie: Int,
     val userModel: UserModel? = null,
     val movieModel: MovieModel? = null,
     val createdAt: String,
-    val updatedAt: String
 )
