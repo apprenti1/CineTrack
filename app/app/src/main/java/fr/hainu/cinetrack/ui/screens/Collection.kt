@@ -51,44 +51,34 @@ fun CollectionScreen(
     var watchlistMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var watchedMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var favoriteMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
-    //val isLoading by moviesViewModel.isLoading.collectAsState()
 
-    // Charger les films selon l'onglet sélectionné et les IDs
-    LaunchedEffect(selectedTab, watchlistIds.hashCode(), watchedIds.hashCode(), favoriteIds.hashCode()) {
-        when (selectedTab) {
-            CollectionTab.WATCHLIST -> {
-                if (watchlistIds.isNotEmpty()) {
-                    moviesViewModel.getMoviesByIds(watchlistIds)
-                } else {
-                    watchlistMovies = emptyList()
-                }
-            }
-            CollectionTab.WATCHED -> {
-                if (watchedIds.isNotEmpty()) {
-                    moviesViewModel.getMoviesByIds(watchedIds)
-                } else {
-                    watchedMovies = emptyList()
-                }
-            }
-            CollectionTab.FAVORITES -> {
-                if (favoriteIds.isNotEmpty()) {
-                    moviesViewModel.getMoviesByIds(favoriteIds)
-                } else {
-                    favoriteMovies = emptyList()
-                }
-            }
-            CollectionTab.COLLECTIONS -> {}
+    // LaunchedEffect séparé pour la WATCHLIST
+    LaunchedEffect(watchlistIds, watchlistIds.size) {
+        if (watchlistIds.isNotEmpty()) {
+            val movies = moviesViewModel.fetchMoviesByIds(watchlistIds)
+            watchlistMovies = movies
+        } else {
+            watchlistMovies = emptyList()
         }
     }
 
-    // Observer les résultats et les assigner à la bonne liste
-    LaunchedEffect(moviesViewModel.moviesByIds.collectAsState().value) {
-        val movies = moviesViewModel.moviesByIds.value
-        when (selectedTab) {
-            CollectionTab.WATCHLIST -> watchlistMovies = movies
-            CollectionTab.WATCHED -> watchedMovies = movies
-            CollectionTab.FAVORITES -> favoriteMovies = movies
-            CollectionTab.COLLECTIONS -> {}
+    // LaunchedEffect séparé pour WATCHED
+    LaunchedEffect(watchedIds, watchedIds.size) {
+        if (watchedIds.isNotEmpty()) {
+            val movies = moviesViewModel.fetchMoviesByIds(watchedIds)
+            watchedMovies = movies
+        } else {
+            watchedMovies = emptyList()
+        }
+    }
+
+    // LaunchedEffect séparé pour FAVORITES
+    LaunchedEffect(favoriteIds, favoriteIds.size) {
+        if (favoriteIds.isNotEmpty()) {
+            val movies = moviesViewModel.fetchMoviesByIds(favoriteIds)
+            favoriteMovies = movies
+        } else {
+            favoriteMovies = emptyList()
         }
     }
 

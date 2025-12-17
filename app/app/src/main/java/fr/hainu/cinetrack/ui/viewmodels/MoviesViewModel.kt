@@ -160,6 +160,16 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
         }
     }
 
+    // Fonction suspend pour récupérer les films de manière synchrone
+    suspend fun fetchMoviesByIds(movieIds: List<Int>): List<MovieModel> {
+        return try {
+            movieUseCases.getMoviesByIds(movieIds)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
 //    fun clearError() {
 //        _errorMessage.value = null
 //    }
