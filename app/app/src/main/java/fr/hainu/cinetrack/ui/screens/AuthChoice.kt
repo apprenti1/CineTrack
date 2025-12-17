@@ -27,7 +27,7 @@ import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun AuthChoiceScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onLoginSuccess: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
@@ -108,8 +108,8 @@ fun AuthChoiceScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun AuthChoiceScreenPreview() {
-    AuthChoiceScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun AuthChoiceScreenPreview() {
+//     AuthChoiceScreen()
+// }

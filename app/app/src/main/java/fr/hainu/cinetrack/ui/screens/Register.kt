@@ -36,7 +36,7 @@ import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun RegisterScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onBackClick: () -> Unit = {},
     onRegisterSuccess: () -> Unit = {},
     onLoginClick: () -> Unit = {}
@@ -265,8 +265,8 @@ fun RegisterScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun RegisterScreenPreview() {
-    RegisterScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun RegisterScreenPreview() {
+//     RegisterScreen()
+// }

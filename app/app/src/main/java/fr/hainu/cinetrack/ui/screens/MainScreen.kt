@@ -36,10 +36,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
-    viewModel: MoviesViewModel = viewModel(),
-    
+    moviesViewModel: MoviesViewModel,
+    userViewModel: fr.hainu.cinetrack.ui.viewmodels.UserViewModel,
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
+    val viewModel = moviesViewModel
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
     val currentPage = remember { mutableStateOf(NavItem.HOME) }
     val coroutineScope = rememberCoroutineScope()
@@ -98,7 +99,9 @@ fun MainScreen(
                         onMovieClick = onMovieClick
                     )
                     2 -> CollectionScreen(
-                        onMovieClick = onMovieClick,
+                        moviesViewModel = viewModel,
+                        userViewModel = userViewModel,
+                        onMovieClick = onMovieClick
                     )
                     3 -> PlaceholderScreenContent(title = "Profil")
                 }

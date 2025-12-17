@@ -41,8 +41,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.*
-import fr.hainu.cinetrack.ui.mock.getMockMovies
-import fr.hainu.cinetrack.ui.mock.MockMovieRepository
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
@@ -59,11 +57,12 @@ fun extractVideoId(ytUrl: String): String? {
 
 @Composable
 fun MovieDetailsScreen(
+    moviesViewModel: MoviesViewModel,
+    userViewModel: UserViewModel,
     movie: MovieModel,
-    viewModel: MoviesViewModel = viewModel(),
-    userViewModel: UserViewModel = viewModel(),
     onBackClick: () -> Unit = {}
 ) {
+    val viewModel = moviesViewModel
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
@@ -91,8 +90,8 @@ fun MovieDetailsScreen(
     Log.d("MovieDetails", "User likes: ${currentUser?.likes}")
     Log.d("MovieDetails", "User watched: ${currentUser?.watched}")
 
-    // Utiliser les données du film passé en paramètre
-    val similarMovies = getMockMovies().filter { it.id != displayMovie.id }.take(3)
+    // Utiliser les films similaires chargés depuis l'API
+    val similarMovies = displayMovie.similarMovies
 
     // Convertir les reviews internes en format Review pour l'affichage
     val reviews = displayMovie.reviews.map { review ->
@@ -129,7 +128,7 @@ fun MovieDetailsScreen(
                     context.startActivity(Intent.createChooser(shareIntent, "Partager"))
                 },
                 onPlayClick = {
-                    if (displayMovie.trailerUrl.isNotBlank()) {
+                    if (!displayMovie.trailerUrl.isNullOrBlank()) {
                         showTrailer = true
                     } else {
                         Toast.makeText(context, "Bande-annonce non disponible", Toast.LENGTH_SHORT).show()
@@ -192,7 +191,7 @@ fun MovieDetailsScreen(
             }
 
             SynopsisSection(
-                synopsis = displayMovie.synopsis
+                synopsis = displayMovie.synopsis ?: ""
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -225,7 +224,7 @@ fun MovieDetailsScreen(
                             YouTubePlayerView(it).apply {
                                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                                        val videoId = extractVideoId(displayMovie.trailerUrl)
+                                        val videoId = displayMovie.trailerUrl?.let { extractVideoId(it) }
                                         if (videoId != null) {
                                             youTubePlayer.loadVideo(videoId, 0f)
                                         } else {
@@ -238,9 +237,10 @@ fun MovieDetailsScreen(
                                         if (error == PlayerConstants.PlayerError.VIDEO_NOT_PLAYABLE_IN_EMBEDDED_PLAYER) {
                                             showTrailer = false
                                             Toast.makeText(context, "Lecture impossible dans l'app, ouverture sur YouTube", Toast.LENGTH_LONG).show()
-                                            val playIntent = Intent(Intent.ACTION_VIEW,
-                                                displayMovie.trailerUrl.toUri())
-                                            context.startActivity(playIntent)
+                                            displayMovie.trailerUrl?.let { url ->
+                                                val playIntent = Intent(Intent.ACTION_VIEW, url.toUri())
+                                                context.startActivity(playIntent)
+                                            }
                                         } else {
                                             showTrailer = false
                                             Toast.makeText(context, "Erreur de lecture: $error", Toast.LENGTH_LONG).show()
@@ -284,17 +284,4 @@ fun MovieDetailsScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun MovieDetailsScreenPreview() {
-    val movie = remember { mutableStateOf<MovieModel?>(null) }
-    LaunchedEffect(Unit) {
-        val loadedMovie = MockMovieRepository().getMovies(MockMovieRepository.MovieType.TREND)[0]
-        loadedMovie.pullMoreDetails()
-        movie.value = loadedMovie
-    }
-
-    movie.value?.let {
-        MovieDetailsScreen(it)
-    }
-}
+// Preview removed - requires real ViewModels

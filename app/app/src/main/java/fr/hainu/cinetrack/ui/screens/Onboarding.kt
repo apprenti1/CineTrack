@@ -40,7 +40,7 @@ data class OnboardingPage(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onFinish: () -> Unit = {}
 ) {
     val pages = listOf(
@@ -213,8 +213,8 @@ private fun OnboardingPageContent(page: OnboardingPage) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun OnboardingScreenPreview() {
-    OnboardingScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun OnboardingScreenPreview() {
+//     OnboardingScreen()
+// }

@@ -16,6 +16,8 @@ import fr.hainu.cinetrack.ui.screens.MovieDetailsScreen
 import fr.hainu.cinetrack.ui.screens.OnboardingScreen
 import fr.hainu.cinetrack.ui.screens.RegisterScreen
 import fr.hainu.cinetrack.ui.screens.SplashScreen
+import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 object Destinations {
     const val SPLASH = "splash"
@@ -34,7 +36,10 @@ object Destinations {
 
 
 @Composable
-fun NavGraph() {
+fun NavGraph(
+    moviesViewModel: MoviesViewModel,
+    userViewModel: UserViewModel
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -43,6 +48,7 @@ fun NavGraph() {
     ) {
         composable(route = Destinations.SPLASH) {
             SplashScreen(
+                userViewModel = userViewModel,
                 onNavigateToOnboarding = {
                     navController.navigate(Destinations.ONBOARDING) {
                         popUpTo(Destinations.SPLASH) { inclusive = true }
@@ -52,12 +58,18 @@ fun NavGraph() {
                     navController.navigate(Destinations.AUTH) {
                         popUpTo(Destinations.SPLASH) { inclusive = true }
                     }
+                },
+                onNavigateToHome = {
+                    navController.navigate(Destinations.HOME) {
+                        popUpTo(Destinations.SPLASH) { inclusive = true }
+                    }
                 }
             )
         }
 
         composable(route = Destinations.ONBOARDING) {
             OnboardingScreen(
+                userViewModel = userViewModel,
                 onFinish = {
                     navController.navigate(Destinations.AUTH) {
                         popUpTo(Destinations.ONBOARDING) { inclusive = true }
@@ -68,6 +80,7 @@ fun NavGraph() {
 
         composable(route = Destinations.AUTH) {
             AuthChoiceScreen(
+                userViewModel = userViewModel,
                 onLoginSuccess = {
                     navController.navigate(Destinations.HOME) {
                         popUpTo(Destinations.AUTH) { inclusive = true }
@@ -89,6 +102,7 @@ fun NavGraph() {
 
         composable(route = Destinations.REGISTER) {
             RegisterScreen(
+                userViewModel = userViewModel,
                 onBackClick = {
                     navController.popBackStack()
                 },
@@ -107,6 +121,7 @@ fun NavGraph() {
 
         composable(route = Destinations.LOGIN) {
             LoginScreen(
+                userViewModel = userViewModel,
                 onBackClick = {
                     navController.popBackStack()
                 },
@@ -128,6 +143,8 @@ fun NavGraph() {
 
         composable(route = Destinations.HOME) {
             MainScreen(
+                moviesViewModel = moviesViewModel,
+                userViewModel = userViewModel,
                 onMovieClick = { movie ->
                     navController.navigate(Destinations.movieDetails(movie))
                 }
@@ -144,6 +161,8 @@ fun NavGraph() {
 
             movie?.let {
                 MovieDetailsScreen(
+                    moviesViewModel = moviesViewModel,
+                    userViewModel = userViewModel,
                     movie = it,
                     onBackClick = {
                         navController.popBackStack(route = Destinations.HOME, inclusive = false)

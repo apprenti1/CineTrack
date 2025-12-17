@@ -25,8 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.mock.MockMovieRepository
-import fr.hainu.cinetrack.ui.mock.getMockMovies
+import fr.hainu.cinetrack.domain.models.UserModel
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
@@ -37,7 +36,8 @@ enum class CollectionTab {
 
 @Composable
 fun CollectionScreen(
-    userViewModel: UserViewModel = viewModel(),
+    moviesViewModel: MoviesViewModel,
+    userViewModel: UserViewModel,
     onMovieClick: (MovieModel) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(CollectionTab.WATCHLIST) }
@@ -49,41 +49,64 @@ fun CollectionScreen(
     val watchedIds = currentUser?.watched ?: emptyList()
     val favoriteIds = currentUser?.likes ?: emptyList()
 
-    // Charger les films depuis TMDB avec les IDs
-    val movieRepository = remember { MockMovieRepository() }
-
+    // États pour stocker les films de chaque catégorie
     var watchlistMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var watchedMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var favoriteMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by moviesViewModel.isLoading.collectAsState()
 
+    // Charger les films pour watchlist
     LaunchedEffect(watchlistIds.hashCode()) {
         if (watchlistIds.isNotEmpty()) {
-            isLoading = true
-            watchlistMovies = movieRepository.getMoviesByIds(watchlistIds)
-            isLoading = false
-        } else {
-            watchlistMovies = emptyList()
+            moviesViewModel.getMoviesByIds(watchlistIds)
         }
     }
 
-    LaunchedEffect(watchedIds.hashCode()) {
-        if (watchedIds.isNotEmpty()) {
-            isLoading = true
-            watchedMovies = movieRepository.getMoviesByIds(watchedIds)
-            isLoading = false
-        } else {
-            watchedMovies = emptyList()
+    // Observer les résultats et les assigner à watchlistMovies quand selectedTab == WATCHLIST
+    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
+        when (selectedTab) {
+            CollectionTab.WATCHLIST -> {
+                if (watchlistIds.isNotEmpty()) {
+                    watchlistMovies = moviesViewModel.moviesByIds.value
+                } else {
+                    watchlistMovies = emptyList()
+                }
+            }
+            else -> {}
         }
     }
 
-    LaunchedEffect(favoriteIds.hashCode()) {
-        if (favoriteIds.isNotEmpty()) {
-            isLoading = true
-            favoriteMovies = movieRepository.getMoviesByIds(favoriteIds)
-            isLoading = false
-        } else {
-            favoriteMovies = emptyList()
+    // Charger les films pour watched
+    LaunchedEffect(watchedIds.hashCode(), selectedTab) {
+        if (watchedIds.isNotEmpty() && selectedTab == CollectionTab.WATCHED) {
+            moviesViewModel.getMoviesByIds(watchedIds)
+        }
+    }
+
+    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
+        if (selectedTab == CollectionTab.WATCHED) {
+            if (watchedIds.isNotEmpty()) {
+                watchedMovies = moviesViewModel.moviesByIds.value
+            } else {
+                watchedMovies = emptyList()
+            }
+        }
+    }
+
+    // Charger les films pour favorites
+    LaunchedEffect(favoriteIds.hashCode(), selectedTab) {
+        if (favoriteIds.isNotEmpty() && selectedTab == CollectionTab.FAVORITES) {
+            moviesViewModel.getMoviesByIds(favoriteIds)
+        }
+    }
+
+    LaunchedEffect(selectedTab, moviesViewModel.moviesByIds.collectAsState().value) {
+        if (selectedTab == CollectionTab.FAVORITES) {
+            if (favoriteIds.isNotEmpty()) {
+                favoriteMovies = moviesViewModel.moviesByIds.value
+            } else {
+                favoriteMovies = emptyList()
+            }
         }
     }
 
@@ -393,8 +416,8 @@ fun CollectionMovieItem(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun CollectionScreenPreview() {
-    CollectionScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun CollectionScreenPreview() {
+//     CollectionScreen()
+// }

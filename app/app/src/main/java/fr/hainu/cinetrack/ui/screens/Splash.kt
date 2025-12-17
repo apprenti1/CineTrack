@@ -22,17 +22,27 @@ import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun SplashScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onNavigateToOnboarding: () -> Unit = {},
-    onNavigateToAuth: () -> Unit = {}
+    onNavigateToAuth: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {}
 ) {
     val hasCompletedOnboarding by userViewModel.hasCompletedOnboarding.collectAsState()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
 
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(1000)
-        if (hasCompletedOnboarding) {
+        kotlinx.coroutines.delay(1500)
+
+        // Si l'utilisateur a un token, on essaie de le vérifier
+        // Le ViewModel charge automatiquement le profil dans son init si isLoggedIn est true
+        if (isLoggedIn) {
+            // L'utilisateur est déjà connecté avec un token valide
+            onNavigateToHome()
+        } else if (hasCompletedOnboarding) {
+            // L'onboarding est terminé mais pas connecté
             onNavigateToAuth()
         } else {
+            // Première utilisation
             onNavigateToOnboarding()
         }
     }
@@ -123,8 +133,8 @@ private fun AnimatedDot(delay: Int) {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun SplashScreenPreview() {
-    SplashScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun SplashScreenPreview() {
+//     SplashScreen()
+// }

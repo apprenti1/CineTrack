@@ -30,7 +30,7 @@ import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 @Composable
 fun LoginScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onBackClick: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
@@ -199,8 +199,8 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun LoginScreenPreview() {
-    LoginScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun LoginScreenPreview() {
+//     LoginScreen()
+// }
