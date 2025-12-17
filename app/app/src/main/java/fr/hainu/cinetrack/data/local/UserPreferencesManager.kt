@@ -11,16 +11,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-/**
- * Gestionnaire de préférences utilisateur avec DataStore
- * Remplace SecurePreferencesManager avec une API asynchrone moderne
- */
+
 class UserPreferencesManager(private val context: Context) {
 
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
-        // Clés des préférences
         private val KEY_AUTH_TOKEN = stringPreferencesKey("auth_token")
         private val KEY_USER_ID = stringPreferencesKey("user_id")
         private val KEY_USER_PSEUDO = stringPreferencesKey("user_pseudo")
@@ -28,7 +24,6 @@ class UserPreferencesManager(private val context: Context) {
         private val KEY_HAS_COMPLETED_ONBOARDING = booleanPreferencesKey("has_completed_onboarding")
     }
 
-    // Auth Token
     suspend fun saveAuthToken(token: String) {
         context.dataStore.edit { preferences ->
             preferences[KEY_AUTH_TOKEN] = token
@@ -53,7 +48,6 @@ class UserPreferencesManager(private val context: Context) {
         }
     }
 
-    // User ID
     suspend fun saveUserId(userId: String) {
         context.dataStore.edit { preferences ->
             preferences[KEY_USER_ID] = userId
@@ -66,7 +60,6 @@ class UserPreferencesManager(private val context: Context) {
         }.first()
     }
 
-    // User Info (pseudo & email)
     suspend fun saveUserInfo(pseudo: String, email: String) {
         context.dataStore.edit { preferences ->
             preferences[KEY_USER_PSEUDO] = pseudo
