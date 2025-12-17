@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.domain.models.MovieModel
-
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400
 

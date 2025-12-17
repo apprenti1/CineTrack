@@ -14,10 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.ButtonVariant
 import fr.hainu.cinetrack.ui.components.CustomButton
@@ -26,11 +24,11 @@ import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple400
 import fr.hainu.cinetrack.ui.theme.Rose500
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 @Composable
 fun LoginScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onBackClick: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
@@ -199,8 +197,8 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun LoginScreenPreview() {
-    LoginScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun LoginScreenPreview() {
+//     LoginScreen()
+// }

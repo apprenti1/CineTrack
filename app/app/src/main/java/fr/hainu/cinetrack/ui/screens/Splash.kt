@@ -12,25 +12,28 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 @Composable
 fun SplashScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onNavigateToOnboarding: () -> Unit = {},
-    onNavigateToAuth: () -> Unit = {}
+    onNavigateToAuth: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {}
 ) {
     val hasCompletedOnboarding by userViewModel.hasCompletedOnboarding.collectAsState()
+    val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
 
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(1000)
-        if (hasCompletedOnboarding) {
+        kotlinx.coroutines.delay(1500)
+
+        if (isLoggedIn) {
+            onNavigateToHome()
+        } else if (hasCompletedOnboarding) {
             onNavigateToAuth()
         } else {
             onNavigateToOnboarding()
@@ -123,8 +126,8 @@ private fun AnimatedDot(delay: Int) {
     )
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun SplashScreenPreview() {
-    SplashScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun SplashScreenPreview() {
+//     SplashScreen()
+// }

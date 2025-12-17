@@ -31,20 +31,16 @@ class SecurePreferencesManager(context: Context) {
         private const val KEY_HAS_COMPLETED_ONBOARDING = "has_completed_onboarding"
     }
 
-    // Auth Token (sécurisé)
     fun saveAuthToken(token: String) {
         encryptedPrefs.edit { putString(KEY_AUTH_TOKEN, token) }
     }
-
     fun getAuthToken(): String? {
         return encryptedPrefs.getString(KEY_AUTH_TOKEN, null)
     }
-
     fun clearAuthToken() {
         encryptedPrefs.edit { remove(KEY_AUTH_TOKEN) }
     }
 
-    // User ID (sécurisé)
     fun saveUserId(userId: String) {
         encryptedPrefs.edit { putString(KEY_USER_ID, userId) }
     }

@@ -29,13 +29,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.domain.models.CastMemberModel
 import fr.hainu.cinetrack.ui.theme.*
 
@@ -503,48 +501,5 @@ fun SimilarMoviesSection(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFF111827)
-@Composable
-fun MovieDetailsComponentsPreview() {
-    Column(
-        modifier = Modifier
-            .background(Gray900)
-            .padding(bottom = 16.dp)
-    ) {
-        MovieDetailsHeader()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MoviePosterInfo(
-            title = "Dune: Part Two",
-            year = "2024",
-            duration = "2h 46min",
-            rating = 8.5
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        GenreChips(
-            genres = listOf("Action", "Sci-Fi", "Aventure")
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ActionButtons(isOnFavorite = true)
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        SynopsisSection(
-            synopsis = "Paul Atreides s'unit à Chani et aux Fremen pour mener la révolte contre ceux qui ont détruit sa famille. Hanté par de sombres prémonitions, il se trouve confronté au plus grand des dilemmes..."
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        CastSection(
-            cast = getMockMovies()[0].cast
-        )
     }
 }

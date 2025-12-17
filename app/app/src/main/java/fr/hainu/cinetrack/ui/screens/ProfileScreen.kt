@@ -2,212 +2,173 @@ package fr.hainu.cinetrack.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.hainu.cinetrack.ui.theme.Gray800
-import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.theme.Purple600
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.R
+import fr.hainu.cinetrack.ui.theme.*
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import fr.hainu.cinetrack.domain.models.UserModel
+import fr.hainu.cinetrack.ui.components.CustomInput
+import androidx.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    viewModel: UserViewModel,
+    userViewModel: UserViewModel,
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit
 ) {
-    val currentUser by viewModel.currentUser.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
+    val currentUser by userViewModel.currentUser.collectAsState()
+    val errorMessage by userViewModel.errorMessage.collectAsState()
     val context = LocalContext.current
-
     var isEditing by remember { mutableStateOf(false) }
-    var pseudo by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var editPseudo by remember { mutableStateOf("") }
+    var editEmail by remember { mutableStateOf("") }
 
     LaunchedEffect(currentUser) {
         currentUser?.let {
-            pseudo = it.pseudo
-            email = it.email
+            editPseudo = it.pseudo
+            editEmail = it.email
         }
     }
 
     LaunchedEffect(errorMessage) {
         errorMessage?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-            viewModel.clearError()
+            userViewModel.clearError()
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mon Profil", fontWeight = FontWeight.Bold, color = Color.White) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Retour", tint = Color.White)
-                    }
-                },
-                actions = {
-                    if (!isEditing) {
-                        IconButton(onClick = { isEditing = true }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Éditer", tint = Color.White)
-                        }
-                    } else {
-                        IconButton(onClick = { isEditing = false }) {
-                            Icon(Icons.Default.Close, contentDescription = "Annuler", tint = Color.White)
-                        }
-                    }
-                    IconButton(onClick = {
-                        viewModel.logout()
-                        onLogout()
-                    }) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = "Déconnexion", tint = Color.Red)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Gray900)
-            )
-        },
-        containerColor = Gray900
-    ) { paddingValues ->
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Gray900),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(bottom = 80.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Avatar Placeholder
-                Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .background(Gray800),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(60.dp),
-                        tint = Purple600
-                    )
+            // Profile Header
+            ProfileHeader(
+                currentUser = currentUser,
+                isEditing = isEditing,
+                onEditClick = { isEditing = true },
+                onCancelEdit = {
+                    isEditing = false
+                    currentUser?.let {
+                        editPseudo = it.pseudo
+                        editEmail = it.email
+                    }
+                },
+                onLogout = {
+                    userViewModel.logout()
+                    onLogout()
                 }
+            )
 
+            Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 if (isEditing) {
-                    OutlinedTextField(
-                        value = pseudo,
-                        onValueChange = { pseudo = it },
-                        label = { Text("Pseudo", color = Color.Gray) },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Purple600) },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Gray800,
-                            unfocusedContainerColor = Gray800,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White,
-                            focusedBorderColor = Purple600,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Email", color = Color.Gray) },
-                        leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Purple600) },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Gray800,
-                            unfocusedContainerColor = Gray800,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White,
-                            focusedBorderColor = Purple600,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = {
-                            viewModel.updateProfile(pseudo, email)
+                    // Edit Profile Form
+                    EditProfileSection(
+                        pseudo = editPseudo,
+                        email = editEmail,
+                        onPseudoChange = { editPseudo = it },
+                        onEmailChange = { editEmail = it },
+                        onSave = {
+                            // TODO: Add updateProfile method to UserViewModel when backend endpoint is ready
+                            Toast.makeText(context, "Fonctionnalité en cours de développement", Toast.LENGTH_SHORT).show()
                             isEditing = false
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Purple600),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        if (isLoading) {
-                            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                        } else {
-                            Text("Enregistrer", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         }
-                    }
-
+                    )
                 } else {
-                     CurrentUserProfileView(currentUser = currentUser)
+                    // User Info Display
+                    UserInfoCard(currentUser = currentUser)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Main Stats
+                    StatsSection(currentUser = currentUser)
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileHeader(
+    currentUser: UserModel?,
+    isEditing: Boolean,
+    onEditClick: () -> Unit,
+    onCancelEdit: () -> Unit,
+    onLogout: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        // User Info
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = "Profile",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+
+        // Action buttons
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (isEditing) {
+                IconButton(onClick = onCancelEdit) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Annuler",
+                        tint = Gray400
+                    )
+                }
+            } else {
+//                IconButton(onClick = onEditClick) {
+//                    Icon(
+//                        imageVector = Icons.Default.Edit,
+//                        contentDescription = "Modifier le profil",
+//                        tint = Purple400
+//                    )
+//                }
+                IconButton(onClick = onLogout) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = "Déconnexion",
+                        tint = Color(0xFFEF4444)
+                    )
                 }
             }
         }
@@ -215,51 +176,242 @@ fun ProfileScreen(
 }
 
 @Composable
-fun CurrentUserProfileView(currentUser: UserModel?) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
+fun EditProfileSection(
+    pseudo: String,
+    email: String,
+    onPseudoChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
+    Column {
         Text(
-            text = currentUser?.pseudo ?: "Utilisateur",
-            fontSize = 24.sp,
+            text = "Modifier le profil",
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
 
-        Text(
-            text = currentUser?.email ?: "",
-            fontSize = 16.sp,
-            color = Color.Gray
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Pseudo field
+        CustomInput(
+            value = pseudo,
+            onValueChange = onPseudoChange,
+            label = "Pseudo",
+            placeholder = "Votre pseudo"
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Stats Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+        // Email field
+        CustomInput(
+            value = email,
+            onValueChange = onEmailChange,
+            label = "Email",
+            placeholder = "votre@email.com"
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Save button
+        Button(
+            onClick = onSave,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Purple600),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            StatItem(count = currentUser?.watchlist?.size ?: 0, label = "Watchlist")
-            StatItem(count = currentUser?.watched?.size ?: 0, label = "Vus")
-            StatItem(count = currentUser?.likes?.size ?: 0, label = "J'aime")
+            Text(
+                text = "Enregistrer les modifications",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
 
 @Composable
-fun StatItem(count: Int, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = count.toString(),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Purple600
+fun UserInfoCard(currentUser: UserModel?) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Gray800)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Informations du compte",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Pseudo
+            Column {
+                Text(
+                    text = "Pseudo",
+                    fontSize = 12.sp,
+                    color = Gray400
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = currentUser?.pseudo ?: "Non défini",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            HorizontalDivider(color = Gray600, thickness = 1.dp)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Email
+            Column {
+                Text(
+                    text = "Email",
+                    fontSize = 12.sp,
+                    color = Gray400
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = currentUser?.email ?: "Non défini",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StatsSection(currentUser: UserModel?) {
+    val watchlistCount = currentUser?.watchlist?.size ?: 0
+    val watchedCount = currentUser?.watched?.size ?: 0
+    val likesCount = currentUser?.likes?.size ?: 0
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Watchlist
+        StatCard(
+            modifier = Modifier.weight(1f),
+            iconRes = R.drawable.bookmark,
+            count = watchlistCount,
+            label = "À voir",
+            gradientColors = listOf(Color(0xFF7C3AED), Color(0xFF9333EA))
         )
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Color.Gray
+
+        // Watched
+        StatCard(
+            modifier = Modifier.weight(1f),
+            iconRes = R.drawable.check_circle,
+            count = watchedCount,
+            label = "Vus",
+            gradientColors = listOf(Color(0xFF059669), Color(0xFF10B981))
         )
+
+        // Likes
+        StatCard(
+            modifier = Modifier.weight(1f),
+            iconRes = R.drawable.heart,
+            count = likesCount,
+            label = "J'aime",
+            gradientColors = listOf(Color(0xFFDC2626), Color(0xFFEF4444))
+        )
+    }
+}
+
+@Composable
+fun StatCard(
+    modifier: Modifier = Modifier,
+    iconRes: Int,
+    count: Int,
+    label: String,
+    gradientColors: List<Color>
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.linearGradient(colors = gradientColors)
+                )
+                .padding(12.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    tint = Color.White.copy(alpha = 0.9f),
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = count.toString(),
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = label,
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.9f)
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProfileHeaderPreview() {
+    val mockUser = UserModel(
+        id = "1",
+        pseudo = "JohnDoe",
+        email = "john.doe@example.com",
+        password = "",
+        watchlist = listOf(550, 551, 552, 553, 554),
+        likes = listOf(238, 240, 242)
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Gray900)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            ProfileHeader(
+                currentUser = mockUser,
+                isEditing = false,
+                onEditClick = {},
+                onCancelEdit = {},
+                onLogout = {}
+            )
+
+            UserInfoCard(currentUser = mockUser)
+
+            StatsSection(currentUser = mockUser)
+        }
     }
 }

@@ -25,7 +25,7 @@ import fr.hainu.cinetrack.ui.components.BottomNavigationBar
 import fr.hainu.cinetrack.ui.components.MovieCard
 import fr.hainu.cinetrack.ui.components.NavItem
 import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
 
 //enum class ExploreTab {
 //    FILMS, SERIES, ALL

@@ -6,14 +6,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -21,25 +19,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.components.BottomNavigationBar
 import fr.hainu.cinetrack.ui.components.HomeHeader
 import fr.hainu.cinetrack.ui.components.NavItem
-import fr.hainu.cinetrack.ui.theme.Gray900
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(
-    viewModel: MoviesViewModel = viewModel(),
+    moviesViewModel: MoviesViewModel,
+    userViewModel: UserViewModel,
     onMovieClick: (MovieModel) -> Unit = {},
+    onNavigateToAuth: () -> Unit = {},
     onLogout: () -> Unit = {}
 ) {
+    val viewModel = moviesViewModel
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
     val currentPage = remember { mutableStateOf(NavItem.HOME) }
     val coroutineScope = rememberCoroutineScope()
@@ -98,10 +95,13 @@ fun MainScreen(
                         onMovieClick = onMovieClick
                     )
                     2 -> CollectionScreen(
+                        moviesViewModel = viewModel,
+                        userViewModel = userViewModel,
                         onMovieClick = onMovieClick,
+                        onNavigateToAuth = onNavigateToAuth
                     )
                     3 -> ProfileScreen(
-                        viewModel = viewModel(), // We can perform simple injection here, ideally we should pass it from above or use Hilt properly
+                        userViewModel = userViewModel,
                         onNavigateBack = {
                             coroutineScope.launch { pagerState.animateScrollToPage(0) }
                             currentPage.value = NavItem.HOME

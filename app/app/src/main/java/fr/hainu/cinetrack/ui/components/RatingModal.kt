@@ -1,5 +1,6 @@
 package fr.hainu.cinetrack.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ import coil.compose.AsyncImage
 import fr.hainu.cinetrack.domain.models.MovieModel
 import fr.hainu.cinetrack.ui.theme.*
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun RatingModal(
     movie: MovieModel,

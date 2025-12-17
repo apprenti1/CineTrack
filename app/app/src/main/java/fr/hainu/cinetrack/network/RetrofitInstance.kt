@@ -1,75 +1,94 @@
 package fr.hainu.cinetrack.network
 
+import fr.hainu.cinetrack.BuildConfig
+import fr.hainu.cinetrack.data.local.UserPreferencesManager
+import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitInstance {
-    private const val TMDB_API_URL = "https://api.themoviedb.org/3/"
-    //To fill
-    private const val DB_API_URL = ""
-    private const val TOKEN =
-        "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MGQyNzI0ZjllODIyNzQ3M2VmMWIwNThkNTZiM2M0MSIsIm5iZiI6MTc2NTMxMjQ2Mi4yNjksInN1YiI6IjY5Mzg4N2NlODYyNTNiNDczOWFmMDA4MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.A-8tN8w5FtnmPp8V7EnwbFoLJdyfKVQFMLLNHH79wZo"
-    private const val DB_TOKEN = ""
+    // URLs depuis BuildConfig
+    private val TMDB_BASE_URL = BuildConfig.TMDB_BASE_URL
+    private val TMDB_API_KEY = BuildConfig.TMDB_API_KEY
+    private val CINETRACK_API_URL = "${BuildConfig.CINETRACK_API_URL}/api/"
 
-    //The Movie Data Bse HTTP client
+    // Logging interceptor pour le debug
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                else HttpLoggingInterceptor.Level.NONE
+    }
+
+    // TMDB HTTP client avec API key dans les query params
     private val okHttpClientTmdb: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val request = chain.request()
-                    .newBuilder()
+                val original = chain.request()
+                val originalHttpUrl = original.url
+
+                val url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("api_key", TMDB_API_KEY)
+                    .addQueryParameter("language", "fr-FR")
+                    .build()
+
+                val request = original.newBuilder()
+                    .url(url)
                     .addHeader("Accept", "application/json")
-                    .addHeader("Authorization", "Bearer $TOKEN")
                     .build()
 
                 chain.proceed(request)
             }
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
-    //DB HTTP client
-    private val okHttpClientDB: OkHttpClient by lazy {
-        OkHttpClient.Builder()
+    // CineTrack API HTTP client avec token JWT dynamique
+    fun createCineTrackClient(userPrefs: UserPreferencesManager? = null): OkHttpClient {
+        return OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val request = chain.request()
-                    .newBuilder()
+                val requestBuilder = chain.request().newBuilder()
                     .addHeader("Accept", "application/json")
-                    .addHeader("Authorization", "Bearer $DB_TOKEN")
-                    .build()
-                chain.proceed(request)
+                    .addHeader("Content-Type", "application/json")
+
+                // Ajouter le token si disponible (DataStore nécessite runBlocking dans l'interceptor)
+                userPrefs?.let { prefs ->
+                    val token = runBlocking { prefs.getAuthToken() }
+                    token?.let {
+                        requestBuilder.addHeader("Authorization", "Bearer $it")
+                    }
+                }
+
+                chain.proceed(requestBuilder.build())
             }
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
-    //The Movie Data Bse HTTP API
-    val apiTmdb: Retrofit by lazy {
+    // TMDB API instance
+    val tmdbApi: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(TMDB_API_URL)
+            .baseUrl(TMDB_BASE_URL)
             .client(okHttpClientTmdb)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(Retrofit::class.java)
     }
 
-    //DB API
-    val apiDB: Retrofit =
+    // CineTrack API instance (sans token pour auth endpoints)
+    val cineTrackApi: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(DB_API_URL)
-            .client(okHttpClientDB)
+            .baseUrl(CINETRACK_API_URL)
+            .client(createCineTrackClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(Retrofit::class.java)
+    }
 
+    // CineTrack API avec token
+    fun getCineTrackApiWithAuth(userPrefs: UserPreferencesManager): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(CINETRACK_API_URL)
+            .client(createCineTrackClient(userPrefs))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 }
-
-/*prof :
-object RetrofitInstance {
-    private val BASE_URL = "https://my-json-server.typicode.com/RamzyK/"
-
-    val api: Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-}
-//work in progress
-*/

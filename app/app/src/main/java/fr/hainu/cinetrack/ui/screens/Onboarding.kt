@@ -20,14 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.CustomButton
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -40,7 +38,7 @@ data class OnboardingPage(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onFinish: () -> Unit = {}
 ) {
     val pages = listOf(
@@ -213,8 +211,8 @@ private fun OnboardingPageContent(page: OnboardingPage) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun OnboardingScreenPreview() {
-    OnboardingScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun OnboardingScreenPreview() {
+//     OnboardingScreen()
+// }

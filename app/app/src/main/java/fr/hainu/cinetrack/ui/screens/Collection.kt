@@ -19,26 +19,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.ui.mock.MockMovieRepository
-import fr.hainu.cinetrack.ui.mock.getMockMovies
 import fr.hainu.cinetrack.ui.theme.*
-import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 enum class CollectionTab {
-    WATCHLIST, WATCHED, FAVORITES, COLLECTIONS
+    WATCHLIST, WATCHED, FAVORITES
 }
 
 @Composable
 fun CollectionScreen(
-    userViewModel: UserViewModel = viewModel(),
-    onMovieClick: (MovieModel) -> Unit = {}
+    moviesViewModel: MoviesViewModel,
+    userViewModel: UserViewModel,
+    onMovieClick: (MovieModel) -> Unit = {},
+    onNavigateToAuth: () -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(CollectionTab.WATCHLIST) }
     val currentUser by userViewModel.currentUser.collectAsState()
@@ -49,39 +47,36 @@ fun CollectionScreen(
     val watchedIds = currentUser?.watched ?: emptyList()
     val favoriteIds = currentUser?.likes ?: emptyList()
 
-    // Charger les films depuis TMDB avec les IDs
-    val movieRepository = remember { MockMovieRepository() }
-
+    // États pour stocker les films de chaque catégorie
     var watchlistMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var watchedMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var favoriteMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(false) }
 
-    LaunchedEffect(watchlistIds.hashCode()) {
+    // LaunchedEffect séparé pour la WATCHLIST
+    LaunchedEffect(watchlistIds, watchlistIds.size) {
         if (watchlistIds.isNotEmpty()) {
-            isLoading = true
-            watchlistMovies = movieRepository.getMoviesByIds(watchlistIds)
-            isLoading = false
+            val movies = moviesViewModel.fetchMoviesByIds(watchlistIds)
+            watchlistMovies = movies
         } else {
             watchlistMovies = emptyList()
         }
     }
 
-    LaunchedEffect(watchedIds.hashCode()) {
+    // LaunchedEffect séparé pour WATCHED
+    LaunchedEffect(watchedIds, watchedIds.size) {
         if (watchedIds.isNotEmpty()) {
-            isLoading = true
-            watchedMovies = movieRepository.getMoviesByIds(watchedIds)
-            isLoading = false
+            val movies = moviesViewModel.fetchMoviesByIds(watchedIds)
+            watchedMovies = movies
         } else {
             watchedMovies = emptyList()
         }
     }
 
-    LaunchedEffect(favoriteIds.hashCode()) {
+    // LaunchedEffect séparé pour FAVORITES
+    LaunchedEffect(favoriteIds, favoriteIds.size) {
         if (favoriteIds.isNotEmpty()) {
-            isLoading = true
-            favoriteMovies = movieRepository.getMoviesByIds(favoriteIds)
-            isLoading = false
+            val movies = moviesViewModel.fetchMoviesByIds(favoriteIds)
+            favoriteMovies = movies
         } else {
             favoriteMovies = emptyList()
         }
@@ -129,7 +124,6 @@ fun CollectionScreen(
             CollectionTab.WATCHLIST -> watchlistMovies
             CollectionTab.WATCHED -> watchedMovies
             CollectionTab.FAVORITES -> favoriteMovies
-            CollectionTab.COLLECTIONS -> emptyList()
         }
 
         if (!isLoggedIn) {
@@ -140,12 +134,30 @@ fun CollectionScreen(
                     .padding(24.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Connectez-vous pour voir votre collection",
-                    fontSize = 16.sp,
-                    color = Gray400,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.padding(bottom = 100.dp)
-                )
+                ) {
+                    Text(
+                        text = "Connectez-vous pour voir votre collection",
+                        fontSize = 16.sp,
+                        color = Gray400
+                    )
+                    Button(
+                        onClick = onNavigateToAuth,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Purple600
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Se connecter",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         } else {
             LazyColumn(
@@ -168,7 +180,6 @@ fun CollectionScreen(
                                     CollectionTab.WATCHLIST -> "Aucun film dans votre watchlist"
                                     CollectionTab.WATCHED -> "Aucun film vu"
                                     CollectionTab.FAVORITES -> "Aucun film favori"
-                                    CollectionTab.COLLECTIONS -> "Aucune collection"
                                 },
                                 fontSize = 14.sp,
                                 color = Gray400
@@ -185,7 +196,6 @@ fun CollectionScreen(
                                 CollectionTab.WATCHLIST -> userViewModel.removeFromWatchlist(movie.id)
                                 CollectionTab.WATCHED -> userViewModel.removeFromWatched(movie.id)
                                 CollectionTab.FAVORITES -> userViewModel.removeFromLikes(movie.id)
-                                CollectionTab.COLLECTIONS -> { /* TODO */ }
                             }
                         }
                     )
@@ -213,7 +223,6 @@ fun CollectionTabs(
                 CollectionTab.WATCHLIST -> "Watchlist"
                 CollectionTab.WATCHED -> "Vus"
                 CollectionTab.FAVORITES -> "Favoris"
-                CollectionTab.COLLECTIONS -> "Collections"
             }
 
             Button(
@@ -393,8 +402,8 @@ fun CollectionMovieItem(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun CollectionScreenPreview() {
-    CollectionScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun CollectionScreenPreview() {
+//     CollectionScreen()
+// }

@@ -13,21 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.ButtonVariant
 import fr.hainu.cinetrack.ui.components.CustomButton
 import fr.hainu.cinetrack.ui.theme.Gray400
 import fr.hainu.cinetrack.ui.theme.Gray900
 import fr.hainu.cinetrack.ui.theme.Purple600
-import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
+import fr.hainu.cinetrack.viewmodels.UserViewModel
 
 @Composable
 fun AuthChoiceScreen(
-    userViewModel: UserViewModel = viewModel(),
+    userViewModel: UserViewModel,
     onLoginSuccess: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {},
@@ -108,8 +106,8 @@ fun AuthChoiceScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun AuthChoiceScreenPreview() {
-    AuthChoiceScreen()
-}
+// @Preview(showBackground = true, showSystemUi = true)
+// @Composable
+// private fun AuthChoiceScreenPreview() {
+//     AuthChoiceScreen()
+// }
