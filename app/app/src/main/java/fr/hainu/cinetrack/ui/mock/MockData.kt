@@ -36,19 +36,17 @@ fun getMockMovies(): List<MovieModel> {
                     id = 1,
                     comment = "Un chef-d'œuvre absolu ! La fin est incroyable.",
                     rating = 10,
-                    refUser = 1,
+                    refUser = "1",
                     refMovie = 550,
-                    createdAt = "2024-01-15",
-                    updatedAt = "2024-01-15"
+                    createdAt = "2024-01-15"
                 ),
                 ReviewModel(
                     id = 2,
                     comment = "Film culte, à voir absolument.",
                     rating = 9,
-                    refUser = 2,
+                    refUser = "2",
                     refMovie = 550,
-                    createdAt = "2024-02-10",
-                    updatedAt = "2024-02-10"
+                    createdAt = "2024-02-10"
                 )
             ),
             isOnFavorite = true,
@@ -86,10 +84,9 @@ fun getMockMovies(): List<MovieModel> {
                     id = 3,
                     comment = "Le meilleur film de tous les temps.",
                     rating = 10,
-                    refUser = 1,
+                    refUser = "1",
                     refMovie = 238,
                     createdAt = "2024-01-20",
-                    updatedAt = "2024-01-20"
                 )
             ),
             isOnFavorite = true,
@@ -131,19 +128,17 @@ fun getMockMovies(): List<MovieModel> {
                     id = 4,
                     comment = "Heath Ledger est incroyable en Joker !",
                     rating = 10,
-                    refUser = 2,
+                    refUser = "2",
                     refMovie = 155,
                     createdAt = "2024-03-01",
-                    updatedAt = "2024-03-01"
                 ),
                 ReviewModel(
                     id = 5,
                     comment = "Le meilleur film de super-héros jamais réalisé.",
                     rating = 9,
-                    refUser = 3,
+                    refUser = "3",
                     refMovie = 155,
                     createdAt = "2024-03-05",
-                    updatedAt = "2024-03-05"
                 )
             ),
             isOnFavorite = false,
@@ -181,10 +176,9 @@ fun getMockMovies(): List<MovieModel> {
                     id = 6,
                     comment = "Un film émouvant qui touche le cœur.",
                     rating = 9,
-                    refUser = 1,
+                    refUser = "1",
                     refMovie = 13,
                     createdAt = "2024-02-15",
-                    updatedAt = "2024-02-15"
                 )
             ),
             isOnFavorite = true,
@@ -226,19 +220,17 @@ fun getMockMovies(): List<MovieModel> {
                     id = 7,
                     comment = "Tarantino à son meilleur. Dialogues brillants.",
                     rating = 10,
-                    refUser = 2,
+                    refUser = "2",
                     refMovie = 680,
                     createdAt = "2024-01-25",
-                    updatedAt = "2024-01-25"
                 ),
                 ReviewModel(
                     id = 8,
                     comment = "Structure narrative géniale, casting parfait.",
                     rating = 9,
-                    refUser = 3,
+                    refUser = "3",
                     refMovie = 680,
                     createdAt = "2024-02-20",
-                    updatedAt = "2024-02-20"
                 )
             ),
             isOnFavorite = false,
@@ -276,10 +268,9 @@ fun getMockMovies(): List<MovieModel> {
                     id = 9,
                     comment = "Bouleversant. Un film qui doit être vu par tous.",
                     rating = 10,
-                    refUser = 1,
+                    refUser = "1",
                     refMovie = 424,
                     createdAt = "2024-03-10",
-                    updatedAt = "2024-03-10"
                 )
             ),
             isOnFavorite = false,

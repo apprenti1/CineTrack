@@ -5,15 +5,9 @@ import com.google.gson.JsonObject
 import fr.hainu.cinetrack.BuildConfig
 import fr.hainu.cinetrack.domain.models.CastMemberModel
 import fr.hainu.cinetrack.domain.models.MovieModel
-<<<<<<< HEAD
-import fr.hainu.cinetrack.domain.models.CastMemberModel
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.collections.joinToString
-=======
-import java.net.HttpURLConnection
-import java.net.URL
->>>>>>> d6b09d2b72ad70fcd721470e9f58066faaa7dd3d
 
 class MockMovieRepository {
 
