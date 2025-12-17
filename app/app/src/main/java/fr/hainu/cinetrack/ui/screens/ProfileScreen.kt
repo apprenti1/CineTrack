@@ -232,7 +232,7 @@ fun EditProfileSection(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
                 focusedBorderColor = Purple600,
-                unfocusedBorderColor = Gray700,
+                unfocusedBorderColor = Gray600,
                 cursorColor = Purple600
             ),
             modifier = Modifier.fillMaxWidth(),
@@ -260,7 +260,7 @@ fun EditProfileSection(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
                 focusedBorderColor = Purple600,
-                unfocusedBorderColor = Gray700,
+                unfocusedBorderColor = Gray600,
                 cursorColor = Purple600
             ),
             modifier = Modifier.fillMaxWidth(),
@@ -341,7 +341,7 @@ fun UserInfoCard(currentUser: UserModel?) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Divider(color = Gray700, thickness = 1.dp)
+            Divider(color = Gray600, thickness = 1.dp)
 
             Spacer(modifier = Modifier.height(12.dp))
 
