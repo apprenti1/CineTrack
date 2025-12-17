@@ -6,11 +6,8 @@ package fr.hainu.cinetrack.domain.models
  * @param comment: Le texte du commentaire
  * @param rating: La note donnée (généralement sur 5 ou 10)
  * @param refUser: L'ID de référence de l'utilisateur qui a créé le commentaire
+ * @param userName: Le pseudo de l'utilisateur
  * @param refMovie: L'ID de référence du film commenté
- * @param userModel: Le modèle utilisateur associé (optionnel)
- * majoritairement utilisé par l'utilisateur donc pas toujours utile de le récupérer
- * @param movieModel: Le modèle film associé (optionnel)
- * majoritairement utilisé par un objet Movie donc pas toujours utile de le récupérer
  * @param createdAt: La date de création du commentaire
  **/
 data class ReviewModel(
@@ -18,8 +15,7 @@ data class ReviewModel(
     val comment: String,
     val rating: Int,
     val refUser: String,
+    val userName: String,
     val refMovie: Int,
-    val userModel: UserModel? = null,
-    val movieModel: MovieModel? = null,
-    val createdAt: String,
+    val createdAt: String
 )

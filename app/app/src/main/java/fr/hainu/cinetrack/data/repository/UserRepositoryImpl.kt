@@ -1,7 +1,6 @@
 package fr.hainu.cinetrack.data.repository
 
 import android.util.Log
-import fr.hainu.cinetrack.data.local.SecurePreferencesManager
 import fr.hainu.cinetrack.data.mapper.mapUserResponseDtoToModel
 import fr.hainu.cinetrack.data.remote.UserRemoteDataSource
 import fr.hainu.cinetrack.domain.repository.UserRepository

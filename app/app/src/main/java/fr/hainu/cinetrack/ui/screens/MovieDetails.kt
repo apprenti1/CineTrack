@@ -1,9 +1,12 @@
 package fr.hainu.cinetrack.ui.screens
 
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,11 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -55,10 +56,43 @@ fun extractVideoId(ytUrl: String): String? {
     }
 }
 
+// format date il ya tant de jours/mois/année
+fun formatTimeAgo(isoDate: String): String {
+    return try {
+        // parser date (format: 2024-01-15T10:30:00.000Z)
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        val date = sdf.parse(isoDate) ?: return isoDate
+
+        val now = Date()
+        val diffInMillis = now.time - date.time
+
+        val seconds = diffInMillis / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val days = hours / 24
+        val months = days / 30
+        val years = days / 365
+
+        when {
+            years > 0 -> "Il y a $years an${if (years > 1) "s" else ""}"
+            months > 0 -> "Il y a $months mois"
+            days > 0 -> "Il y a $days jour${if (days > 1) "s" else ""}"
+            hours > 0 -> "Il y a $hours heure${if (hours > 1) "s" else ""}"
+            minutes > 0 -> "Il y a $minutes minute${if (minutes > 1) "s" else ""}"
+            else -> "À l'instant"
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "indeterminé"
+    }
+}
+
 @Composable
 fun MovieDetailsScreen(
     moviesViewModel: MoviesViewModel,
     userViewModel: UserViewModel,
+    reviewViewModel: fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel,
     movie: MovieModel,
     onBackClick: () -> Unit = {}
 ) {
@@ -66,11 +100,22 @@ fun MovieDetailsScreen(
     val currentMovie by viewModel.currentMovieDetails.collectAsState()
     val isLoggedIn by userViewModel.isLoggedIn.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
+    val movieReviews by reviewViewModel.movieReviews.collectAsState()
+    val reviewSubmitted by reviewViewModel.reviewSubmitted.collectAsState()
     var showTrailer by remember { mutableStateOf(false) }
     var showRatingModal by remember { mutableStateOf(false) }
 
     LaunchedEffect(movie.id) {
         viewModel.loadMovieDetails(movie)
+        reviewViewModel.loadMovieReviews(movie.id)
+    }
+
+    // Recharger les reviews et fermer le modal après soumission
+    LaunchedEffect(reviewSubmitted) {
+        if (reviewSubmitted) {
+            showRatingModal = false
+            reviewViewModel.resetReviewSubmitted()
+        }
     }
 
     val context = LocalContext.current
@@ -83,23 +128,23 @@ fun MovieDetailsScreen(
     val isOnFavorite = currentUser?.likes?.contains(displayMovie.id) ?: false
     val isOnWatched = currentUser?.watched?.contains(displayMovie.id) ?: false
 
-    Log.d("MovieDetails", "Movie: ${displayMovie.title} (${displayMovie.id})")
-    Log.d("MovieDetails", "CurrentUser: ${currentUser?.pseudo}, isLoggedIn: $isLoggedIn")
-    Log.d("MovieDetails", "isOnWatchlist: $isOnWatchlist, isOnFavorite: $isOnFavorite, isOnWatched: $isOnWatched")
-    Log.d("MovieDetails", "User watchlist: ${currentUser?.watchlist}")
-    Log.d("MovieDetails", "User likes: ${currentUser?.likes}")
-    Log.d("MovieDetails", "User watched: ${currentUser?.watched}")
+    // Log.d("MovieDetails", "Movie: ${displayMovie.title} (${displayMovie.id})")
+    // Log.d("MovieDetails", "CurrentUser: ${currentUser?.pseudo}, isLoggedIn: $isLoggedIn")
+    // Log.d("MovieDetails", "isOnWatchlist: $isOnWatchlist, isOnFavorite: $isOnFavorite, isOnWatched: $isOnWatched")
+    // Log.d("MovieDetails", "User watchlist: ${currentUser?.watchlist}")
+    // Log.d("MovieDetails", "User likes: ${currentUser?.likes}")
+    // Log.d("MovieDetails", "User watched: ${currentUser?.watched}")
 
     // Utiliser les films similaires chargés depuis l'API
     val similarMovies = displayMovie.similarMovies
 
-    // Convertir les reviews internes en format Review pour l'affichage
-    val reviews = displayMovie.reviews.map { review ->
+    // Convertir les reviews de l'API en format Review pour l'affichage
+    val reviews = movieReviews.map { review ->
         Review(
-            userName = "Utilisateur ${review.refUser}",
+            userName = review.userName,
             rating = review.rating,
             comment = review.comment,
-            timeAgo = "Le ${review.createdAt}",
+            timeAgo = formatTimeAgo(review.createdAt),
             likes = 0,
         )
     }
@@ -161,7 +206,7 @@ fun MovieDetailsScreen(
                     isOnWatched = isOnWatched,
                     isRated = displayMovie.isRated,
                     onFavoriteClick = {
-                        Log.d("MovieDetails", "Favorite button clicked, isOnFavorite: $isOnFavorite, movieId: ${displayMovie.id}")
+                        // Log.d("MovieDetails", "Favorite button clicked, isOnFavorite: $isOnFavorite, movieId: ${displayMovie.id}")
                         if (isOnFavorite) {
                             userViewModel.removeFromLikes(displayMovie.id)
                         } else {
@@ -169,7 +214,7 @@ fun MovieDetailsScreen(
                         }
                     },
                     onWatchlistClick = {
-                        Log.d("MovieDetails", "Watchlist button clicked, isOnWatchlist: $isOnWatchlist, movieId: ${displayMovie.id}")
+                        // Log.d("MovieDetails", "Watchlist button clicked, isOnWatchlist: $isOnWatchlist, movieId: ${displayMovie.id}")
                         if (isOnWatchlist) {
                             userViewModel.removeFromWatchlist(displayMovie.id)
                         } else {
@@ -177,7 +222,7 @@ fun MovieDetailsScreen(
                         }
                     },
                     onWatchedClick = {
-                        Log.d("MovieDetails", "Watched button clicked, isOnWatched: $isOnWatched, movieId: ${displayMovie.id}")
+                        // Log.d("MovieDetails", "Watched button clicked, isOnWatched: $isOnWatched, movieId: ${displayMovie.id}")
                         if (isOnWatched) {
                             userViewModel.removeFromWatched(displayMovie.id)
                         } else {
@@ -220,11 +265,11 @@ fun MovieDetailsScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     AndroidView(
-                        factory = {
-                            YouTubePlayerView(it).apply {
+                        factory = { context ->
+                            YouTubePlayerView(context).apply {
                                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                                        val videoId = displayMovie.trailerUrl?.let { extractVideoId(it) }
+                                        val videoId = displayMovie.trailerUrl?.let { url -> extractVideoId(url) }
                                         if (videoId != null) {
                                             youTubePlayer.loadVideo(videoId, 0f)
                                         } else {
@@ -272,13 +317,16 @@ fun MovieDetailsScreen(
             movie = displayMovie,
             onDismiss = { showRatingModal = false },
             onSubmit = { rating, comment ->
-                // TODO: Implement rating submission
-                showRatingModal = false
-                Toast.makeText(
-                    context,
-                    "Note enregistrée : $rating/5",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (isLoggedIn) {
+                    reviewViewModel.addReview(displayMovie.id, rating, comment)
+                } else {
+                    showRatingModal = false
+                    Toast.makeText(
+                        context,
+                        "Vous devez être connecté pour noter un film",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         )
     }

@@ -12,10 +12,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
@@ -33,16 +31,11 @@ fun SplashScreen(
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(1500)
 
-        // Si l'utilisateur a un token, on essaie de le vérifier
-        // Le ViewModel charge automatiquement le profil dans son init si isLoggedIn est true
         if (isLoggedIn) {
-            // L'utilisateur est déjà connecté avec un token valide
             onNavigateToHome()
         } else if (hasCompletedOnboarding) {
-            // L'onboarding est terminé mais pas connecté
             onNavigateToAuth()
         } else {
-            // Première utilisation
             onNavigateToOnboarding()
         }
     }

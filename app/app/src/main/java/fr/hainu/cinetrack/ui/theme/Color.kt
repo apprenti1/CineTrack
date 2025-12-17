@@ -119,7 +119,7 @@ private val AppColors: CineTrackColors
     @ReadOnlyComposable
     get() = LocalAppColors.current
 
-// Accesseurs pour utiliser directement les couleurs comme avant
+// Accesseurs pour utiliser directement les couleurs
 val Purple900: Color
     @Composable
     @ReadOnlyComposable

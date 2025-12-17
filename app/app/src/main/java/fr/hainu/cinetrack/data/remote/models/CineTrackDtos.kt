@@ -47,3 +47,42 @@ data class UserResponseDto(
 data class WatchlistRequestDto(
     @SerializedName("filmId") val filmId: Int
 )
+
+/**
+ * DTO pour créer un review
+ */
+data class CreateReviewRequestDto(
+    @SerializedName("filmId") val filmId: Int,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("comment") val comment: String
+)
+
+/**
+ * DTO pour mettre à jour un review
+ */
+data class UpdateReviewRequestDto(
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("comment") val comment: String
+)
+
+/**
+ * DTO pour les infos utilisateur dans un review
+ */
+data class ReviewUserDto(
+    @SerializedName("id") val id: String,
+    @SerializedName("pseudo") val pseudo: String
+)
+
+/**
+ * DTO pour la réponse review
+ */
+data class ReviewResponseDto(
+    @SerializedName("id") val id: String,
+    @SerializedName("userId") val userId: String,
+    @SerializedName("filmId") val filmId: Int,
+    @SerializedName("rating") val rating: Int,
+    @SerializedName("comment") val comment: String,
+    @SerializedName("createdAt") val createdAt: String,
+    @SerializedName("updatedAt") val updatedAt: String,
+    @SerializedName("user") val user: ReviewUserDto
+)

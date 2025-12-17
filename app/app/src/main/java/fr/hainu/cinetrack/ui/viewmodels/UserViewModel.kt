@@ -33,14 +33,11 @@ class UserViewModel(
 
     init {
         viewModelScope.launch {
-            // Observer l'état de l'onboarding avec Flow
             launch {
                 userPrefs.hasCompletedOnboardingFlow().collect { completed ->
                     _hasCompletedOnboarding.value = completed
                 }
             }
-
-            // Observer l'état de connexion avec Flow
             launch {
                 userPrefs.isLoggedInFlow().collect { loggedIn ->
                     _isLoggedIn.value = loggedIn
@@ -59,7 +56,7 @@ class UserViewModel(
             try {
                 val result = userUseCases.login(pseudo, password)
                 result.onSuccess { (token, userModel) ->
-                    // Sauvegarder le token et les infos utilisateur dans DataStore
+                    // save datastore
                     userPrefs.saveAuthToken(token)
                     userPrefs.saveUserId(userModel.id)
                     userPrefs.saveUserInfo(userModel.pseudo, userModel.email)
@@ -70,7 +67,7 @@ class UserViewModel(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _errorMessage.value = "Erreur lors de la connexion : ${e.message}"
+                _errorMessage.value = "erreur connexion : ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -132,12 +129,12 @@ class UserViewModel(
     fun addToWatchlist(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d("UserViewModel", "addToWatchlist called for movieId: $movieId")
+                // Log.d("UserViewModel", "addToWatchlist called for movieId: $movieId")
                 val result = userUseCases.addToWatchlist(movieId)
                 result.onSuccess { userModel ->
-                    Log.d("UserViewModel", "addToWatchlist success: watchlist=${userModel.watchlist}")
+                    // Log.d("UserViewModel", "addToWatchlist success: watchlist=${userModel.watchlist}")
                     _currentUser.value = userModel
-                    Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watchlist}")
+                    // Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watchlist}")
                 }.onFailure { error ->
                     Log.e("UserViewModel", "addToWatchlist failed: ${error.message}")
                     _errorMessage.value = error.message
@@ -169,12 +166,12 @@ class UserViewModel(
     fun addToLikes(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d("UserViewModel", "addToLikes called for movieId: $movieId")
+                // Log.d("UserViewModel", "addToLikes called for movieId: $movieId")
                 val result = userUseCases.addToLikes(movieId)
                 result.onSuccess { userModel ->
-                    Log.d("UserViewModel", "addToLikes success: likes=${userModel.likes}")
+                    // Log.d("UserViewModel", "addToLikes success: likes=${userModel.likes}")
                     _currentUser.value = userModel
-                    Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.likes}")
+                    // Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.likes}")
                 }.onFailure { error ->
                     Log.e("UserViewModel", "addToLikes failed: ${error.message}")
                     _errorMessage.value = error.message
@@ -206,12 +203,12 @@ class UserViewModel(
     fun addToWatched(movieId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d("UserViewModel", "addToWatched called for movieId: $movieId")
+                // Log.d("UserViewModel", "addToWatched called for movieId: $movieId")
                 val result = userUseCases.addToWatched(movieId)
                 result.onSuccess { userModel ->
-                    Log.d("UserViewModel", "addToWatched success: watched=${userModel.watched}")
+                    // Log.d("UserViewModel", "addToWatched success: watched=${userModel.watched}")
                     _currentUser.value = userModel
-                    Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watched}")
+                    // Log.d("UserViewModel", "Updated currentUser: ${_currentUser.value?.watched}")
                 }.onFailure { error ->
                     Log.e("UserViewModel", "addToWatched failed: ${error.message}")
                     _errorMessage.value = error.message

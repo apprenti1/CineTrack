@@ -8,28 +8,35 @@ import fr.hainu.cinetrack.data.local.UserPreferencesManager
 import fr.hainu.cinetrack.data.remote.MovieRemoteDataSource
 import fr.hainu.cinetrack.data.remote.UserRemoteDataSource
 import fr.hainu.cinetrack.data.repository.MovieRepositoryImpl
+import fr.hainu.cinetrack.data.repository.ReviewRepositoryImpl
 import fr.hainu.cinetrack.data.repository.UserRepositoryImpl
 import fr.hainu.cinetrack.domain.usecase.movie.*
+import fr.hainu.cinetrack.domain.usecase.review.*
 import fr.hainu.cinetrack.domain.usecase.user.*
 import fr.hainu.cinetrack.navigation.NavGraph
+import fr.hainu.cinetrack.network.RetrofitInstance
 import fr.hainu.cinetrack.ui.theme.CineTrackTheme
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
+import fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 
 class MainActivity : ComponentActivity() {
 
-    // UserPreferencesManager (DataStore)
+    // datastore
     private val userPrefs by lazy { UserPreferencesManager(applicationContext) }
 
-    // Data Sources
+    // datasources
     private val movieRemoteDataSource by lazy { MovieRemoteDataSource() }
     private val userRemoteDataSource by lazy { UserRemoteDataSource(userPrefs) }
 
-    // Repositories
+    // repos impl
     private val movieRepository by lazy { MovieRepositoryImpl(movieRemoteDataSource) }
     private val userRepository by lazy { UserRepositoryImpl(userRemoteDataSource) }
+    private val reviewRepository by lazy {
+        val apiWithAuth = RetrofitInstance.getCineTrackApiWithAuth(userPrefs)
+        ReviewRepositoryImpl(apiWithAuth.create(fr.hainu.cinetrack.network.CineTrackApi::class.java))
+    }
 
-    // Movie UseCases
     private val movieUseCases by lazy {
         MovieUseCase(
             getTrendingWeek = GetTrendingWeekUseCase(movieRepository),
@@ -42,7 +49,6 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    // User UseCases
     private val userUseCases by lazy {
         UserUseCase(
             register = RegisterUseCase(userRepository),
@@ -57,9 +63,16 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    // ViewModels
+    private val reviewUseCases by lazy {
+        ReviewUseCase(
+            addReview = AddReviewUseCase(reviewRepository),
+            getMovieReviews = GetMovieReviewsUseCase(reviewRepository)
+        )
+    }
+
     private val moviesViewModel by lazy { MoviesViewModel(movieUseCases) }
     private val userViewModel by lazy { UserViewModel(userUseCases, userPrefs) }
+    private val reviewViewModel by lazy { ReviewViewModel(reviewUseCases) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +81,8 @@ class MainActivity : ComponentActivity() {
             CineTrackTheme {
                 NavGraph(
                     moviesViewModel = moviesViewModel,
-                    userViewModel = userViewModel
+                    userViewModel = userViewModel,
+                    reviewViewModel = reviewViewModel
                 )
             }
         }

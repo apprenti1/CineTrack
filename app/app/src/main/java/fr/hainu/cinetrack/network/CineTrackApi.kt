@@ -1,15 +1,7 @@
 package fr.hainu.cinetrack.network
 
-import fr.hainu.cinetrack.data.remote.models.AuthRequestDto
-import fr.hainu.cinetrack.data.remote.models.AuthResponseDto
-import fr.hainu.cinetrack.data.remote.models.RegisterRequestDto
-import fr.hainu.cinetrack.data.remote.models.UserResponseDto
-import fr.hainu.cinetrack.data.remote.models.WatchlistRequestDto
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import fr.hainu.cinetrack.data.remote.models.*
+import retrofit2.http.*
 
 interface CineTrackApi {
 
@@ -60,4 +52,31 @@ interface CineTrackApi {
     suspend fun removeFromWatched(
         @Path("filmId") filmId: Int
     ): UserResponseDto
+
+    // ============ REVIEWS ============
+    @POST("reviews")
+    suspend fun createReview(
+        @Body request: CreateReviewRequestDto
+    ): ReviewResponseDto
+
+    @GET("reviews/film/{filmId}")
+    suspend fun getMovieReviews(
+        @Path("filmId") filmId: Int
+    ): List<ReviewResponseDto>
+
+    @GET("reviews/user/{userId}")
+    suspend fun getUserReviews(
+        @Path("userId") userId: String
+    ): List<ReviewResponseDto>
+
+    @PUT("reviews/{id}")
+    suspend fun updateReview(
+        @Path("id") reviewId: String,
+        @Body request: UpdateReviewRequestDto
+    ): ReviewResponseDto
+
+    @DELETE("reviews/{id}")
+    suspend fun deleteReview(
+        @Path("id") reviewId: String
+    )
 }

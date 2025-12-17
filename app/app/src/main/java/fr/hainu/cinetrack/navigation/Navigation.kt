@@ -38,7 +38,8 @@ object Destinations {
 @Composable
 fun NavGraph(
     moviesViewModel: MoviesViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    reviewViewModel: fr.hainu.cinetrack.ui.viewmodels.ReviewViewModel
 ) {
     val navController = rememberNavController()
 
@@ -165,6 +166,7 @@ fun NavGraph(
                 MovieDetailsScreen(
                     moviesViewModel = moviesViewModel,
                     userViewModel = userViewModel,
+                    reviewViewModel = reviewViewModel,
                     movie = it,
                     onBackClick = {
                         navController.popBackStack(route = Destinations.HOME, inclusive = false)

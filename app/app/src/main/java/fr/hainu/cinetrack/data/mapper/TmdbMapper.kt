@@ -7,9 +7,9 @@ import fr.hainu.cinetrack.data.remote.models.TmdbMovieDto
 import fr.hainu.cinetrack.domain.models.CastMemberModel
 import fr.hainu.cinetrack.domain.models.MovieModel
 
-private val IMAGE_BASE_URL = BuildConfig.TMDB_IMAGE_URL
-private val POSTER_SIZE = BuildConfig.TMDB_IMAGE_POSTERSIZE
-private val BACKDROP_SIZE = BuildConfig.TMDB_IMAGE_BACKDROPSIZE
+private const val IMAGE_BASE_URL = BuildConfig.TMDB_IMAGE_URL
+private const val POSTER_SIZE = BuildConfig.TMDB_IMAGE_POSTERSIZE
+private const val BACKDROP_SIZE = BuildConfig.TMDB_IMAGE_BACKDROPSIZE
 
 /**
  * Mapper pour convertir TmdbMovieDto (liste) en MovieModel

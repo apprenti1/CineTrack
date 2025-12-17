@@ -19,13 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import fr.hainu.cinetrack.domain.models.MovieModel
-import fr.hainu.cinetrack.domain.models.UserModel
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.MoviesViewModel
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
@@ -54,7 +51,7 @@ fun CollectionScreen(
     var watchlistMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var watchedMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
     var favoriteMovies by remember { mutableStateOf<List<MovieModel>>(emptyList()) }
-    val isLoading by moviesViewModel.isLoading.collectAsState()
+    //val isLoading by moviesViewModel.isLoading.collectAsState()
 
     // Charger les films selon l'onglet sélectionné et les IDs
     LaunchedEffect(selectedTab, watchlistIds.hashCode(), watchedIds.hashCode(), favoriteIds.hashCode()) {

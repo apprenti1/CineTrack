@@ -45,8 +45,6 @@ data class Review(
 fun ReviewItem(
     modifier: Modifier = Modifier,
     review: Review,
-    onLikeClick: () -> Unit = {},
-    onReplyClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -150,47 +148,6 @@ fun ReviewItem(
                 lineHeight = 20.sp
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.clickable(onClick = onLikeClick),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.thumb_up),
-                        contentDescription = "J'aime",
-                        modifier = Modifier.size(16.dp),
-                        tint = Gray400
-                    )
-                    Text(
-                        text = review.likes.toString(),
-                        fontSize = 12.sp,
-                        color = Gray400
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.clickable(onClick = onReplyClick),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.chat),
-                        contentDescription = "Répondre",
-                        modifier = Modifier.size(16.dp),
-                        tint = Gray400
-                    )
-                    Text(
-                        text = "Répondre",
-                        fontSize = 12.sp,
-                        color = Gray400
-                    )
-                }
-            }
         }
     }
 }
@@ -200,7 +157,7 @@ fun ReviewsSection(
     modifier: Modifier = Modifier,
     reviews: List<Review>,
     onAddReviewClick: () -> Unit = {},
-    onLoadMoreClick: () -> Unit = {},
+    // onLoadMoreClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -245,27 +202,29 @@ fun ReviewsSection(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        )
+        {
             reviews.forEach { review ->
                 ReviewItem(review = review)
             }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Gray800)
-                    .clickable(onClick = onLoadMoreClick)
-                    .padding(vertical = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Voir plus d'avis",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Purple400
-                )
-            }
+//
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .clip(RoundedCornerShape(12.dp))
+//                    .background(Gray800)
+//                    .clickable(onClick = onLoadMoreClick)
+//                    .padding(vertical = 12.dp),
+//                contentAlignment = Alignment.Center
+//            )
+//            {
+//                Text(
+//                    text = "Voir plus d'avis",
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.SemiBold,
+//                    color = Purple400
+//                )
+//            }
         }
     }
 }

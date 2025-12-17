@@ -39,9 +39,8 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    // Message d'erreur
     private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage = _errorMessage.asStateFlow()
+    //val errorMessage = _errorMessage.asStateFlow()
 
     init {
         fetchTrendingMoviesWeek()
@@ -106,7 +105,7 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
                 val movies = movieUseCases.searchMovies(query)
                 _moviesWithSearch.value = movies
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors de la recherche : ${e.message}"
+                _errorMessage.value = "erreur recherche : ${e.message}"
                 e.printStackTrace()
             } finally {
                 _isLoading.value = false
@@ -122,20 +121,21 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
                     // Le film a déjà les détails
                     _currentMovieDetails.value = movie
                 } else {
-                    // Charger les détails depuis l'API
+                    // charger les détails depuis l'api
                     val detailedMovie = movieUseCases.getMovieDetails(movie.id)
 
-                    // Charger les films similaires
+                    // les films similaires
                     val similarMovies = try {
                         movieUseCases.getSimilarMovies(movie.id).take(3)
                     } catch (e: Exception) {
+                        e.printStackTrace()
                         emptyList()
                     }
 
                     _currentMovieDetails.value = detailedMovie?.copy(similarMovies = similarMovies) ?: movie
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors du chargement des détails : ${e.message}"
+                _errorMessage.value = "erreur chargement des détails : ${e.message}"
                 e.printStackTrace()
                 _currentMovieDetails.value = movie
             } finally {
@@ -151,7 +151,7 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
                 val movies = movieUseCases.getMoviesByIds(movieIds)
                 _moviesByIds.value = movies
             } catch (e: Exception) {
-                _errorMessage.value = "Erreur lors du chargement des films : ${e.message}"
+                _errorMessage.value = "erreur du chargement des films : ${e.message}"
                 e.printStackTrace()
                 _moviesByIds.value = emptyList()
             } finally {
@@ -160,7 +160,7 @@ class MoviesViewModel(private val movieUseCases: MovieUseCase) : ViewModel() {
         }
     }
 
-    fun clearError() {
-        _errorMessage.value = null
-    }
+//    fun clearError() {
+//        _errorMessage.value = null
+//    }
 }

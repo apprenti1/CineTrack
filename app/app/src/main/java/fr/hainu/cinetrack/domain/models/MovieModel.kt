@@ -45,10 +45,4 @@ data class MovieModel(
     val isRated: Boolean = false,
     var isDetailed: Boolean = false,
     var similarMovies: List<MovieModel> = emptyList()
-){
-
-
-
-
-
-}
+)

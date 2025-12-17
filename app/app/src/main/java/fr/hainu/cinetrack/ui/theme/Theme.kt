@@ -20,7 +20,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun CineTrackTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Désactivé par défaut pour utiliser nos couleurs custom
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

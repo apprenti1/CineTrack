@@ -20,12 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.CustomButton
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.ui.theme.*
 import fr.hainu.cinetrack.ui.viewmodels.UserViewModel
 import kotlinx.coroutines.launch

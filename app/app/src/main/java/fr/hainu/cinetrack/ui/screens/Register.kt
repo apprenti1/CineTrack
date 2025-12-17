@@ -19,10 +19,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hainu.cinetrack.R
 import fr.hainu.cinetrack.ui.components.ButtonVariant
 import fr.hainu.cinetrack.ui.components.CustomButton
@@ -83,7 +81,6 @@ fun RegisterScreen(
                 }
             }
 
-            // Content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -107,7 +104,6 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Form
                 CustomInput(
                     value = pseudo,
                     onValueChange = {
@@ -164,7 +160,6 @@ fun RegisterScreen(
                     errorMessage = if (!passwordsMatch && confirmPassword.isNotEmpty()) "Les mots de passe ne correspondent pas" else null
                 )
 
-                // Error message
                 if (errorMessage != null) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -177,7 +172,6 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Terms checkbox
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -215,7 +209,6 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Register button
                 CustomButton(
                     text = if (isLoading) "" else "Créer mon compte",
                     onClick = {
@@ -240,7 +233,6 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Login link
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
